@@ -10,7 +10,7 @@ import drawable.drawable;
 
 @SuppressWarnings("serial")
 public abstract class Terrain extends JPanel{
-	protected boolean[][] terrain; // This will hold all of the points that will be painted
+	protected int[][] terrain; // This will hold all of the points that will be painted
 	protected int xPanel = 0;// This will be set to the JPanels width
 	protected int yPanel = 0;// This will be set to the JPanels height
 	public int maxPlayers = -1;
@@ -52,7 +52,7 @@ public abstract class Terrain extends JPanel{
 	 * 
 	 * @return boolean array of points
 	 */
-	public boolean[][] getTerrain(){
+	public int[][] getTerrain(){
 		return terrain;
 	}
 
@@ -119,7 +119,7 @@ public abstract class Terrain extends JPanel{
 			int high = (int)(Math.sqrt(Math.pow(mag, 2) - Math.pow(i - y, 2)) + x);// Finds the upper x coordiante for the given y corrdinate
 			for(int j = low; j < high; j += 1){// loops from the lower x to the upper x
 				if(j >= 0 && j < xPanel && i >= 0 && i < yPanel){
-					terrain[j][i] = false;//sets points equal to false
+					terrain[j][i] = 0;//sets points equal to false
 				}
 			}
 		}
@@ -129,9 +129,9 @@ public abstract class Terrain extends JPanel{
 			for(int i = x - mag; i < x + mag; i += 1){
 				for(int j = y + mag; j > 0; j -= 1){
 					if(j + 1 < yPanel && j > 0 && i > 0 && i < xPanel){
-						if (terrain[i][j] && !terrain[i][j + 1]){
-							terrain[i][j+1] = true;
-							terrain[i][j] = false;
+						if (terrain[i][j] > 0 && !(terrain[i][j + 1] > 0)){
+							terrain[i][j+1] = 1;
+							terrain[i][j] = 0;
 							repaint();
 						}
 					}

@@ -39,18 +39,18 @@ public class manualTank extends drawable{
 	 * 
 	 * @return the angle in radians
 	 */
-	public double angle(int x, boolean[][] points) {
+	public double angle(int x, int[][] points) {
 		int y1 = 0;
 		int y2 = 0;
 		for(int i = 0; i < points[x].length; i += 1){
-			if(points[x][i]){
+			if(points[x][i] > 0){
 				y1 = i;
 				break;
 			}
 		}
 		
 		for(int i = 0; i < points[x].length; i += 1){
-			if(points[x - 15][i]){
+			if(points[x - 15][i] > 0){
 				y2 = i;
 				break;
 			}

@@ -14,7 +14,7 @@ import terrain.Terrain;
 public class standardShell extends drawable implements Runnable {
 
 	private Thread t;
-	private boolean[][] terrain;
+	private int[][] terrain;
 	private int frameX;
 	private int frameY;
 	private double x = 0;
@@ -37,7 +37,7 @@ public class standardShell extends drawable implements Runnable {
 	 * @param angle Angle that the shell is going at
 	 * @param drawable Array list that objects are drawn from
 	 */
-	public standardShell(Terrain painter, boolean[][] landscape, int frameX, int frameY, int x0, int y0, double angle, ArrayList<drawable> drawable, int power) {
+	public standardShell(Terrain painter, int[][] landscape, int frameX, int frameY, int x0, int y0, double angle, ArrayList<drawable> drawable, int power) {
 		terrain = landscape;
 		this.frameX = frameX;
 		this.frameY = frameY;
@@ -59,7 +59,7 @@ public class standardShell extends drawable implements Runnable {
 		final int a = 1;
 		
 		//calculate x and y position of shell
-		while ( x < frameX && x >= 0 && y < frameY && y >= 0 && !terrain[(int) x][(int) y]) {
+		while ( x < frameX && x >= 0 && y < frameY && y >= 0 && !(terrain[(int) x][(int) y] > 0)) {
 			x = (double) x0 + (double) v0 * Math.cos(angle) * (double) time;
 			y = (double) y0 + (double) v0 * Math.sin(angle) * (double) time + 0.5 * a * Math.pow(time, 2);
 			painter.repaint();
@@ -108,7 +108,6 @@ public class standardShell extends drawable implements Runnable {
 			painter.damage((int) x, (int)y, 25);
 		}
 		
-		painter.angle.setText(String.format("%2.1f", painter.currentTank().barrelAngle));
 		painter.power.setText("" + painter.currentTank().v0);
 		
 		//remove the shell from the drawable array when it finishes
