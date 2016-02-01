@@ -69,9 +69,7 @@ public class standardShell extends drawable implements Runnable {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			
-			
-			
+
 			time += .1;
 		}
 		
@@ -108,6 +106,7 @@ public class standardShell extends drawable implements Runnable {
 			painter.damage((int) x, (int)y, 25);
 		}
 		
+		//resets the power to the standard velocity
 		painter.power.setText("" + painter.currentTank().v0);
 		
 		//remove the shell from the drawable array when it finishes

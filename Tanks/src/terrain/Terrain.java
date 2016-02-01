@@ -130,7 +130,7 @@ public abstract class Terrain extends JPanel{
 				for(int j = y + mag; j > 0; j -= 1){
 					if(j + 1 < yPanel && j > 0 && i > 0 && i < xPanel){
 						if (terrain[i][j] > 0 && !(terrain[i][j + 1] > 0)){
-							terrain[i][j+1] = 1;
+							terrain[i][j+1] = terrain[i][j];
 							terrain[i][j] = 0;
 							repaint();
 						}
