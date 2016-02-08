@@ -142,6 +142,8 @@ public class Sand extends Terrain implements KeyListener{
 		c = bArray[2][0]; 
 		d = bArray[3][0]; 
 
+		System.out.println("A: " + a + " B: " + b +" C: " + c + " D: " + d);
+		
 		y = a+b*x+c*Math.pow(x, 2)+d*Math.pow(x, 3);
 
 		while ((int)x <= getXTerrain()) {// Puts points in the array that will form the cubic line
