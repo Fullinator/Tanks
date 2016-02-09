@@ -1,10 +1,8 @@
 package Main;
 import java.awt.*;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.AffineTransform;
 import java.util.Random;
 
 import javax.swing.JPanel;
@@ -38,7 +36,10 @@ public class StartMenu extends JPanel implements ActionListener {
 	private JTextField player3Name = new JTextField();
 	private JTextField player4Name = new JTextField();
 	private JTextField player5Name = new JTextField();
-
+	private double y = 0,a = 613.0530044043094,b = 0.5723935937530484,c = -0.0017677556908674563,d = .0000010360170037339734, x = 0;
+	
+	private manualTank tank; 
+	
 	private int xLength = -1;
 	private int yLength = -1;
 
@@ -56,10 +57,11 @@ public class StartMenu extends JPanel implements ActionListener {
 	 * @param yDim The height of the panel
 	 */
 	public StartMenu(int xDim, int yDim) {
-		setBackground(Color.WHITE);
+		//setBackground(Color.WHITE);
 		xLength = xDim;
 		yLength = yDim;
-
+		tank = new manualTank(null, xDim);
+		
 		createBackground();
 		
 		String xDimension = new String("[" + xDim/2 + "][" + xDim/2 + "]");
@@ -154,7 +156,6 @@ public class StartMenu extends JPanel implements ActionListener {
 	 */
 	private void createBackground() {
 		//Polynomial variables for the terrain
-		double y = 0,a = 613.0530044043094,b = 0.5723935937530484,c = -0.0017677556908674563,d = .0000010360170037339734, x = 0;
 		
 		//Polynomial equation
 		y = a+b*x+c*Math.pow(x, 2)+d*Math.pow(x, 3);
@@ -269,6 +270,7 @@ public class StartMenu extends JPanel implements ActionListener {
 	public void paintComponent(Graphics g) {
 		Graphics2D g2d=(Graphics2D)g;
 		
+		g2d.rotate(0, 0, 0);
 		g2d.setColor(new Color(0x21a1cb));
 		g.fillRect(0,0,(int) xLength,(int) yLength);
 		
@@ -288,8 +290,39 @@ public class StartMenu extends JPanel implements ActionListener {
 				}
 			}
 		}
+		
+		AffineTransform old = g2d.getTransform();// Saves a copy of the old transform so the rotation can be reset later
+				
+		int tankXPos = 750;
+		int tankYPos = findY(600);
+		//draw tank
+			g2d.rotate(tank.angle(tankXPos, terrain), tankXPos, findY(tankXPos));// this takes a radian. It has to be a very small radian
+			g2d.drawImage(tank.queryImage(), tankXPos, findY(tankXPos) - 18, null);
+
+			//draws the barrel on the tank
+			g2d.setColor(Color.BLACK);
+			g2d.rotate(tank.barrelAngle(), tankXPos, findY(tankXPos) - 15 );
+			g2d.fillRect(tankXPos, findY(tankXPos) - 17, 20, 4);
+		
+			g2d.setTransform(old);// resets the rotation back to how it was before the painting began
 	}//END OF PAINT
 
+	/**
+	 * Returns the y coordinate of the top of the terrain from the boolean terrain array.
+	 * @param x the x coordinate to check for the y coordinate
+	 * @return returns the y coordinate of the terrain or -1 if one cannot be found
+	 */
+	public int findY(int x) {
+		if(x > 0 && x < xLength){
+			for(int i = 0; i < terrain[0].length; i += 1){
+				if(terrain[x][i] > 0){
+					return i;
+				}
+			}
+		}
+		return (int)(a + b * x + c * Math.pow(x, 2) + d * Math.pow(x, 3));
+	}//end of findY method
+	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 

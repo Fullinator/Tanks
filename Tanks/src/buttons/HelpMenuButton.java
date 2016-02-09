@@ -2,6 +2,7 @@ package buttons;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,6 +20,8 @@ public class HelpMenuButton extends JButton implements ActionListener {
 
 	public HelpMenuButton(String label) {
 		super(label);
+		this.setFont(new Font("Arial", Font.PLAIN, 35));
+		setForeground(Color.WHITE);
 		setBorder(null);
 		setBorderPainted(false);
 		setContentAreaFilled(false);
@@ -38,8 +41,8 @@ public class HelpMenuButton extends JButton implements ActionListener {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		collectButton();
-		g.drawImage(button, 0, 0, null);
+		//collectButton();
+		//g.drawImage(button, 0, 0, null);
 	}
 
 	@Override
