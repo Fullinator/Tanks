@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 
@@ -29,21 +30,22 @@ public class MainMenu extends JPanel {
 		xLength = xDim;
 		yLength = yDim;
 		
-		String xDimension = new String("[" + (xDim - (49*5))+"][41][41][41][41]");
+		setLayout(new MigLayout("fillx, filly", "[" + (yLength/5) + "][" + yLength/5 + "][" + yLength/5 + "][" + yLength/5 + "][" + yLength/5 + "]"
+								,"[" + (xDim - (49*5)) +"][41][41][41][41]"));//layout constraints, column, row
+		this.setSize(xDim, yDim);
+		JLabel gameName = new JLabel("Tanks");
+		gameName.setFont(new Font("Arial", Font.BOLD, 42));
+		gameName.setForeground(Color.BLACK);
 		
-		setLayout(new MigLayout("fillx", "[50][" + yLength/5 + "][" + yLength/5 + "][" + yLength/5 + "][" + yLength/5 + "]"
-								,"[" + (xDim - (49*5))+"][41][41][41][41]"));//layout constraints, column, row
-		//MigLayout layout = new MigLayout("", "[]", xDimension); // Row constraints
-		//this.setLayout(layout);
-		this.setSize(1000, 700);
+		this.add(gameName, "cell 3 0, aligny 30%, alignx center");
 		StartMenuButton start = new StartMenuButton("Start");
-		this.add(start, "cell 0 1, alignx left");
+		this.add(start, "cell 0 3, alignx left");
 		SettingsMenuButton settings = new SettingsMenuButton("Settings");
-		this.add(settings, "cell 0 2, alignx left");
+		this.add(settings, "cell 0 4, alignx left");
 		HelpMenuButton help = new HelpMenuButton("Help");
-		this.add(help, "cell 0 3, alignx left");
+		this.add(help, "cell 0 5, alignx left");
 		ExitMenuButton exit = new ExitMenuButton("Exit");
-		this.add(exit, "cell 0 4, alignx left");
+		this.add(exit, "cell 0 6, alignx left");
 		
 		collectBackground();
 		

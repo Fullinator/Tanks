@@ -54,7 +54,7 @@ public class HelpMenuButton extends JButton implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		try {
-			Main.startSand();
+			Main.helpMenu();
 		}
 		catch(Exception e){
 			Main.error(e);

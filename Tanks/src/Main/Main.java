@@ -20,6 +20,7 @@ public class Main extends JFrame {
 	private static Sand sand;// = new Sand(1000,700);
 	private static JFrame frame = new JFrame();
 	private static MainMenu menu;
+	private static HelpMenu help;
 	
 	/**
 	 * @param args
@@ -65,6 +66,17 @@ public class Main extends JFrame {
 		settings.requestFocusInWindow();
 		frame.setVisible(true);
 		frame.revalidate();
+	}
+	public static void helpMenu() {
+		frame.getContentPane().removeAll();
+		frame.setSize(xLength, yLength);
+		help = new HelpMenu(xLength, yLength);
+		frame.add(help);
+		menu.setFocusable(true);
+		menu.requestFocusInWindow();
+		menu.setVisible(true);
+		frame.setFocusable(false);
+		frame.setVisible(true);
 	}
 	
 	public static void error(Exception e) {
