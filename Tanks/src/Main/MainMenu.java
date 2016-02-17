@@ -41,8 +41,6 @@ public class MainMenu extends JPanel {
 		this.add(gameName, "cell 3 0, aligny 30%, alignx center");
 		
 		/*
-		StartMenuButton start = new StartMenuButton("Start");
-		this.add(start, "cell 0 3, alignx left");
 		SettingsMenuButton settings = new SettingsMenuButton("Settings");
 		this.add(settings, "cell 0 4, alignx left");
 		*/
