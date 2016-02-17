@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import buttons.*;
 import drawable.*;
 import Jama.Matrix;
+import Main.sounds;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -23,6 +24,7 @@ import net.miginfocom.swing.MigLayout;
 @SuppressWarnings("serial")
 public class Sand extends Terrain implements KeyListener{
 
+	sounds sound = new sounds();
 
 
 
@@ -328,6 +330,8 @@ public class Sand extends Terrain implements KeyListener{
 				//moves the tank to the left
 				if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 					if (drawable.get(i).startX > 0 && drawable.get(i).getGas() > 0) {
+						sound.loadSound("sounds/Movement.wav");
+						sound.run();
 						drawable.get(i).startX -= 5;
 						drawable.get(i).setMove(drawable.get(i).getMove() + 5);
 						if(drawable.get(i).getMove() % 30 == 0){
@@ -340,6 +344,8 @@ public class Sand extends Terrain implements KeyListener{
 				//moves the tank to the right
 				if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 					if (drawable.get(i).startX < drawable.get(i).maxX - 55 && drawable.get(i).getGas() > 0) {
+						sound.loadSound("sounds/Movement.wav");
+						sound.run();
 						drawable.get(i).startX += 5;
 						drawable.get(i).setMove(drawable.get(i).getMove() + 5);
 						if(drawable.get(i).getMove() % 30 == 0){
@@ -352,6 +358,8 @@ public class Sand extends Terrain implements KeyListener{
 				//moves the turret in a clockwise direction
 				if (e.getKeyCode() == KeyEvent.VK_UP) {
 					if (drawable.get(i).barrelAngle < Math.PI) {
+						sound.loadSound("sounds/Bounce.wav");
+						sound.run();
 						drawable.get(i).barrelAngle += 0.1;
 						angle.setText(String.format("%2.1f", drawable.get(i).barrelAngle));
 					}
@@ -361,6 +369,8 @@ public class Sand extends Terrain implements KeyListener{
 				//moves the turret in a counterclockwise direction
 				if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 					if (drawable.get(i).barrelAngle >= 0 ) {
+						sound.loadSound("sounds/Bounce.wav");
+						sound.run();
 						drawable.get(i).barrelAngle -= 0.1;
 						angle.setText(String.format("%2.1f", drawable.get(i).barrelAngle));
 					}
@@ -369,7 +379,9 @@ public class Sand extends Terrain implements KeyListener{
 				//fires a shell
 				if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 					currentPlayer = currentPlayer * -1;
-					double theta = Math.PI - drawable.get(i).barrelAngle;					
+					double theta = Math.PI - drawable.get(i).barrelAngle;				
+					sound.loadSound("sounds/Shot1.wav");
+					sound.run();
 					int barrelX = (int)(drawable.get(i).getX() + 20 + 20 * Math.cos(theta));
 					int barrelY = (int)(findY(drawable.get(i).getX()) - 18 - 20 * Math.sin(theta));
 					standardShell shell = new standardShell(this, terrain, getXTerrain(), getYTerrain(), barrelX, barrelY, drawable.get(i).barrelAngle + drawable.get(i).tankAngle+ Math.PI, drawable, drawable.get(i).v0);

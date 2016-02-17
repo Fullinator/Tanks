@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
 import drawable.drawable;
 
 
@@ -24,6 +25,7 @@ public abstract class Terrain extends JPanel{
 	public JLabel angle;
 	public JLabel power;
     protected ArrayList<drawable> drawable;
+   
 	
 	/**
 	 *

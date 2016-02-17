@@ -2,6 +2,8 @@ package drawable;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+
+import Main.sounds;
 import terrain.Terrain;
 
 /**
@@ -24,6 +26,7 @@ public class standardShell extends drawable implements Runnable {
 	private double angle;
 	private Terrain painter;
 	private ArrayList<drawable> drawable;
+	sounds sound = new sounds();
 
 	/**
 	 * standardShell Constructor
@@ -103,6 +106,8 @@ public class standardShell extends drawable implements Runnable {
 		
 		//damage the terrain if relevant
 		if ( (int) x >= 0 && (int) x <= frameX ) {
+			sound.loadSound("sounds/TNT.wav");
+			sound.run();
 			painter.damage((int) x, (int)y, 25);
 		}
 		
