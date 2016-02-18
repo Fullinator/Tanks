@@ -21,6 +21,8 @@ public class Main extends JFrame {
 	private static JFrame frame = new JFrame();
 	private static MainMenu menu;
 	private static HelpMenu help;
+
+	private static Ticker ticker;
 	
 	/**
 	 * @param args
@@ -39,6 +41,9 @@ public class Main extends JFrame {
 		menu.setVisible(true);
 		frame.setFocusable(false);
 		frame.setVisible(true);
+
+		ticker = new Ticker(10);
+		new Thread(ticker).start();
 	}
 	
 	public static void setMaxHumans(int x) {
@@ -116,6 +121,7 @@ public class Main extends JFrame {
 	
 	public static void exitGame() {
 		frame.dispose();
+		ticker.stopTicking();
 	}
 	
 }
