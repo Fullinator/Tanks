@@ -40,7 +40,6 @@ public class Ticker implements Runnable {
 			synchronized (managedMethods) {
 				managedMethods.forEach(f -> f.accept(curTime - finalLastRunTime));
 			}
-			System.out.println(curTime - finalLastRunTime);
 			lastRunTime = curTime;
 			try {
 				Thread.sleep(sleepMillis);
