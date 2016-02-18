@@ -7,6 +7,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import drawable.drawable;
+import drawable.Drawable2;
+import drawable.Tank;
 
 
 @SuppressWarnings("serial")
@@ -24,8 +26,8 @@ public abstract class Terrain extends JPanel{
 	protected int maxHuman = -1;
 	public JLabel angle;
 	public JLabel power;
-    protected ArrayList<drawable> drawable;
-   
+    protected ArrayList<Drawable2> drawable;
+	protected ArrayList<Tank> players;
 	
 	/**
 	 *
@@ -39,12 +41,8 @@ public abstract class Terrain extends JPanel{
 		generate();
 	}
 	
-	public drawable currentTank() {
-		for ( int i = 0; i < drawable.size(); i++) {
-			if (drawable.get(i).playerNumber() == currentPlayer) {
-				return drawable.get(i);
-			}
-		}
+	public Tank currentTank() {
+		if (players.size() >= currentPlayer) return players.get(currentPlayer - 1);
 		return null;
 	}
 	
@@ -58,7 +56,9 @@ public abstract class Terrain extends JPanel{
 		return terrain;
 	}
 
-	public abstract void setDrawable(ArrayList<drawable> drawable);
+	public void setDrawable(ArrayList<Drawable2> drawable) {
+		this.drawable = drawable;
+	}
 
 	public abstract int findY(int x); 
 
