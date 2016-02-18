@@ -1,7 +1,9 @@
 package drawable;
 
+import javax.imageio.ImageIO;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 public abstract class Tank implements Drawable2 {
 	private double barrelAngle = 0.0;
@@ -9,9 +11,20 @@ public abstract class Tank implements Drawable2 {
 	private int gas = 500;
 	private Point location;
 	private BufferedImage image;
-	private float healthPercent;
+	private double healthPercent;
 	private String name;
 	private int launchPower;
+
+	public Tank() {
+		healthPercent = 1.0f;
+		name = "";
+		try {
+			image = ImageIO.read(getClass().getResourceAsStream("/img/temporaryTank.png"));
+		} catch (IOException e) {
+			System.out.println("The tank file requested does not exist! Please fix this before continuing!");
+		}
+		location = new Point(100, 100000);
+	}
 
 	public void setLocation(Point location) {
 		this.location = location;
@@ -25,11 +38,11 @@ public abstract class Tank implements Drawable2 {
 		this.image = image;
 	}
 
-	public float getHealthPercent() {
+	public double getHealth() {
 		return healthPercent;
 	}
 
-	public void setHealthPercent(float healthPercent) {
+	public void setHealth(double healthPercent) {
 		this.healthPercent = healthPercent;
 	}
 
@@ -51,11 +64,6 @@ public abstract class Tank implements Drawable2 {
 
 	public void adjustLaunchPower(int launchPower) {
 		this.launchPower = Math.max(0, this.launchPower + launchPower);
-	}
-
-	public Tank() {
-		healthPercent = 1.0f;
-		name = "";
 	}
 
 	public void setBarrelAngle(double angle) { barrelAngle = angle; }
@@ -109,4 +117,33 @@ public abstract class Tank implements Drawable2 {
 	public void stopAimCannon() {
 
 	}
+
+	/**
+	 * Used to find the angle of rotation of the tank for keeping it level on the terrain
+	 *
+	 * @param x X position of the tank
+	 * @param points Terrain array of points for determining slope
+	 *
+	 * @return the angle in radians
+	 */
+	public double angle(int x, int[][] points) {
+		int y1 = 0;
+		int y2 = 0;
+		for(int i = 0; i < points[x].length; i += 1){
+			if(points[x][i] > 0){
+				y1 = i;
+				break;
+			}
+		}
+
+		for(int i = 0; i < points[x].length; i += 1){
+			if(points[x - 15][i] > 0){
+				y2 = i;
+				break;
+			}
+		}
+		double angle = Math.atan((y2 - y1) / -15.0);
+		tankAngle = angle;
+		return angle;
+	}//end of angle method
 }
