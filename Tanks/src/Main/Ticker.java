@@ -1,7 +1,9 @@
 package Main;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.LongConsumer;
 
 /**
@@ -9,9 +11,10 @@ import java.util.function.LongConsumer;
  */
 public class Ticker implements Runnable {
 
-	private static final List<LongConsumer> managedMethods = new ArrayList<>();
+	private static final Map<Integer, LongConsumer> managedMethods = new HashMap<>();
 	private boolean stop;
 	private long sleepMillis;
+	private static int id = -1;
 
 	public Ticker(long sleepMillis) {
 		stop = false;
@@ -22,12 +25,18 @@ public class Ticker implements Runnable {
 		stop = true;
 	}
 
-	public synchronized static void addMethod(LongConsumer consumer) {
-		managedMethods.add(consumer);
+	public static int addMethod(LongConsumer consumer) {
+		id++;
+		synchronized (managedMethods) {
+			managedMethods.put(id, consumer);
+			return id;
+		}
 	}
 
-	public synchronized static void removeMethod(LongConsumer consumer) {
-		managedMethods.remove(consumer);
+	public static void removeMethod(int index) {
+		synchronized (managedMethods) {
+			managedMethods.remove(index);
+		}
 	}
 
 	@Override
@@ -38,10 +47,12 @@ public class Ticker implements Runnable {
 			final long finalLastRunTime = lastRunTime;
 			final long curTime = System.nanoTime();
 			synchronized (managedMethods) {
-				managedMethods.forEach(f -> f.accept(curTime - finalLastRunTime));
+				managedMethods.values()
+						.forEach(f -> f.accept(curTime - finalLastRunTime));
 			}
 			lastRunTime = curTime;
 			try {
+				Thread.yield();
 				Thread.sleep(sleepMillis);
 			} catch (InterruptedException e) {}
 		}

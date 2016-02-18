@@ -1,5 +1,6 @@
 package drawable;
 
+import Main.Main;
 import Main.Ticker;
 
 import javax.imageio.ImageIO;
@@ -20,6 +21,8 @@ public abstract class Tank implements Drawable2 {
 	private String name;
 	private int launchPower;
 
+	private int motionTickerID;
+	private int cannonTickerID;
 	private boolean goLeft;
 	private boolean counterClockwise;
 
@@ -112,29 +115,31 @@ public abstract class Tank implements Drawable2 {
 
 	public void startMotion(boolean goLeft) {
 		this.goLeft = goLeft;
-		Ticker.addMethod(this::moveTank);
+		motionTickerID = Ticker.addMethod(this::moveTank);
 	}
 
 	public void stopMotion() {
-		Ticker.removeMethod(this::moveTank);
+		Ticker.removeMethod(motionTickerID);
 	}
 
 	public void aimCannon(boolean counterClockWise) {
 		this.counterClockwise = counterClockWise;
-		Ticker.addMethod(this::rotateCannon);
-
+		cannonTickerID = Ticker.addMethod(this::rotateCannon);
 	}
 
 	public void stopAimCannon() {
-		Ticker.removeMethod(this::rotateCannon);
+		Ticker.removeMethod(cannonTickerID);
 	}
 
 	private void moveTank(long elapsedNanos) {
-
+		double speed = 100.0 * ((double) elapsedNanos / 1000000000);
+		double newX = location.getX() + (goLeft ? -speed : speed);
+		if (newX > 0 && newX < Main.xLength) location.setLocation(newX, 1000);
 	}
 
 	private void rotateCannon(long elapsedNanos) {
-
+		double rate = 10.0 * ((double) elapsedNanos / 1000000000);
+		barrelAngle += (counterClockwise ? -rate : rate);
 	}
 
 	/**
