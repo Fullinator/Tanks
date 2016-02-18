@@ -366,8 +366,13 @@ public class Sand extends Terrain implements KeyListener{
 //		}
 //	}//end of keyPressed method
 
+	private java.util.List<Long> downKeys = new ArrayList<>();
+
 	@Override
 	public void keyPressed(KeyEvent e) {
+		if (downKeys.contains((long) e.getKeyCode())) return;
+		else downKeys.add((long) e.getKeyCode());
+
 		//draws all of the drawables in the drawable array
 		Tank t = players.get(currentPlayer - 1);
 
@@ -428,6 +433,8 @@ public class Sand extends Terrain implements KeyListener{
 
 	@Override
 	public void keyReleased(KeyEvent e) {
+		downKeys.remove(((long) e.getKeyCode()));
+
 		Tank t = players.get(currentPlayer - 1);
 
 		switch (e.getKeyCode()) {
