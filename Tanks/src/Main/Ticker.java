@@ -47,8 +47,9 @@ public class Ticker implements Runnable {
 			final long finalLastRunTime = lastRunTime;
 			final long curTime = System.nanoTime();
 			synchronized (managedMethods) {
-				managedMethods.values()
-						.forEach(f -> f.accept(curTime - finalLastRunTime));
+				managedMethods.values().forEach(f -> new Thread(() -> {
+					f.accept(curTime - finalLastRunTime);
+				}).start());
 			}
 			lastRunTime = curTime;
 			try {
