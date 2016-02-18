@@ -24,8 +24,6 @@ import net.miginfocom.swing.MigLayout;
 @SuppressWarnings("serial")
 public class Sand extends Terrain implements KeyListener{
 
-	sounds sound = new sounds();
-
 
 
 	/**
@@ -399,6 +397,8 @@ public class Sand extends Terrain implements KeyListener{
 		// fire projectile
 		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 			System.out.println("fire");
+			Main.Main.sound.loadSound("sounds/Shot1.wav");
+			Main.Main.sound.run();
 		}
 		/*for ( int i = 0; i < players.size(); i++) {
 			if (i == currentPlayer && (drawable.get(i) instanceof manualTank || drawable.get(i) instanceof AITank)) {// PLAYER NUMBER HERE FOR THE EVENTUAL TURNS

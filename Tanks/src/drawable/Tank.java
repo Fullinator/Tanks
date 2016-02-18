@@ -132,14 +132,18 @@ public abstract class Tank implements Drawable2 {
 	}
 
 	private void moveTank(long elapsedNanos) {
+		Main.sound.loadSound("sounds/Movement.wav");
 		double speed = 100.0 * ((double) elapsedNanos / 1000000000);
 		double newX = location.getX() + (goLeft ? -speed : speed);
 		if (newX > 0 && newX < Main.xLength) location.setLocation(newX, 1000);
+		Main.sound.run();
 	}
 
 	private void rotateCannon(long elapsedNanos) {
+		Main.sound.loadSound("sounds/Bounce.wav");
 		double rate = 10.0 * ((double) elapsedNanos / 1000000000);
 		barrelAngle += (counterClockwise ? -rate : rate);
+		Main.sound.run();
 	}
 
 	/**

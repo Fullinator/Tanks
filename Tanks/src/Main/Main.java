@@ -23,6 +23,8 @@ public class Main extends JFrame {
 	private static HelpMenu help;
 
 	private static Ticker ticker;
+
+	public static sounds sound = new sounds();
 	
 	/**
 	 * @param args
