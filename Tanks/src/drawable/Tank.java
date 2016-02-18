@@ -1,9 +1,14 @@
 package drawable;
 
+import Main.Ticker;
+
 import javax.imageio.ImageIO;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.List;
+import java.util.function.Function;
+import java.util.function.LongConsumer;
 
 public abstract class Tank implements Drawable2 {
 	private double barrelAngle = 0.0;
@@ -14,6 +19,9 @@ public abstract class Tank implements Drawable2 {
 	private double healthPercent;
 	private String name;
 	private int launchPower;
+
+	private boolean goLeft;
+	private boolean counterClockwise;
 
 	public Tank() {
 		healthPercent = 1.0f;
@@ -103,18 +111,29 @@ public abstract class Tank implements Drawable2 {
 	}
 
 	public void startMotion(boolean goLeft) {
-
+		this.goLeft = goLeft;
+		Ticker.addMethod(this::moveTank);
 	}
 
 	public void stopMotion() {
-
+		Ticker.removeMethod(this::moveTank);
 	}
 
 	public void aimCannon(boolean counterClockWise) {
+		this.counterClockwise = counterClockWise;
+		Ticker.addMethod(this::rotateCannon);
 
 	}
 
 	public void stopAimCannon() {
+		Ticker.removeMethod(this::rotateCannon);
+	}
+
+	private void moveTank(long elapsedNanos) {
+
+	}
+
+	private void rotateCannon(long elapsedNanos) {
 
 	}
 
