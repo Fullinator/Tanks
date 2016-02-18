@@ -5,7 +5,8 @@ import java.util.ArrayList;
 
 import Main.sounds;
 import terrain.Terrain;
-
+import physics.Projectile;
+import physics.Wind;
 /**
  * Class to create standardShell objects
  * 
@@ -26,6 +27,8 @@ public class standardShell extends drawable implements Runnable {
 	private double angle;
 	private Terrain painter;
 	private ArrayList<drawable> drawable;
+	public Projectile shell;
+	private Wind wind;
 	sounds sound = new sounds();
 
 	/**
@@ -52,28 +55,48 @@ public class standardShell extends drawable implements Runnable {
 		t = new Thread(this, "standard shell thread");
 		t.start(); // Start the thread
 		v0 = power;
+		wind = new Wind();
+		shell = new Projectile(this.x0, this.y0, this.painter , wind);
+		shell.setAngle(angle);
+		shell.setPower(power);
+		System.out.println("Does this happen?");
+		System.out.println(shell.getAngle() + " , " + shell.getPower());
+		
 	}
 	
 	
 	@Override
 	public void run() {
 		//set constants
-		double time = 0;
+//		double time = 0;
 		final int a = 1;
+		int tick = 1;
+		System.out.println("test");
+		shell.setAngle(angle);
+		shell.setPower(v0);
+		
 		
 		//calculate x and y position of shell
 		while ( x < frameX && x >= 0 && y < frameY && y >= 0 && !(terrain[(int) x][(int) y] > 0)) {
-			x = (double) x0 + (double) v0 * Math.cos(angle) * (double) time;
-			y = (double) y0 + (double) v0 * Math.sin(angle) * (double) time + 0.5 * a * Math.pow(time, 2);
-			painter.repaint();
+//			x = (double) x0 + (double) v0 * Math.cos(angle) * (double) time;
+//			y = (double) y0 + (double) v0 * Math.sin(angle) * (double) time + 0.5 * a * Math.pow(time, 2);
+			System.out.println("1");
+			double [] shot = shell.fire(tick, 10,x0,y0);
+			System.out.println("2");
+			x = shot[0];
+			y = shot[1];
 			
+			painter.repaint();
+//			
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 
-			time += .1;
+//			time += .1;
+			tick+= 1;
+			System.out.println(tick);
 		}
 		
 		//make it the next player's turn

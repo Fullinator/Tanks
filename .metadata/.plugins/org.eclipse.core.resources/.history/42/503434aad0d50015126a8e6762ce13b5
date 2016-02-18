@@ -1,0 +1,76 @@
+package physics;
+
+import java.awt.*;
+
+import drawable.drawable;
+import drawable.standardShell;
+
+import java.math.*;
+
+import terrain.Terrain;
+
+public class Projectile {
+	protected double power;
+	protected static double intX;
+	protected static double intY;
+	protected static double x0;
+	protected static double y0;
+	protected static double g;
+	protected double angle;
+	protected double maxPower;
+	private Terrain terrain;
+	private standardShell std;
+	private static double wind;
+	public static double vX;
+	public static double vY;
+	public double height;
+	private static double[] points;
+
+	public Projectile(double x, double y, Terrain terr, Wind wind){
+		terrain = terr;
+		intX = x;
+		intY= y;
+		x0 = x;
+		y0 = y;
+		g = 1;
+		angle = Math.sin(y/x);
+		maxPower = 100;
+		this.wind = wind.getWindSpeed();
+		vX = 0;
+		vY = 0;
+		double[] points = new double[2];
+		height = 0;
+		
+	}
+
+	public double getPower() {
+		return power;
+	}
+
+	public void setPower(double power){
+		this.power = power;
+		vX = (double) power * Math.cos(angle);
+		vY = (double) power* Math.sin(angle);
+	}
+	
+	public void setAngle(double ang){
+		angle = ang;
+	}
+	
+	public void setAngle(){
+		angle = terrain.currentTank().barrelAngle;
+	}
+	
+	public double[] fire(int tick,double freq){
+		//freq is frequency of calls per second: ie freq = 10, 10 ticks per sec
+		double time = tick/freq;
+		
+		vX = vX - wind;
+		intX = (double) intX + vX * (double) time;
+		intY = (double) intY + vY * (double) time + 0.5 * g *-1* Math.pow(time, 2);
+		points[0] = intX;
+		points[1] = intY;
+		return points;
+	}
+
+}

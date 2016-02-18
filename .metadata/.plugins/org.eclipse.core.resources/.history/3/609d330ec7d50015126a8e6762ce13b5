@@ -1,0 +1,18 @@
+package physics;
+
+public class Wind {
+	protected double windSpeed;
+
+
+
+	protected Wind (double speed){
+		windSpeed = speed;
+	}
+	public double getWindSpeed() {
+		return windSpeed;
+	}
+
+	public void setWindSpeed (double speed){
+		windSpeed = speed;
+	}
+}

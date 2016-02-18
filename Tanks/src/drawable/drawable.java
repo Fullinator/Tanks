@@ -2,6 +2,9 @@ package drawable;
 
 import java.awt.image.BufferedImage;
 
+import physics.Projectile;
+import physics.Wind;
+
 /**
  * 
  * @author Joel Cherney
@@ -20,7 +23,9 @@ public abstract class drawable {
 	private int moved = 0;
 	private int health = 10;
 	public int v0 = 15;
-	
+	public Wind wind = new Wind();
+	public Projectile shell = new Projectile();
+
 	/**
 	 * figure out which player the drawable is for
 	 */

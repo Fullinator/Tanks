@@ -1,0 +1,52 @@
+package physics;
+
+import java.awt.*;
+
+import drawable.drawable;
+import drawable.standardShell;
+
+import java.math.*;
+
+import terrain.Terrain;
+
+public class Projectile {
+	protected double power;
+	protected int intX;
+	protected int intY;
+	protected double g;
+	protected double angle;
+	protected double maxPower;
+	private Terrain terrain;
+	private standardShell std;
+	private double wind;
+
+	public Projectile(standardShell standard, Terrain terr, Wind wind){
+		terrain = terr;
+		std = standard;
+		intX = std.getX();
+		intY= std.getY();
+		g = 10;
+		angle = std.barrelAngle;
+		maxPower = 100;
+		this.wind = wind.getWindSpeed();
+		
+	}
+
+	public double getPower() {
+		return power;
+	}
+
+	public void setPower(double power){
+		this.power = power;
+	}
+	
+	public void setAngle(double ang){
+		angle = ang;
+	}
+	
+	public void setAngle(){
+		angle = terrain.currentTank().barrelAngle;
+	}
+	
+
+}
