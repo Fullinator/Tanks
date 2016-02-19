@@ -1,6 +1,7 @@
 package terrain;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -62,6 +63,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		setXTerrain(x);
 		setYTerrain(y);
 		maxHuman = maxH;
+		maxPlayers = maxHuman; //ADD THE AI PLAYERS TO THIS LATER
 		generate();
 		fill();// calls a method that fills in the points underneath the cubic
 		createTanks(maxHuman, names);
@@ -440,12 +442,16 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		//Change the status bar to the information
 		//of the current player
 		power.setText("" + currentTank().getLaunchPower());
-		
+		playerName.setText(currentTank().getName());
 	}
 	
 	protected void createTopMenu() {
 		setLayout(new MigLayout("", "["+ ((getXTerrain() - 500)/2) +"][29][29][29][26][26][26]["+ ((getXTerrain() - 500)/2) +"]", "[35][35]"));
 
+		playerName = new JLabel();
+		playerName.setText(currentTank().getName());
+		playerName.setFont(new Font("Arial", Font.PLAIN, 35));
+		add(playerName, "cell 0 0");
 		
 		RightButton angleUp = new RightButton("", this);
 		this.add(angleUp, "cell 4 0");
@@ -499,6 +505,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			System.out.println("fire");
 			Main.Main.sound.loadSound("sounds/Shot1.wav");
 			Main.Main.sound.run();
+			
+			nextPlayerTurn();
 		}
 		/*for ( int i = 0; i < players.size(); i++) {
 			if (i == currentPlayer && (drawable.get(i) instanceof manualTank || drawable.get(i) instanceof AITank)) {// PLAYER NUMBER HERE FOR THE EVENTUAL TURNS
