@@ -14,11 +14,16 @@ import javax.swing.JPanel;
 
 import Jama.Matrix;
 import Main.Ticker;
+import buttons.DownButton;
+import buttons.LeftButton;
+import buttons.RightButton;
+import buttons.UpButton;
 import drawable.AITank;
 import drawable.Clouds;
 import drawable.drawable;
 import drawable.manualTank;
 import drawable.standardShell;
+import net.miginfocom.swing.MigLayout;
 import drawable.Drawable2;
 import drawable.Tank;
 import drawable.UserTank;
@@ -61,6 +66,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		fill();// calls a method that fills in the points underneath the cubic
 		createTanks(maxHuman, names);
 		createClouds(2);
+		createTopMenu();
 		paintLock = false;
 		Ticker.addMethod(this::render);
 	}
@@ -436,12 +442,35 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		power.setText("" + currentTank().getLaunchPower());
 		
 	}
+	
+	protected void createTopMenu() {
+		setLayout(new MigLayout("", "["+ ((getXTerrain() - 500)/2) +"][29][29][29][26][26][26]["+ ((getXTerrain() - 500)/2) +"]", "[35][35]"));
+
+		
+		RightButton angleUp = new RightButton("", this);
+		this.add(angleUp, "cell 4 0");
+		LeftButton angleDown = new LeftButton("",this);
+		this.add(angleDown, "cell 2 0");
+		angle = new JLabel("0.0");
+		this.add(angle, "cell 3 0");
+
+		UpButton powerUp = new UpButton("", this);
+		this.add(powerUp, "cell 5 0");
+		DownButton powerDown = new DownButton("", this);
+		this.add(powerDown, "cell 7 0");
+		power = new JLabel("" + currentTank().getLaunchPower());
+		this.add(power, "cell 6 0");
+	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (downKeys.contains((long) e.getKeyCode())) return;
 		else downKeys.add((long) e.getKeyCode());
 
+		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+			System.out.println("Escape pressed");
+		}
+		
 		//draws all of the drawables in the drawable array
 		Tank t = players.get(currentPlayer - 1);
 
@@ -525,7 +554,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// Unused
 
 	}
 	
