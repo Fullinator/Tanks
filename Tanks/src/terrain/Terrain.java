@@ -45,7 +45,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
     Color secondary;
     protected ArrayList<Drawable2> drawable;
 	protected ArrayList<Tank> players;
-	protected java.util.List<Long> downKeys = new ArrayList<>();;
+	protected java.util.List<Long> downKeys = new ArrayList<>();
+	private boolean paintLock;
 	
 	/**
 	 *
@@ -60,11 +61,16 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		fill();// calls a method that fills in the points underneath the cubic
 		createTanks(maxHuman);
 		createClouds(2);
+		paintLock = false;
 		Ticker.addMethod(this::render);
 	}
 
 	private void render(long elapsedNanos) {
-		repaint();
+		if (!paintLock) {
+			paintLock = true;
+			repaint();
+			paintLock = false;
+		}
 	}
 	
 	public Tank currentTank() {
