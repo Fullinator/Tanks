@@ -276,6 +276,9 @@ public class StartMenu extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		names = new String[currentNumberofPlayers];
 		
+		for (int i = 0; i < currentNumberofPlayers; i++) {
+			names[i] = nameFields[i].getText();
+		}
 		
 		if (comboBox.getSelectedItem().equals("Sand")) {
 			Main.manualTanks = Integer.parseInt((String) humanSelect.getSelectedItem());;
