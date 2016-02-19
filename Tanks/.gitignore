@@ -3,3 +3,8 @@
 /.metadata
 /bin/*
 *.DS_Store
+*.jar
+*.project
+.DS_Store
+*.classpath
+*.zip
