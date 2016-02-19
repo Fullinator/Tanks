@@ -4,6 +4,8 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+
+import Main.Ticker;
 import terrain.Terrain;
 
 /**
@@ -12,9 +14,9 @@ import terrain.Terrain;
  * @author Joel Cherney
  *
  */
-public class Clouds implements Drawable2, Runnable{
+public class Clouds implements Drawable2 {
 
-	private int x = 1;
+	private double x = 0;
 	private int y = 30;
 	private Thread t;
 	private Terrain terrain;
@@ -22,6 +24,8 @@ public class Clouds implements Drawable2, Runnable{
 	private int xLength;
 	private int start;
 	private BufferedImage cloud;
+	private double rate;
+	private int offset;
 
 	/**
 	 * This is the constructor for clouds
@@ -37,8 +41,12 @@ public class Clouds implements Drawable2, Runnable{
 		yHeight = y1;
 		collectCloud();
 		start = startingPosition;
-		t = new Thread(this, "Cloud Thread");
-		t.start(); // Start the thread
+
+		y = (int) (Math.random() * (yHeight / 4)) + 50;
+		rate = Math.random() * 25 + 20;
+		offset = (int) (Math.random() * 200);
+
+		Ticker.addMethod(this::moveCloud);
 	}//end of constructor
 
 	/**
@@ -64,7 +72,7 @@ public class Clouds implements Drawable2, Runnable{
 	 * gets the x position of the cloud
 	 */
 	public int getX() {
-		return x;
+		return (int) x;
 
 	}//end of getX method
 
@@ -78,7 +86,6 @@ public class Clouds implements Drawable2, Runnable{
 	/**
 	 * makes the cloud move across the screen
 	 */
-	@Override
 	public void run() {
 		while(true) {
 			x = start;
@@ -129,6 +136,15 @@ public class Clouds implements Drawable2, Runnable{
 			}
 		}
 	}//end of run method
+
+	private void moveCloud(long elapsedNanos) {
+		if (x > xLength + offset) {
+			x = -cloud.getWidth();
+			y = (int) (Math.random() * (yHeight / 4)) + 50;
+			offset = (int) (Math.random() * 200);
+		}
+		else x += rate * ((double) elapsedNanos / 1000000000.0);
+	}
 
 	@Override
 	public Point getLocation() {
