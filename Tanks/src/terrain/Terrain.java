@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import Jama.Matrix;
+import Main.Ticker;
 import drawable.AITank;
 import drawable.Clouds;
 import drawable.drawable;
@@ -45,6 +46,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
     protected ArrayList<Drawable2> drawable;
 	protected ArrayList<Tank> players;
 	protected java.util.List<Long> downKeys = new ArrayList<>();
+	private boolean paintLock;
 	
 	/**
 	 *
@@ -59,6 +61,16 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		fill();// calls a method that fills in the points underneath the cubic
 		createTanks(maxHuman, names);
 		createClouds(2);
+		paintLock = false;
+		Ticker.addMethod(this::render);
+	}
+
+	private void render(long elapsedNanos) {
+		if (!paintLock) {
+			paintLock = true;
+			repaint();
+			paintLock = false;
+		}
 	}
 	
 	public Tank currentTank() {
@@ -487,7 +499,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				}
 			}
 		}*/
-		repaint();
 	}//end of keyPressed method
 
 
