@@ -12,15 +12,13 @@ public class Snow extends Terrain {
 	public Snow(int x, int y, int maxH) {
 		super(x, y, maxH);
 		
-		primary = new Color(0xe3bb1d);
-		secondary = new Color(0xe7db8e);
-		
-		generate();
+		primary = new Color(0xFFFFFF);
+		secondary = new Color(0xf2f2f2);
 	}
 
 	@Override
 	public void paintComponent(Graphics g) {
-		// TODO Auto-generated method stub
+		super.paintComponent(g);
 		
 	}
 

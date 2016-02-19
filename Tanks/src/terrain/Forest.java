@@ -6,9 +6,9 @@ import java.util.ArrayList;
 
 import drawable.drawable;
 
-public class Forrest extends Terrain {
+public class Forest extends Terrain {
 
-	public Forrest(int x, int y, int maxH) {
+	public Forest(int x, int y, int maxH) {
 		super(x, y, maxH);
 		// TODO Auto-generated constructor stub
 	}

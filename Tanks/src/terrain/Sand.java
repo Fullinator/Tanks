@@ -61,6 +61,7 @@ public class Sand extends Terrain implements KeyListener{
 	 * Stress Level Zero would like to thank them for their hard work and providing JAMA for open use
 	 * JAMA: http://math.nist.gov/javanumerics/jama/
 	 */
+	/*
 	@Override
 	protected void generate() {
 		terrain = new int[getXTerrain()][getYTerrain()];// holds the elements of the terrain to be drawn
@@ -186,11 +187,12 @@ public class Sand extends Terrain implements KeyListener{
 		//drawable.add(cloudOne);
 		//drawable.add(cloudTwo);
 	}//End of Generate
-
+	*/
 
 	/**
 	 *  Fills the area underneath the line
 	 */
+	/*
 	@Override
 	protected void fill() {
 		for(int i = 0; i < terrain.length; i += 1){
@@ -218,15 +220,15 @@ public class Sand extends Terrain implements KeyListener{
 			x++;
 		}
 	}// End of fill()
-
+*/
 	/**
 	 * Paint Component. This handles all of the painting for the game part of Tanks
 	 */
 	@Override
 	public void paintComponent(Graphics g) {
-		Graphics2D g2d=(Graphics2D)g;
+		//Graphics2D g2d=(Graphics2D)g;
 		super.paintComponent(g);// prevents older objects from staying on the screen
-
+/*
 		g2d.setColor(new Color(0x21a1cb));// The skies color
 		g2d.fillRect(0, 0, getXTerrain(), getYTerrain());// fills the entire background with the sky       
 
@@ -272,7 +274,7 @@ public class Sand extends Terrain implements KeyListener{
 
 		g2d.setColor(new Color(0xdfdfdf));
 		g2d.fillRect(0, 0, getXTerrain(), 70);// draws the top menu bar
-
+*/
 	}// End of Paint Component
 
 
@@ -281,6 +283,7 @@ public class Sand extends Terrain implements KeyListener{
 	 * @param x the x coordinate to check for the y coordinate
 	 * @return returns the y coordinate of the terrain or -1 if one cannot be found
 	 */
+	/*
 	@Override
 	public int findY(int x) {
 		if(x > 0 && x < xPanel){
@@ -292,7 +295,7 @@ public class Sand extends Terrain implements KeyListener{
 		}
 		return (int)(a + b * x + c * Math.pow(x, 2) + d * Math.pow(x, 3));
 	}//end of findY method
-
+*/
 //	@Override
 //	public void keyPressed(KeyEvent e) {
 //		//draws all of the drawables in the drawable array

@@ -1,5 +1,6 @@
 package drawable;
 
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -11,7 +12,7 @@ import terrain.Terrain;
  * @author Joel Cherney
  *
  */
-public class Clouds extends drawable implements Runnable{
+public class Clouds implements Drawable2, Runnable{
 
 	private int x = 1;
 	private int y = 30;
@@ -128,6 +129,12 @@ public class Clouds extends drawable implements Runnable{
 			}
 		}
 	}//end of run method
+
+	@Override
+	public Point getLocation() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }//end of Clouds class
 

@@ -331,7 +331,7 @@ public class StartMenu extends JPanel implements ActionListener {
 		}else if (comboBox.getSelectedItem().equals("Snow")) {
 			Main.manualTanks = Integer.parseInt((String) humanSelect.getSelectedItem());;
 			Main.startSnow();
-		} else if (comboBox.getSelectedItem().equals("Forrest")) {
+		} else if (comboBox.getSelectedItem().equals("Forest")) {
 			Main.manualTanks = Integer.parseInt((String) humanSelect.getSelectedItem());;
 			Main.startForrest();
 		}
