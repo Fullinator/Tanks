@@ -24,12 +24,6 @@ public class Snow extends Terrain {
 	}
 
 	@Override
-	public void setDrawable(ArrayList<drawable> drawable) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public int findY(int x) {
 		// TODO Auto-generated method stub
 		return 0;

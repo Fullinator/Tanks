@@ -55,9 +55,9 @@ public class UpButton extends JButton implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		try {
 			this.setFocusable(false);
-			if ( terrain.currentTank().v0 < 80) {
-				terrain.currentTank().v0 += 1;
-				terrain.power.setText("" + terrain.currentTank().v0);
+			if ( terrain.currentTank().getLaunchPower() < 80) {
+				terrain.currentTank().adjustLaunchPower(1);
+				terrain.power.setText("" + terrain.currentTank().getLaunchPower());
 				terrain.requestFocusInWindow();
 			}
 		}

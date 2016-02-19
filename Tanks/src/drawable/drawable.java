@@ -25,7 +25,7 @@ public abstract class drawable {
 	public int v0 = 15;
 	public Wind wind = new Wind();
 	public Projectile shell = new Projectile();
-
+	
 	/**
 	 * figure out which player the drawable is for
 	 */
