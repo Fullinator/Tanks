@@ -32,7 +32,6 @@ public class Snow extends Terrain {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 

@@ -1,5 +1,6 @@
 package drawable;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -14,7 +15,7 @@ import terrain.Terrain;
  * @author Joel Cherney
  *
  */
-public class standardShell extends drawable implements Runnable {
+public class standardShell extends Projectile implements Runnable {
 
 	private Thread t;
 	private int[][] terrain;
@@ -26,7 +27,7 @@ public class standardShell extends drawable implements Runnable {
 	private int x0;
 	private double angle;
 	private Terrain painter;
-	private ArrayList<drawable> drawable;
+	private ArrayList<Drawable2> drawable;
 	sounds sound = new sounds();
 
 	/**
@@ -41,7 +42,7 @@ public class standardShell extends drawable implements Runnable {
 	 * @param angle Angle that the shell is going at
 	 * @param drawable Array list that objects are drawn from
 	 */
-	public standardShell(Terrain painter, int[][] landscape, int frameX, int frameY, int x0, int y0, double angle, ArrayList<drawable> drawable, int power) {
+	public standardShell(Terrain painter, int[][] landscape, int frameX, int frameY, int x0, int y0, double angle, ArrayList<Drawable2> drawable, int power) {
 		terrain = landscape;
 		this.frameX = frameX;
 		this.frameY = frameY;
@@ -52,7 +53,7 @@ public class standardShell extends drawable implements Runnable {
 		this.drawable = drawable;
 		t = new Thread(this, "standard shell thread");
 		t.start(); // Start the thread
-		v0 = power;
+//		v0 = power;
 	}
 	
 	
@@ -63,36 +64,37 @@ public class standardShell extends drawable implements Runnable {
 		final int a = 1;
 		
 		//calculate x and y position of shell
-		while ( x < frameX && x >= 0 && y < frameY && y >= 0 && !(terrain[(int) x][(int) y] > 0)) {
-			x = (double) x0 + (double) v0 * Math.cos(angle) * (double) time;
-			y = (double) y0 + (double) v0 * Math.sin(angle) * (double) time + 0.5 * a * Math.pow(time, 2);
-			painter.repaint();
-			
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
-			time += .1;
-		}
+//		while ( x < frameX && x >= 0 && y < frameY && y >= 0 && !(terrain[(int) x][(int) y] > 0)) {
+//			x = (double) x0 + (double) v0 * Math.cos(angle) * (double) time;
+//			y = (double) y0 + (double) v0 * Math.sin(angle) * (double) time + 0.5 * a * Math.pow(time, 2);
+//			painter.repaint();
+//
+//			try {
+//				Thread.sleep(10);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//
+//			time += .1;
+//		}
 		
 		//THIS COMMENTED SECTION SHOULD NOW BE HANDLED IN
 		//TERRAIN FROM THE DAMAGE METHOD
 		/*
 		//damage any tanks if necessary
 		for(int k = 0; k < drawable.size(); k += 1){
-			if(drawable.get(k) instanceof manualTank || drawable.get(k) instanceof AITank){
+			if(drawable.get(k) instanceof Tank){
+				Tank t = (Tank) drawable.get(k);
 				if(Math.abs((drawable.get(k).getX() + 19) - getX()) <= 19){
-					drawable.get(k).setHealth(drawable.get(k).getHealth() - 3);
-					if(drawable.get(k).getHealth() <= 0){
+					t.setHealth(t.getHealth() - 3);
+					if(t.getHealth() <= 0){
 						drawable.remove(k);
 						k -= 1;
 					}
 				}
 				else if(Math.abs((drawable.get(k).getX() + 19) - getX()) <= 39){
-					drawable.get(k).setHealth(drawable.get(k).getHealth() - 1);
-					if(drawable.get(k).getHealth() <= 0){
+					t.setHealth(t.getHealth() - 1);
+					if(t.getHealth() <= 0){
 						drawable.remove(k);
 						k -= 1;
 					}
@@ -106,6 +108,7 @@ public class standardShell extends drawable implements Runnable {
 			sound.run();
 			painter.damage((int) x, (int)y, 25);
 		}
+
 		
 		//remove the shell from the drawable array when it finishes
 		for (int i = 0; i < drawable.size(); i++) {
@@ -118,6 +121,11 @@ public class standardShell extends drawable implements Runnable {
 		painter.setDrawable(drawable);
 		painter.repaint();
 	}//end of run method
+
+	@Override
+	public Point getLocation() {
+		return null;
+	}
 
 	@Override
 	public int getX() {

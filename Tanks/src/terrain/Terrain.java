@@ -14,6 +14,8 @@ import drawable.AITank;
 import drawable.Clouds;
 import drawable.drawable;
 import drawable.manualTank;
+import drawable.Drawable2;
+import drawable.Tank;
 
 
 @SuppressWarnings("serial")
@@ -32,10 +34,11 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	public JLabel angle;
 	public JLabel power;
 	public JLabel playerName;
-    protected ArrayList<drawable> drawable;
+    //protected ArrayList<drawable> drawable;
     Color primary;
     Color secondary;
-
+    protected ArrayList<Drawable2> drawable;
+	protected ArrayList<Tank> players;
 	
 	/**
 	 *
@@ -69,8 +72,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		return terrain;
 	}
 
-	public void setDrawable(ArrayList<drawable> drawable) {
-		this.drawable = drawable;	
+	public void setDrawable(ArrayList<Drawable2> drawable) {
+		this.drawable = drawable;
 	}
 
 	public int findY(int x){
@@ -231,7 +234,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 	
 	protected void createTanks(int numberOfTanks) {
-		drawable =  new ArrayList<drawable>();
+		drawable =  new ArrayList<Drawable2>();
 		Clouds cloudOne = new Clouds(this, getXTerrain(), getYTerrain(), getXTerrain() - (getXTerrain() + 1));
 		Clouds cloudTwo = new Clouds(this, getXTerrain(), getYTerrain(), getXTerrain() - 1);;
 		if (maxHuman == 1) {
@@ -310,6 +313,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 *
 	 */
 	public void damage(int x, int y, int mag){
+		
 		//create the hole
 		for(int i = y + mag; i > y - mag; i -= 1){
 			int low = (int)(-Math.sqrt(Math.pow(mag, 2) - Math.pow(i - y, 2)) + x);// Finds the lower x coordinate for the given y coordinate
