@@ -51,7 +51,6 @@ public class Sand extends Terrain implements KeyListener{
 		
 		primary = new Color(0xe3bb1d);
 		secondary = new Color(0xe7db8e);
-		downKeys = new ArrayList<>();
 	}// End of Sand constructor
 
 }

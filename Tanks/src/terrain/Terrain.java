@@ -44,7 +44,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
     Color secondary;
     protected ArrayList<Drawable2> drawable;
 	protected ArrayList<Tank> players;
-	protected java.util.List<Long> downKeys;
+	protected java.util.List<Long> downKeys = new ArrayList<>();;
 	
 	/**
 	 *
