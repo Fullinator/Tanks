@@ -30,8 +30,8 @@ public class Sand extends Terrain implements KeyListener{
 	 * @param x The length of the panel
 	 * @param y The height of the panel
 	 */
-	public Sand(int x, int y, int maxH) {
-		super(x, y, maxH);
+	public Sand(int x, int y, int maxH, String[] names) {
+		super(x, y, maxH, names);
 		setLayout(new MigLayout("", "["+ ((getXTerrain() - 500)/2) +"][29][29][29][26][26][26]["+ ((getXTerrain() - 500)/2) +"]", "[35][35]"));
 
 		

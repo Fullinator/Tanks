@@ -8,8 +8,8 @@ import drawable.drawable;
 
 public class Forest extends Terrain {
 
-	public Forest(int x, int y, int maxH) {
-		super(x, y, maxH);
+	public Forest(int x, int y, int maxH, String[] names) {
+		super(x, y, maxH, names);
 		// TODO Auto-generated constructor stub
 	}
 

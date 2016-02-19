@@ -44,20 +44,20 @@ public abstract class Terrain extends JPanel implements KeyListener{
     Color secondary;
     protected ArrayList<Drawable2> drawable;
 	protected ArrayList<Tank> players;
-	protected java.util.List<Long> downKeys = new ArrayList<>();;
+	protected java.util.List<Long> downKeys = new ArrayList<>();
 	
 	/**
 	 *
 	 * @param x width of JPanel
 	 * @param y height of JPanel
 	 */
-	protected Terrain(int x, int y, int maxH) {
+	protected Terrain(int x, int y, int maxH, String[] names) {
 		setXTerrain(x);
 		setYTerrain(y);
 		maxHuman = maxH;
 		generate();
 		fill();// calls a method that fills in the points underneath the cubic
-		createTanks(maxHuman);
+		createTanks(maxHuman, names);
 		createClouds(2);
 	}
 	
@@ -252,12 +252,13 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		}
 	}
 	
- 	protected void createTanks(int numberOfTanks) {
+ 	protected void createTanks(int numberOfTanks, String[] names) {
 		players  = new ArrayList<Tank>();
 		drawable = new ArrayList<Drawable2>();
 
 		for (int i = 0; i < maxHuman; i++) {
 			Tank t = new UserTank();
+			t.setName(names[i]);
 			drawable.add(t);
 			players.add(t);
 		}
