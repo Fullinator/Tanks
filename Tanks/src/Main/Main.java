@@ -7,7 +7,7 @@ import javax.swing.*;
 import net.miginfocom.swing.MigLayout;
 
 import drawable.Clouds;
-import terrain.Sand;
+import terrain.*;
 
 
 public class Main extends JFrame {
@@ -17,7 +17,7 @@ public class Main extends JFrame {
 	public static int manualTanks = -1;
 	public static int AITanks = 0;
 	
-	private static Sand sand;// = new Sand(1000,700);
+	private static Terrain map;// = new Sand(1000,700);
 	private static JFrame frame = new JFrame();
 	private static MainMenu menu;
 	private static HelpMenu help;
@@ -103,15 +103,35 @@ public class Main extends JFrame {
 	
 	public static void startSand() {
 		frame.getContentPane().removeAll();
-		sand = new Sand(xLength, yLength, manualTanks);
-		frame.add(sand);
-		sand.setFocusable(true);
-		sand.requestFocusInWindow();
+		map = new Sand(xLength, yLength, manualTanks);
+		frame.add(map);
+		map.setFocusable(true);
+		map.requestFocusInWindow();
 		frame.setVisible(true);
 		frame.revalidate();
-		
-	//	System.out.println(manualTanks);
-		
+			
+	}
+	
+	public static void startSnow() {
+		frame.getContentPane().removeAll();
+		map = new Snow(xLength, yLength, manualTanks);
+		frame.add(map);
+		map.setFocusable(true);
+		map.requestFocusInWindow();
+		frame.setVisible(true);
+		frame.revalidate();
+			
+	}
+	
+	public static void startForrest() {
+		frame.getContentPane().removeAll();
+		map = new Forrest(xLength, yLength, manualTanks);
+		frame.add(map);
+		map.setFocusable(true);
+		map.requestFocusInWindow();
+		frame.setVisible(true);
+		frame.revalidate();
+			
 	}
 	
 	public static void exitGame() {

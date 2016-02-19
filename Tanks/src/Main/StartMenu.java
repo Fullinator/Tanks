@@ -325,31 +325,16 @@ public class StartMenu extends JPanel implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-
-		
-		if (comboBox.getSelectedItem().equals("Select") && comboBox.getSelectedItem().equals("Select")) {
-			//Do something to warn the user that they have to actually select something
-		}
-
-		
-		
-		//		if (comboBox_2.getSelectedItem().equals("select")) {
-		//			
-		//		}
-		if (comboBox.getSelectedItem().equals("Sand") && humanSelect.getSelectedItem().equals("Select") == false ) {
-			if (humanSelect.getSelectedItem().equals("1")) {
-				Main.manualTanks = 1;
-			}
-			if (humanSelect.getSelectedItem().equals("2")) {
-				Main.manualTanks = 2;
-			}
-			if (humanSelect.getSelectedItem().equals("3")) {
-				Main.manualTanks = 3;
-			}
+		if (comboBox.getSelectedItem().equals("Sand")) {
+			Main.manualTanks = Integer.parseInt((String) humanSelect.getSelectedItem());;
 			Main.startSand();
+		}else if (comboBox.getSelectedItem().equals("Snow")) {
+			Main.manualTanks = Integer.parseInt((String) humanSelect.getSelectedItem());;
+			Main.startSnow();
+		} else if (comboBox.getSelectedItem().equals("Forrest")) {
+			Main.manualTanks = Integer.parseInt((String) humanSelect.getSelectedItem());;
+			Main.startForrest();
 		}
-		//Add the other starts and such in here
-
 	}
 
 }

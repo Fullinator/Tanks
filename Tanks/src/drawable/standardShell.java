@@ -3,6 +3,7 @@ package drawable;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import Main.Main;
 import Main.sounds;
 import terrain.Terrain;
 
@@ -76,14 +77,9 @@ public class standardShell extends drawable implements Runnable {
 			time += .1;
 		}
 		
-		//make it the next player's turn
-		if(-painter.currentPlayer == painter.maxPlayers){
-			painter.currentPlayer = 1;
-		}
-		else{
-			painter.currentPlayer = -painter.currentPlayer + 1;
-		}
-		
+		//THIS COMMENTED SECTION SHOULD NOW BE HANDLED IN
+		//TERRAIN FROM THE DAMAGE METHOD
+		/*
 		//damage any tanks if necessary
 		for(int k = 0; k < drawable.size(); k += 1){
 			if(drawable.get(k) instanceof manualTank || drawable.get(k) instanceof AITank){
@@ -103,16 +99,13 @@ public class standardShell extends drawable implements Runnable {
 				}
 			}
 		}
-		
+		*/
 		//damage the terrain if relevant
 		if ( (int) x >= 0 && (int) x <= frameX ) {
 			sound.loadSound("sounds/TNT.wav");
 			sound.run();
 			painter.damage((int) x, (int)y, 25);
 		}
-		
-		//resets the power to the standard velocity
-		painter.power.setText("" + painter.currentTank().v0);
 		
 		//remove the shell from the drawable array when it finishes
 		for (int i = 0; i < drawable.size(); i++) {

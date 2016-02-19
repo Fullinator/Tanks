@@ -1,20 +1,21 @@
 package terrain;
 
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import drawable.drawable;
 
 public class Snow extends Terrain {
 	
-	public Snow(int x, int y) {
-		super(x, y, y);
-	}
-
-	@Override
-	protected void fill() {
-		// TODO Auto-generated method stub
+	public Snow(int x, int y, int maxH) {
+		super(x, y, maxH);
 		
+		primary = new Color(0xe3bb1d);
+		secondary = new Color(0xe7db8e);
+		
+		generate();
 	}
 
 	@Override
@@ -24,19 +25,19 @@ public class Snow extends Terrain {
 	}
 
 	@Override
-	public void setDrawable(ArrayList<drawable> drawable) {
+	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public int findY(int x) {
+	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
-		return 0;
+		
 	}
 
 	@Override
-	protected void generate() {
+	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
 		
 	}

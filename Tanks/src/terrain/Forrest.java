@@ -1,14 +1,15 @@
 package terrain;
 
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import drawable.drawable;
 
 public class Forrest extends Terrain {
 
-	protected Forrest(int x, int y) {
-		super(x, y, y);
+	public Forrest(int x, int y, int maxH) {
+		super(x, y, maxH);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -42,6 +43,27 @@ public class Forrest extends Terrain {
 
 	@Override
 	protected void generate() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
 		
 	}

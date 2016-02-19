@@ -37,6 +37,8 @@ public class Sand extends Terrain implements KeyListener{
 	public Sand(int x, int y, int maxH) {
 		super(x, y, maxH);
 		setLayout(new MigLayout("", "["+ ((getXTerrain() - 500)/2) +"][29][29][29][26][26][26]["+ ((getXTerrain() - 500)/2) +"]", "[35][35]"));
+
+		
 		RightButton angleUp = new RightButton("", this);
 		this.add(angleUp, "cell 4 0");
 		LeftButton angleDown = new LeftButton("",this);
@@ -50,6 +52,9 @@ public class Sand extends Terrain implements KeyListener{
 		this.add(powerDown, "cell 7 0");
 		power = new JLabel("" + currentTank().v0);
 		this.add(power, "cell 6 0");
+		
+		primary = new Color(0xe3bb1d);
+		secondary = new Color(0xe7db8e);
 	}// End of Sand constructor
 
 	/**
@@ -202,7 +207,7 @@ public class Sand extends Terrain implements KeyListener{
 		drawable.add(cloudOne);
 		drawable.add(cloudTwo);
 	}//End of Generate
-
+	
 	/**
 	 * Allows the drawable array to be set from outside this object. It's used primarily so weapons can be added from outside the object
 	 */
@@ -252,19 +257,15 @@ public class Sand extends Terrain implements KeyListener{
 		super.paintComponent(g);// prevents older objects from staying on the screen
 
 		g2d.setColor(new Color(0x21a1cb));// The skies color
-		g2d.fillRect(0, 0, getXTerrain(), getYTerrain());// fills the entire background with the sky
-
-
-		Color tan = new Color(0xe3bb1d);
-		Color darkTan = new Color(0xe7db8e);       
+		g2d.fillRect(0, 0, getXTerrain(), getYTerrain());// fills the entire background with the sky       
 
 		for (int i = 0; i < getXTerrain() ; i++) {// draws the terrain from the boolean terrain array
 			for (int j = 0; j < getYTerrain(); j++) {
 				if (terrain[i][j] == 1) {
-					g2d.setColor(tan);// The sand color
+					g2d.setColor(primary);// The sand color
 					g.drawRect(i, j, 1, 1);
 				} else if (terrain[i][j] == 2) {
-					g2d.setColor(darkTan);// The sand color
+					g2d.setColor(secondary);// The sand color
 					g.drawRect(i, j, 1, 1);
 				}
 
@@ -378,7 +379,6 @@ public class Sand extends Terrain implements KeyListener{
 				}
 				//fires a shell
 				if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-					currentPlayer = currentPlayer * -1;
 					double theta = Math.PI - drawable.get(i).barrelAngle;				
 					sound.loadSound("sounds/Shot1.wav");
 					sound.run();
@@ -396,6 +396,8 @@ public class Sand extends Terrain implements KeyListener{
 						System.out.println("2");
 					}
 					System.out.println(drawable.get(i).getHealth());
+					
+					nextPlayerTurn();
 					repaint();
 					break;
 				}

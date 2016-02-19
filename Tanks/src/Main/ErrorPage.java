@@ -30,7 +30,7 @@ public class ErrorPage extends JPanel {
 		this.setSize(xLength, yLength);
 		MigLayout layout = new MigLayout("", "[" + xLength + "]", "[20][" + (yLength - 50) + "]"); // Row constraints
 		this.setLayout(layout);
-		JLabel mainLabel = new JLabel("Stress Level Zero would like to apologize for our blunder. Have a look at our mistake:");
+		JLabel mainLabel = new JLabel("Team 2 would like to apologize for our blunder. Have a look at our mistake:");
 		this.add(mainLabel, "cell 0 1, align center");
 
 		// Create Scrolling Text Area in Swing
