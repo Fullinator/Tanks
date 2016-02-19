@@ -3,6 +3,7 @@ package terrain;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
     Color secondary;
     protected ArrayList<Drawable2> drawable;
 	protected ArrayList<Tank> players;
+	protected java.util.List<Long> downKeys;
 	
 	/**
 	 *
@@ -83,6 +85,12 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		this.drawable = drawable;
 	}
 
+	
+	/**
+	 * Returns the y coordinate of the top of the terrain from the boolean terrain array.
+	 * @param x the x coordinate to check for the y coordinate
+	 * @return returns the y coordinate of the terrain or -1 if one cannot be found
+	 */
 	public int findY(int x){
 		if(x > 0 && x < xPanel){
 			for(int i = 0; i < terrain[0].length; i += 1){
@@ -128,7 +136,10 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	
 
 	/**
-	 * Generate random points and uses cubic regression to find the equation of the line
+	 * Generates a random 2D cubic terrain based off of Cubic Regression using JAMA
+	 * All credit remains with JAMA for their hard work.
+	 * Stress Level Zero would like to thank them for their hard work and providing JAMA for open use
+	 * JAMA: http://math.nist.gov/javanumerics/jama/
 	 */
 	protected void generate() {
 		
@@ -284,7 +295,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		}
 	}
 
-
 	/**
 	 * Removes a circle from the boolean terrain array
 	 *
@@ -345,6 +355,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 	/**
 	 * Calls the super paintComponent to paint on the JPanel
+	 * This also handles all standard terrain drawing and drawables drawing.
 	 */
 	public void paintComponent(Graphics g) {
 		Graphics2D g2d=(Graphics2D)g;
@@ -413,4 +424,98 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		
 	}
 
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if (downKeys.contains((long) e.getKeyCode())) return;
+		else downKeys.add((long) e.getKeyCode());
+
+		//draws all of the drawables in the drawable array
+		Tank t = players.get(currentPlayer - 1);
+
+		// move left
+		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+			t.startMotion(true);
+		}
+
+		// move right
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+			t.startMotion(false);
+		}
+
+		// rotate cannon counter clockwise
+		if (e.getKeyCode() == KeyEvent.VK_UP) {
+			t.aimCannon(true);
+		}
+
+		// rotate cannon clockwise
+		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+			t.aimCannon(false);
+		}
+
+		// fire projectile
+		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+			System.out.println("fire");
+			Main.Main.sound.loadSound("sounds/Shot1.wav");
+			Main.Main.sound.run();
+		}
+		/*for ( int i = 0; i < players.size(); i++) {
+			if (i == currentPlayer && (drawable.get(i) instanceof manualTank || drawable.get(i) instanceof AITank)) {// PLAYER NUMBER HERE FOR THE EVENTUAL TURNS
+				//fires a shell
+				if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+					double theta = Math.PI - drawable.get(i).barrelAngle;				
+					sound.loadSound("sounds/Shot1.wav");
+					sound.run();
+					int barrelX = (int)(drawable.get(i).getX() + 20 + 20 * Math.cos(theta));
+					int barrelY = (int)(findY(drawable.get(i).getX()) - 18 - 20 * Math.sin(theta));
+					standardShell shell = new standardShell(this, terrain, getXTerrain(), getYTerrain(), barrelX, barrelY, drawable.get(i).barrelAngle + drawable.get(i).tankAngle+ Math.PI, drawable, drawable.get(i).v0);
+					drawable.add(shell);
+					setDrawable(drawable);
+					if(Math.abs((drawable.get(i).getX() + 19) - shell.getX()) <= 19){
+						drawable.get(i).setHealth(drawable.get(i).getHealth() - 3);
+						System.out.println("1");
+					}
+					else if(Math.abs((drawable.get(i).getX() + 19) - shell.getX()) <= 39){
+						drawable.get(i).setHealth(drawable.get(i).getHealth() - 1);
+						System.out.println("2");
+					}
+					System.out.println(drawable.get(i).getHealth());
+					
+					nextPlayerTurn();
+					repaint();
+					break;
+				}
+			}
+		}*/
+		repaint();
+	}//end of keyPressed method
+
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		downKeys.remove(((long) e.getKeyCode()));
+
+		Tank t = players.get(currentPlayer - 1);
+
+		switch (e.getKeyCode()) {
+			// Stop moving tank when motion key released
+			case KeyEvent.VK_LEFT:
+			case KeyEvent.VK_RIGHT:
+				t.stopMotion();
+				break;
+
+			// Stop adjusting cannon angle when aim key released
+			case KeyEvent.VK_UP:
+			case KeyEvent.VK_DOWN:
+				t.stopAimCannon();
+				break;
+		}
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// Unused
+
+	}
+	
+	
 }// End of abstract Terrain Class
