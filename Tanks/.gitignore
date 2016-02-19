@@ -5,8 +5,7 @@
 *.DS_Store
 *.jar
 *.project
-/.DS_Store
 *.classpath
 *.zip
-Tanks/.settings/org.eclipse.jdt.core.prefs
+/Tanks/.settings/org.eclipse.jdt.core.prefs
 
