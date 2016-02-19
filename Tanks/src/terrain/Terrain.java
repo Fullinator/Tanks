@@ -492,7 +492,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				}
 			}
 		}*/
-		repaint();
 	}//end of keyPressed method
 
 
