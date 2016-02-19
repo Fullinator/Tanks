@@ -114,7 +114,7 @@ public class StartMenu extends JPanel implements ActionListener {
 		
 		for (int i = 0; i < maxPlayer; i++) {
 			nameFields[i] = new JTextField();
-			nameFields[i].setText("Username");
+			nameFields[i].setText("Player " + (i+1));
 			nameFields[i].setColumns(10);
 		}
 		for (int i = 0; i < maxPlayer; i++) {
