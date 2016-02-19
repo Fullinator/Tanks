@@ -2,7 +2,9 @@ package terrain;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.KeyListener;
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -14,6 +16,7 @@ import drawable.AITank;
 import drawable.Clouds;
 import drawable.drawable;
 import drawable.manualTank;
+import drawable.standardShell;
 import drawable.Drawable2;
 import drawable.Tank;
 import drawable.UserTank;
@@ -51,6 +54,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		setYTerrain(y);
 		maxHuman = maxH;
 		generate();
+		fill();// calls a method that fills in the points underneath the cubic
+		createTanks(maxHuman);
+		createClouds(2);
 	}
 	
 	public Tank currentTank() {
@@ -63,7 +69,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 //		assert false; //Execution should never reach this point
 //		return null;
 	}
-	
 
 	/**
 	 * used to get the array of points used to draw the terrain
@@ -88,7 +93,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		}
 		return (int)(a + b * x + c * Math.pow(x, 2) + d * Math.pow(x, 3));	
 	}
-	
 
 	/**
 	 *
@@ -121,7 +125,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	public int getYTerrain() {
 		return yPanel;
 	}
-
 	
 
 	/**
@@ -229,58 +232,28 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			} 
 			x++; 
 		} 
+	}//END OF GENERATE
 
-		fill();// calls a method that fills in the points underneath the cubic
-		createTanks(maxHuman);
+	protected void createClouds(int numberOfClouds) {
+		for (int i = 0; i < numberOfClouds; i++) {
+			Clouds c = new Clouds(this, getXTerrain(), getYTerrain(), getXTerrain() - (getXTerrain() + 1));
+			drawable.add(c);
+		}
 	}
-
 	
-	protected void createTanks(int numberOfTanks) {
-		drawable =  new ArrayList<Drawable2>();
-//		Clouds cloudOne = new Clouds(this, getXTerrain(), getYTerrain(), getXTerrain() - (getXTerrain() + 1));
-//		Clouds cloudTwo = new Clouds(this, getXTerrain(), getYTerrain(), getXTerrain() - 1);;
-//		if (maxHuman == 1) {
-//			manualTank tankOne = new manualTank(this, getXTerrain());
-//			tankOne.setPlayerNumber(1);
-//			drawable.add(tankOne);
-//			//CHANGE THIS FOR AI LATER
-//			maxPlayers = 1;
-//		}
-//		if (maxHuman == 2) {
-//			manualTank tankOne = new manualTank(this, getXTerrain());
-//			manualTank tankTwo = new manualTank(this, getXTerrain());
-//			tankOne.setPlayerNumber(1);
-//			tankTwo.setPlayerNumber(2);
-//			drawable.add(tankOne);
-//			drawable.add(tankTwo);
-//			maxPlayers = 2;
-//		}
-//		if (maxHuman == 3) {
-//			manualTank tankOne = new manualTank(this, getXTerrain());
-//			manualTank tankTwo = new manualTank(this, getXTerrain());
-//			manualTank tankThree = new manualTank(this, getXTerrain());
-//			tankOne.setPlayerNumber(1);
-//			tankTwo.setPlayerNumber(2);
-//			tankThree.setPlayerNumber(3);
-//			drawable.add(tankOne);
-//			drawable.add(tankTwo);
-//			drawable.add(tankThree);
-//			maxPlayers = 3;
-//		}
+ 	protected void createTanks(int numberOfTanks) {
+		players  = new ArrayList<Tank>();
+		drawable = new ArrayList<Drawable2>();
 
 		for (int i = 0; i < maxHuman; i++) {
 			Tank t = new UserTank();
 			drawable.add(t);
 			players.add(t);
 		}
-
-
 		setFocusTraversalKeysEnabled(false);
 		addKeyListener(this);
-
-//		drawable.add(cloudOne);
-//		drawable.add(cloudTwo);
 	}
+ 	
 	/**
 	 * fills the space underneath the cubic
 	 */
@@ -374,8 +347,54 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 * Calls the super paintComponent to paint on the JPanel
 	 */
 	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
+		Graphics2D g2d=(Graphics2D)g;
+		super.paintComponent(g);// prevents older objects from staying on the screen
 
+		g2d.setColor(new Color(0x21a1cb));// The skies color
+		g2d.fillRect(0, 0, getXTerrain(), getYTerrain());// fills the entire background with the sky       
+
+		for (int i = 0; i < getXTerrain() ; i++) {// draws the terrain from the boolean terrain array
+			for (int j = 0; j < getYTerrain(); j++) {
+				if (terrain[i][j] == 1) {
+					g2d.setColor(primary);// The sand color
+					g.drawRect(i, j, 1, 1);
+				} else if (terrain[i][j] == 2) {
+					g2d.setColor(secondary);// The sand color
+					g.drawRect(i, j, 1, 1);
+				}
+
+
+			}
+		}
+
+		AffineTransform old = g2d.getTransform();// Saves a copy of the old transform so the rotation can be reset later
+
+		for (int i = 0; i < drawable.size(); i++) {// draws the clouds and tanks and eventually trees and whatever else needs to be drawn
+
+			if (drawable.get(i) instanceof Tank) {// draws player controlled tanks
+				g2d.rotate(((Tank)drawable.get(i)).angle(drawable.get(i).getX() + 20, terrain), drawable.get(i).getX(), findY(drawable.get(i).getX()));// this takes a radian. It has to be a very small radian
+				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), findY(drawable.get(i).getX()) - 18, null);
+
+				//draws the barrel on the tank
+				g2d.setColor(Color.BLACK);
+				g2d.rotate(((Tank)drawable.get(i)).getBarrelAngle(), drawable.get(i).getX() + 20, findY(drawable.get(i).getX()) - 15 );
+				g2d.fillRect(drawable.get(i).getX(), findY(drawable.get(i).getX()) - 17, 20, 4);
+			}
+
+			if (drawable.get(i) instanceof standardShell) {// draws the missile
+				g2d.fillOval(drawable.get(i).getX(), drawable.get(i).getY(), 5, 5);
+			}
+
+			g2d.setTransform(old);// resets the rotation back to how it was before the painting began
+
+			if (drawable.get(i) instanceof Clouds) {// draws clouds
+				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY(), null);
+			}
+
+		}// End of loop to draw objects
+
+		g2d.setColor(new Color(0xdfdfdf));
+		g2d.fillRect(0, 0, getXTerrain(), 70);// draws the top menu bar
 	}//end of paintComponent method
 	
 	/**

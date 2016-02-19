@@ -132,7 +132,7 @@ public class Main extends JFrame {
 	
 	public static void startForrest() {
 		frame.getContentPane().removeAll();
-		map = new Forrest(xLength, yLength, manualTanks);
+		map = new Forest(xLength, yLength, manualTanks);
 		frame.add(map);
 		map.setFocusable(true);
 		map.requestFocusInWindow();
