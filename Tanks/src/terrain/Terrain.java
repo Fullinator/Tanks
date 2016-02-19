@@ -16,6 +16,7 @@ import drawable.drawable;
 import drawable.manualTank;
 import drawable.Drawable2;
 import drawable.Tank;
+import drawable.UserTank;
 
 
 @SuppressWarnings("serial")
@@ -52,14 +53,15 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		generate();
 	}
 	
-	public drawable currentTank() {
-		for ( int i = 0; i < drawable.size(); i++) {
-			if (drawable.get(i).playerNumber() == currentPlayer) {
-				return drawable.get(i);
-			}
-		}
-		assert false; //Execution should never reach this point
-		return null;
+	public Tank currentTank() {
+		return players.get(currentPlayer - 1);
+//		for ( int i = 0; i < drawable.size(); i++) {
+//			if (drawable.get(i).playerNumber() == currentPlayer) {
+//				return drawable.get(i);
+//			}
+//		}
+//		assert false; //Execution should never reach this point
+//		return null;
 	}
 	
 
@@ -235,43 +237,49 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	
 	protected void createTanks(int numberOfTanks) {
 		drawable =  new ArrayList<Drawable2>();
-		Clouds cloudOne = new Clouds(this, getXTerrain(), getYTerrain(), getXTerrain() - (getXTerrain() + 1));
-		Clouds cloudTwo = new Clouds(this, getXTerrain(), getYTerrain(), getXTerrain() - 1);;
-		if (maxHuman == 1) {
-			manualTank tankOne = new manualTank(this, getXTerrain());
-			tankOne.setPlayerNumber(1);
-			drawable.add(tankOne);
-			//CHANGE THIS FOR AI LATER
-			maxPlayers = 1;
-		}
-		if (maxHuman == 2) {
-			manualTank tankOne = new manualTank(this, getXTerrain());
-			manualTank tankTwo = new manualTank(this, getXTerrain());
-			tankOne.setPlayerNumber(1);
-			tankTwo.setPlayerNumber(2);
-			drawable.add(tankOne);
-			drawable.add(tankTwo);
-			maxPlayers = 2;
-		}
-		if (maxHuman == 3) {
-			manualTank tankOne = new manualTank(this, getXTerrain());
-			manualTank tankTwo = new manualTank(this, getXTerrain());
-			manualTank tankThree = new manualTank(this, getXTerrain());
-			tankOne.setPlayerNumber(1);
-			tankTwo.setPlayerNumber(2);
-			tankThree.setPlayerNumber(3);
-			drawable.add(tankOne);
-			drawable.add(tankTwo);
-			drawable.add(tankThree);
-			maxPlayers = 3;
+//		Clouds cloudOne = new Clouds(this, getXTerrain(), getYTerrain(), getXTerrain() - (getXTerrain() + 1));
+//		Clouds cloudTwo = new Clouds(this, getXTerrain(), getYTerrain(), getXTerrain() - 1);;
+//		if (maxHuman == 1) {
+//			manualTank tankOne = new manualTank(this, getXTerrain());
+//			tankOne.setPlayerNumber(1);
+//			drawable.add(tankOne);
+//			//CHANGE THIS FOR AI LATER
+//			maxPlayers = 1;
+//		}
+//		if (maxHuman == 2) {
+//			manualTank tankOne = new manualTank(this, getXTerrain());
+//			manualTank tankTwo = new manualTank(this, getXTerrain());
+//			tankOne.setPlayerNumber(1);
+//			tankTwo.setPlayerNumber(2);
+//			drawable.add(tankOne);
+//			drawable.add(tankTwo);
+//			maxPlayers = 2;
+//		}
+//		if (maxHuman == 3) {
+//			manualTank tankOne = new manualTank(this, getXTerrain());
+//			manualTank tankTwo = new manualTank(this, getXTerrain());
+//			manualTank tankThree = new manualTank(this, getXTerrain());
+//			tankOne.setPlayerNumber(1);
+//			tankTwo.setPlayerNumber(2);
+//			tankThree.setPlayerNumber(3);
+//			drawable.add(tankOne);
+//			drawable.add(tankTwo);
+//			drawable.add(tankThree);
+//			maxPlayers = 3;
+//		}
+
+		for (int i = 0; i < maxHuman; i++) {
+			Tank t = new UserTank();
+			drawable.add(t);
+			players.add(t);
 		}
 
 
 		setFocusTraversalKeysEnabled(false);
 		addKeyListener(this);
 
-		drawable.add(cloudOne);
-		drawable.add(cloudTwo);
+//		drawable.add(cloudOne);
+//		drawable.add(cloudTwo);
 	}
 	/**
 	 * fills the space underneath the cubic
@@ -344,15 +352,15 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				for(int k = 0; k < drawable.size(); k++){
 					if(drawable.get(k) instanceof manualTank || drawable.get(k) instanceof AITank){
 						if(Math.abs((drawable.get(k).getX() + 19) - getX()) <= 19){
-							drawable.get(k).setHealth(drawable.get(k).getHealth() - 3);
-							if(drawable.get(k).getHealth() <= 0){
+							players.get(k).setHealth(players.get(k).getHealth() - 3);
+							if(players.get(k).getHealth() <= 0){
 								drawable.remove(k);
 								k -= 1;
 							}
 						}
 						else if(Math.abs((drawable.get(k).getX() + 19) - getX()) <= 39){
-							drawable.get(k).setHealth(drawable.get(k).getHealth() - 1);
-							if(drawable.get(k).getHealth() <= 0){
+							players.get(k).setHealth(players.get(k).getHealth() - 1);
+							if(players.get(k).getHealth() <= 0){
 								drawable.remove(k);
 								k -= 1;
 							}
@@ -382,7 +390,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		
 		//Change the status bar to the information
 		//of the current player
-		power.setText("" + currentTank().v0);
+		power.setText("" + currentTank().getLaunchPower());
 		
 	}
 
