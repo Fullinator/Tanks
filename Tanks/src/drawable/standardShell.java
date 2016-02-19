@@ -4,8 +4,12 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+<<<<<<< HEAD
 import physics.Projectile;
 import physics.Wind;
+=======
+import Main.Main;
+>>>>>>> refs/remotes/origin/master
 import Main.sounds;
 import terrain.Terrain;
 
@@ -16,7 +20,7 @@ import terrain.Terrain;
  * @author Joel Cherney
  *
  */
-public class standardShell extends drawable implements Runnable {
+public class standardShell extends Projectile implements Runnable {
 
 	private Thread t;
 	private int[][] terrain;
@@ -29,8 +33,11 @@ public class standardShell extends drawable implements Runnable {
 	private double angle;
 	private Terrain painter;
 	private ArrayList<Drawable2> drawable;
+<<<<<<< HEAD
 	public Projectile shell;
 	private Wind wind;
+=======
+>>>>>>> refs/remotes/origin/master
 	sounds sound = new sounds();
 
 	/**
@@ -71,6 +78,7 @@ public class standardShell extends drawable implements Runnable {
 		shell.setPower(v0);
 		
 		//calculate x and y position of shell
+<<<<<<< HEAD
 		while ( x < frameX && x >= 0 && y < frameY && y >= 0 && !(terrain[(int) x][(int) y] > 0)) {
 //			x = (double) x0 + (double) v0 * Math.cos(angle) * (double) time;
 //			y = (double) y0 + (double) v0 * Math.sin(angle) * (double) time + 0.5 * a * Math.pow(time, 2);
@@ -97,7 +105,25 @@ public class standardShell extends drawable implements Runnable {
 		else{
 			painter.currentPlayer = -painter.currentPlayer + 1;
 		}
+=======
+//		while ( x < frameX && x >= 0 && y < frameY && y >= 0 && !(terrain[(int) x][(int) y] > 0)) {
+//			x = (double) x0 + (double) v0 * Math.cos(angle) * (double) time;
+//			y = (double) y0 + (double) v0 * Math.sin(angle) * (double) time + 0.5 * a * Math.pow(time, 2);
+//			painter.repaint();
+//
+//			try {
+//				Thread.sleep(10);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//
+//			time += .1;
+//		}
+>>>>>>> refs/remotes/origin/master
 		
+		//THIS COMMENTED SECTION SHOULD NOW BE HANDLED IN
+		//TERRAIN FROM THE DAMAGE METHOD
+		/*
 		//damage any tanks if necessary
 		for(int k = 0; k < drawable.size(); k += 1){
 			if(drawable.get(k) instanceof Tank){
@@ -118,16 +144,20 @@ public class standardShell extends drawable implements Runnable {
 				}
 			}
 		}
-		
+		*/
 		//damage the terrain if relevant
 		if ( (int) x >= 0 && (int) x <= frameX ) {
 			sound.loadSound("sounds/TNT.wav");
 			sound.run();
 			painter.damage((int) x, (int)y, 25);
 		}
+<<<<<<< HEAD
 		
 		//resets the power to the standard velocity
 		painter.power.setText("" + painter.currentTank().getLaunchPower());
+=======
+
+>>>>>>> refs/remotes/origin/master
 		
 		//remove the shell from the drawable array when it finishes
 		for (int i = 0; i < drawable.size(); i++) {
@@ -141,10 +171,18 @@ public class standardShell extends drawable implements Runnable {
 		painter.repaint();
 	}//end of run method
 
+<<<<<<< HEAD
+=======
+	@Override
+>>>>>>> refs/remotes/origin/master
 	public Point getLocation() {
 		return null;
 	}
 
+<<<<<<< HEAD
+=======
+	@Override
+>>>>>>> refs/remotes/origin/master
 	public int getX() {
 		return (int) x;
 	}

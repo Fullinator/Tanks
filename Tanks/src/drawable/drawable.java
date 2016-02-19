@@ -96,5 +96,6 @@ public abstract class drawable {
 	public abstract int getY();
 	
 	public abstract BufferedImage queryImage();
+
 	
 }//End of drawable class

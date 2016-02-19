@@ -35,6 +35,8 @@ public class Sand extends Terrain implements KeyListener{
 	public Sand(int x, int y, int maxH) {
 		super(x, y, maxH);
 		setLayout(new MigLayout("", "["+ ((getXTerrain() - 500)/2) +"][29][29][29][26][26][26]["+ ((getXTerrain() - 500)/2) +"]", "[35][35]"));
+
+		
 		RightButton angleUp = new RightButton("", this);
 		this.add(angleUp, "cell 4 0");
 		LeftButton angleDown = new LeftButton("",this);
@@ -48,6 +50,9 @@ public class Sand extends Terrain implements KeyListener{
 		this.add(powerDown, "cell 7 0");
 		power = new JLabel("" + currentTank().getLaunchPower());
 		this.add(power, "cell 6 0");
+		
+		primary = new Color(0xe3bb1d);
+		secondary = new Color(0xe7db8e);
 	}// End of Sand constructor
 
 	/**
@@ -56,6 +61,7 @@ public class Sand extends Terrain implements KeyListener{
 	 * Stress Level Zero would like to thank them for their hard work and providing JAMA for open use
 	 * JAMA: http://math.nist.gov/javanumerics/jama/
 	 */
+	/*
 	@Override
 	protected void generate() {
 		terrain = new int[getXTerrain()][getYTerrain()];// holds the elements of the terrain to be drawn
@@ -181,11 +187,16 @@ public class Sand extends Terrain implements KeyListener{
 		//drawable.add(cloudOne);
 		//drawable.add(cloudTwo);
 	}//End of Generate
+<<<<<<< HEAD
 
+=======
+	*/
+>>>>>>> refs/remotes/origin/master
 
 	/**
 	 *  Fills the area underneath the line
 	 */
+	/*
 	@Override
 	protected void fill() {
 		for(int i = 0; i < terrain.length; i += 1){
@@ -213,29 +224,25 @@ public class Sand extends Terrain implements KeyListener{
 			x++;
 		}
 	}// End of fill()
-
+*/
 	/**
 	 * Paint Component. This handles all of the painting for the game part of Tanks
 	 */
 	@Override
 	public void paintComponent(Graphics g) {
-		Graphics2D g2d=(Graphics2D)g;
+		//Graphics2D g2d=(Graphics2D)g;
 		super.paintComponent(g);// prevents older objects from staying on the screen
-
+/*
 		g2d.setColor(new Color(0x21a1cb));// The skies color
-		g2d.fillRect(0, 0, getXTerrain(), getYTerrain());// fills the entire background with the sky
-
-
-		Color tan = new Color(0xe3bb1d);
-		Color darkTan = new Color(0xe7db8e);       
+		g2d.fillRect(0, 0, getXTerrain(), getYTerrain());// fills the entire background with the sky       
 
 		for (int i = 0; i < getXTerrain() ; i++) {// draws the terrain from the boolean terrain array
 			for (int j = 0; j < getYTerrain(); j++) {
 				if (terrain[i][j] == 1) {
-					g2d.setColor(tan);// The sand color
+					g2d.setColor(primary);// The sand color
 					g.drawRect(i, j, 1, 1);
 				} else if (terrain[i][j] == 2) {
-					g2d.setColor(darkTan);// The sand color
+					g2d.setColor(secondary);// The sand color
 					g.drawRect(i, j, 1, 1);
 				}
 
@@ -271,7 +278,7 @@ public class Sand extends Terrain implements KeyListener{
 
 		g2d.setColor(new Color(0xdfdfdf));
 		g2d.fillRect(0, 0, getXTerrain(), 70);// draws the top menu bar
-
+*/
 	}// End of Paint Component
 
 
@@ -280,6 +287,7 @@ public class Sand extends Terrain implements KeyListener{
 	 * @param x the x coordinate to check for the y coordinate
 	 * @return returns the y coordinate of the terrain or -1 if one cannot be found
 	 */
+	/*
 	@Override
 	public int findY(int x) {
 		if(x > 0 && x < xPanel){
@@ -291,6 +299,80 @@ public class Sand extends Terrain implements KeyListener{
 		}
 		return (int)(a + b * x + c * Math.pow(x, 2) + d * Math.pow(x, 3));
 	}//end of findY method
+*/
+//	@Override
+//	public void keyPressed(KeyEvent e) {
+//		//draws all of the drawables in the drawable array
+//		for ( int i = 0; i < drawable.size(); i++) {
+//			if (drawable.get(i).playerNumber() == currentPlayer  && (drawable.get(i) instanceof manualTank || drawable.get(i) instanceof AITank)) {// PLAYER NUMBER HERE FOR THE EVENTUAL TURNS
+//
+//				//moves the tank to the left
+//				if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+//					if (drawable.get(i).startX > 0 && drawable.get(i).getGas() > 0) {
+//						drawable.get(i).startX -= 5;
+//						drawable.get(i).setMove(drawable.get(i).getMove() + 5);
+//						if(drawable.get(i).getMove() % 30 == 0){
+//							drawable.get(i).setGas(drawable.get(i).getGas() - 1);
+//						}
+//					}
+//					repaint();
+//				}
+//
+//				//moves the tank to the right
+//				if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+//					if (drawable.get(i).startX < drawable.get(i).maxX - 55 && drawable.get(i).getGas() > 0) {
+//						drawable.get(i).startX += 5;
+//						drawable.get(i).setMove(drawable.get(i).getMove() + 5);
+//						if(drawable.get(i).getMove() % 30 == 0){
+//							drawable.get(i).setGas(drawable.get(i).getGas() - 1);
+//						}
+//					}
+//					repaint();
+//				}
+//
+//				//moves the turret in a clockwise direction
+//				if (e.getKeyCode() == KeyEvent.VK_UP) {
+//					if (drawable.get(i).barrelAngle < Math.PI) {
+//						drawable.get(i).barrelAngle += 0.1;
+//						angle.setText(String.format("%2.1f", drawable.get(i).barrelAngle));
+//					}
+//					repaint();
+//				}
+//
+//				//moves the turret in a counterclockwise direction
+//				if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+//					if (drawable.get(i).barrelAngle >= 0 ) {
+//						drawable.get(i).barrelAngle -= 0.1;
+//						angle.setText(String.format("%2.1f", drawable.get(i).barrelAngle));
+//					}
+//					repaint();
+//				}
+//				//fires a shell
+//				if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+//					currentPlayer = currentPlayer * -1;
+//					double theta = Math.PI - drawable.get(i).barrelAngle;
+//					int barrelX = (int)(drawable.get(i).getX() + 20 + 20 * Math.cos(theta));
+//					int barrelY = (int)(findY(drawable.get(i).getX()) - 18 - 20 * Math.sin(theta));
+//					standardShell shell = new standardShell(this, terrain, getXTerrain(), getYTerrain(), barrelX, barrelY, drawable.get(i).barrelAngle + drawable.get(i).tankAngle+ Math.PI, drawable, drawable.get(i).v0);
+//					drawable.add(shell);
+//					setDrawable(drawable);
+//					if(Math.abs((drawable.get(i).getX() + 19) - shell.getX()) <= 19){
+//						drawable.get(i).setHealth(drawable.get(i).getHealth() - 3);
+//						System.out.println("1");
+//					}
+//					else if(Math.abs((drawable.get(i).getX() + 19) - shell.getX()) <= 39){
+//						drawable.get(i).setHealth(drawable.get(i).getHealth() - 1);
+//						System.out.println("2");
+//					}
+//					System.out.println(drawable.get(i).getHealth());
+//					repaint();
+//					break;
+//				}
+//			}
+//		}
+//	}//end of keyPressed method
+
+	private java.util.List<Long> downKeys = new ArrayList<>();
 
 //	@Override
 //	public void keyPressed(KeyEvent e) {
@@ -404,8 +486,12 @@ public class Sand extends Terrain implements KeyListener{
 			if (i == currentPlayer && (drawable.get(i) instanceof manualTank || drawable.get(i) instanceof AITank)) {// PLAYER NUMBER HERE FOR THE EVENTUAL TURNS
 				//fires a shell
 				if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+<<<<<<< HEAD
 					currentPlayer = currentPlayer * -1;
 					double theta = Math.PI - drawable.get(i).barrelAngle;
+=======
+					double theta = Math.PI - drawable.get(i).barrelAngle;				
+>>>>>>> refs/remotes/origin/master
 					sound.loadSound("sounds/Shot1.wav");
 					sound.run();
 					int barrelX = (int)(drawable.get(i).getX() + 20 + 20 * Math.cos(theta));
@@ -422,6 +508,8 @@ public class Sand extends Terrain implements KeyListener{
 						System.out.println("2");
 					}
 					System.out.println(drawable.get(i).getHealth());
+					
+					nextPlayerTurn();
 					repaint();
 					break;
 				}
@@ -434,6 +522,7 @@ public class Sand extends Terrain implements KeyListener{
 	@Override
 	public void keyReleased(KeyEvent e) {
 		downKeys.remove(((long) e.getKeyCode()));
+<<<<<<< HEAD
 
 		Tank t = players.get(currentPlayer - 1);
 
@@ -444,6 +533,18 @@ public class Sand extends Terrain implements KeyListener{
 				t.stopMotion();
 				break;
 
+=======
+
+		Tank t = players.get(currentPlayer - 1);
+
+		switch (e.getKeyCode()) {
+			// Stop moving tank when motion key released
+			case KeyEvent.VK_LEFT:
+			case KeyEvent.VK_RIGHT:
+				t.stopMotion();
+				break;
+
+>>>>>>> refs/remotes/origin/master
 			// Stop adjusting cannon angle when aim key released
 			case KeyEvent.VK_UP:
 			case KeyEvent.VK_DOWN:
