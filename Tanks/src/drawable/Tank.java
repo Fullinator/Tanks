@@ -73,17 +73,9 @@ public abstract class Tank implements Drawable2 {
 		this.launchPower = launchPower;
 	}
 
-	public void adjustLaunchPower(int launchPower) {
-		this.launchPower = Math.max(0, this.launchPower + launchPower);
-	}
-
 	public void setBarrelAngle(double angle) { barrelAngle = angle; }
 
 	public double getBarrelAngle() { return barrelAngle; }
-
-	public void adjustBarrelAngle(double angle) {
-		barrelAngle += angle;
-	}
 
 	public void setTankAngle(double angle) { tankAngle = angle; }
 

@@ -58,7 +58,7 @@ public class LeftButton extends JButton implements ActionListener {
 		try {
 			this.setFocusable(false);
 			if (terrain.currentTank().getBarrelAngle() >= 0 ) {
-			terrain.currentTank().adjustBarrelAngle(-0.1);
+				terrain.currentTank().setBarrelAngle(terrain.currentTank().getBarrelAngle() - 0.1);
 			terrain.angle.setText(String.format("%2.1f", terrain.currentTank().getBarrelAngle()));
 			terrain.requestFocusInWindow();
 			}
