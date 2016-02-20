@@ -55,10 +55,12 @@ public class RightButton extends JButton implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		try {
 			this.setFocusable(false);
-			if (terrain.currentTank().getBarrelAngle() < Math.PI) {
-				terrain.currentTank().setBarrelAngle(terrain.currentTank().getBarrelAngle() + 0.1);
-				terrain.angle.setText(String.format("%2.1f", terrain.currentTank().getBarrelAngle()));
-				terrain.requestFocusInWindow();
+			if (!terrain.getGameStatus()) {
+				if (terrain.currentTank().getBarrelAngle() < Math.PI) {
+					terrain.currentTank().setBarrelAngle(terrain.currentTank().getBarrelAngle() + 0.1);
+					terrain.angle.setText(String.format("%2.1f", terrain.currentTank().getBarrelAngle()));
+					terrain.requestFocusInWindow();
+				}
 			}
 		}
 		catch (Exception e){Main.error(e);}
