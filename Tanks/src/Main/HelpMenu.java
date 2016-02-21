@@ -36,6 +36,7 @@ public class HelpMenu extends JPanel{
 			"<li>Power Up: 			</li>" +
 			"<li>Power Down: 		</li>" +
 			"<li>Pause: Escape" +
+			"<li>Player Stats: Tab</li>" +
 		"</ul></html>");
 		
 		add(controls, "cell 3 1, alignx 50%");
