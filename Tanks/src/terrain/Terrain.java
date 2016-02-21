@@ -66,7 +66,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	DownButton powerDown;
 	JButton quit;
 	JButton unPause;
-	
+	protected boolean tabbed = false;
+
 	/**
 	 *
 	 * @param x width of JPanel
@@ -439,6 +440,13 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		g2d.setColor(new Color(0xdfdfdf));
 		g2d.fillRect(0, 0, getXTerrain(), 70);// draws the top menu bar
 
+		if (tabbed) {
+			g2d.setColor(new Color(0x21a1cb));// The skies color
+			g2d.fillRect(0, 0, getXTerrain(), 70);
+			g2d.setColor(new Color(0,0,0,180));
+			g2d.fillRect(0, 0, xPanel, yPanel);
+		}
+
 		if (paused) {
 			g2d.setColor(new Color(0x21a1cb));// The skies color
 			g2d.fillRect(0, 0, getXTerrain(), 70);
@@ -492,9 +500,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		//Power Label
 		power = new JLabel("" + currentTank().getLaunchPower());
 		add(power, "cell 6 0");
-		
+
 		//Health Label
-		
+
 		//Fire Button
 
 	}
@@ -508,7 +516,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		remove(powerDown);
 		remove(power);
 	}
-	
+
 	protected void showTopMenu() {
 		add(playerName, "cell 0 0");
 		this.add(angleUp, "cell 4 0");
@@ -518,7 +526,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		add(powerDown, "cell 7 0");
 		add(power, "cell 6 0");
 	}
-	
+
 	/**
 	 * @ getGameStatus
 	 * @params none
@@ -528,7 +536,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	public boolean getGameStatus() {
 		return paused;
 	}
-	
+
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (downKeys.contains((long) e.getKeyCode())) return;
@@ -552,9 +560,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				quit.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-							Main.Main.loadMenu(); 
+						Main.Main.loadMenu(); 
 					}
-			    });
+				});
 				unPause = new JButton("UnPause");
 				unPause.addActionListener(new ActionListener() {
 					@Override
@@ -567,14 +575,21 @@ public abstract class Terrain extends JPanel implements KeyListener{
 						showTopMenu();
 						revalidate(); 
 					}
-			    });
+				});
 				add(unPause, "cell 5 4, alignx center");
 				add(quit, "cell 5 5, alignx center");
 				add(pauseTitle,"cell 5 2, alignx center");
+				tabbed = false;//Makes sure the tab and pause menus don't overlay
 				revalidate();	
 			}
 		}
 		if (!paused) {
+
+			if (e.getKeyCode() == KeyEvent.VK_TAB) {
+				tabbed = true;
+				hideTopMenu();
+			}
+
 			//draws all of the drawables in the drawable array
 			Tank t = players.get(currentPlayer - 1);
 
@@ -655,6 +670,13 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		case KeyEvent.VK_UP:
 		case KeyEvent.VK_DOWN:
 			t.stopAimCannon();
+			break;
+		case KeyEvent.VK_TAB:
+			tabbed = false;
+			if (!paused) {//Make sure we don't bring back the top control menu 
+						  //While the game is paused
+				showTopMenu();
+			}
 			break;
 		}
 	}
