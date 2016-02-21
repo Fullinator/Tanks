@@ -54,7 +54,14 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	protected java.util.List<Long> downKeys = new ArrayList<>();
 	private boolean paintLock;
 	protected boolean paused = false;
-
+	protected JLabel pauseTitle;
+	protected MigLayout normalLayout;
+	protected MigLayout pauseLayout;
+	RightButton angleUp;
+	LeftButton angleDown;
+	UpButton powerUp;
+	DownButton powerDown;
+	
 	/**
 	 *
 	 * @param x width of JPanel
@@ -65,6 +72,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		setYTerrain(y);
 		maxHuman = maxH;
 		maxPlayers = maxHuman; //ADD THE AI PLAYERS TO THIS LATER
+		pauseTitle = new JLabel("Game Paused");
+		pauseTitle.setFont(new Font("Arial", Font.BOLD, 35));
+		pauseTitle.setForeground(Color.white);
 		generate();
 		fill();// calls a method that fills in the points underneath the cubic
 		createTanks(maxHuman, names);
@@ -105,7 +115,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	public void setDrawable(ArrayList<Drawable2> drawable) {
 		this.drawable = drawable;
 	}
-
 
 	/**
 	 * Returns the y coordinate of the top of the terrain from the boolean terrain array.
@@ -203,8 +212,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			}
 		}// end of Y-coordinate generation
 
-
-
 		double[][] xArray = new double[7][4]; 
 
 		for (int i = 0; i < 7 ; i++) {  // creates a 2D array with the x-coordinates in the cubic regression formula
@@ -221,13 +228,11 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			xArray[i][j] = Math.pow(xPoints[i], 3);
 		}
 
-
 		double [][] yArray = new double[7][1]; 
 
 		for (int i = 0; i < yPoints.length; i++) {// creates a 2D array with the y-coordinates in the cubic regression formula
 			yArray[i][0] = yPoints[i]; 
 		} 
-
 
 		Matrix xMatrix = new Matrix(xArray);  // convert the x cubic regression styled 2D array to a matrix
 		Matrix yMatrix = new Matrix(yArray);  // convert the y cubic regression styled 2D array to a matrix
@@ -248,7 +253,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		c = bArray[2][0]; 
 		d = bArray[3][0]; 
 
-		System.out.println("A: " + a + " B: " + b +" C: " + c + " D: " + d);
+		//System.out.println("A: " + a + " B: " + b +" C: " + c + " D: " + d);
 
 		y = a+b*x+c*Math.pow(x, 2)+d*Math.pow(x, 3);
 
@@ -429,8 +434,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		g2d.setColor(new Color(0xdfdfdf));
 		g2d.fillRect(0, 0, getXTerrain(), 70);// draws the top menu bar
 
-
 		if (paused) {
+			g2d.setColor(new Color(0x21a1cb));// The skies color
+			g2d.fillRect(0, 0, getXTerrain(), 70);
 			g2d.setColor(new Color(0,0,0,160));
 			g2d.fillRect(0, 0, xPanel, yPanel);
 		}
@@ -453,28 +459,61 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	}
 
 	protected void createTopMenu() {
-		setLayout(new MigLayout("", "["+ ((getXTerrain() - 500)/2) +"][29][29][29][26][26][26]["+ ((getXTerrain() - 500)/2) +"]", "[35][35]"));
+		normalLayout = new MigLayout("", "["+ ((getXTerrain() - 600)/2) +"][26][26][26][26][26][26]["+ ((getXTerrain() - 500)/2) +"]", "[35][35][150][][][]");
+		setLayout(normalLayout);
 
+		//Player Name
 		playerName = new JLabel();
 		playerName.setText(currentTank().getName());
 		playerName.setFont(new Font("Arial", Font.PLAIN, 35));
 		add(playerName, "cell 0 0");
 
-		RightButton angleUp = new RightButton("", this);
-		this.add(angleUp, "cell 4 0");
-		LeftButton angleDown = new LeftButton("",this);
-		this.add(angleDown, "cell 2 0");
+		//Barrel Angle Up
+		angleUp = new RightButton("", this);
+		add(angleUp, "cell 4 0");
+		//Barrel Angle Down
+		angleDown = new LeftButton("",this);
+		add(angleDown, "cell 2 0");
+		//Angle Label
 		angle = new JLabel("0.0");
-		this.add(angle, "cell 3 0");
+		add(angle, "cell 3 0");
 
-		UpButton powerUp = new UpButton("", this);
-		this.add(powerUp, "cell 5 0");
-		DownButton powerDown = new DownButton("", this);
-		this.add(powerDown, "cell 7 0");
+		//Power Up
+		powerUp = new UpButton("", this);
+		add(powerUp, "cell 5 0");
+		//Power Down
+		powerDown = new DownButton("", this);
+		add(powerDown, "cell 7 0");
+		//Power Label
 		power = new JLabel("" + currentTank().getLaunchPower());
-		this.add(power, "cell 6 0");
+		add(power, "cell 6 0");
+		
+		//Health Label
+		
+		//Fire Button
+
 	}
 
+	protected void hideTopMenu() {
+		remove(playerName);
+		remove(angleUp);
+		remove(angleDown);
+		remove(angle);
+		remove(powerUp);
+		remove(powerDown);
+		remove(power);
+	}
+	
+	protected void showTopMenu() {
+		add(playerName, "cell 0 0");
+		this.add(angleUp, "cell 4 0");
+		add(angleDown, "cell 2 0");
+		add(angle, "cell 3 0");
+		add(powerUp, "cell 5 0");
+		add(powerDown, "cell 7 0");
+		add(power, "cell 6 0");
+	}
+	
 	/**
 	 * @ getGameStatus
 	 * @params none
@@ -493,8 +532,17 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			if (paused) {
 				paused = false;
+				remove(pauseTitle);
+				setLayout(normalLayout);
+				showTopMenu();
+				revalidate();
 			} else {
 				paused = true;
+				pauseLayout = new MigLayout("", "["+ ((getXTerrain() - 500)/2) +"][29][29][26][26][26]["+ ((getXTerrain() - 500)/2) +"]", "[35][35][150][][][][][][]");
+				setLayout(pauseLayout);
+				hideTopMenu();
+				add(pauseTitle,"cell 2 4, alignx center");
+				revalidate();	
 			}
 		}
 		if (!paused) {

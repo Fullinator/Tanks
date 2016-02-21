@@ -282,7 +282,6 @@ public class StartMenu extends JPanel implements ActionListener {
 			}else {
 				names[i] = nameFields[i].getText();
 			}
-			
 		}
 		
 		if (comboBox.getSelectedItem().equals("Sand")) {
