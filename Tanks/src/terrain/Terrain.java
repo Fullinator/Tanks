@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
@@ -63,7 +65,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	UpButton powerUp;
 	DownButton powerDown;
 	JButton quit;
-	JButton unpause;
+	JButton unPause;
 	
 	/**
 	 *
@@ -536,16 +538,38 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			if (paused) {
 				paused = false;
 				remove(pauseTitle);
+				remove(unPause);
+				remove(quit);
 				setLayout(normalLayout);
 				showTopMenu();
 				revalidate();
 			} else {
 				paused = true;
-				pauseLayout = new MigLayout("", "["+ ((getXTerrain() - 500)/2) +"][29][29][26][26][26]["+ ((getXTerrain() - 500)/2) +"]", "[150][35][][][][][][][]");
+				pauseLayout = new MigLayout("", "["+ ((getXTerrain() - 500)/2) +"][29][29][26][26][26]["+ ((getXTerrain() - 500)/2) +"]", "[150][35][40][][][][][][]");
 				setLayout(pauseLayout);
 				hideTopMenu();
-				
-				
+				quit = new JButton("Quit to Menu");
+				quit.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+							Main.Main.loadMenu(); 
+					}
+			    });
+				unPause = new JButton("UnPause");
+				unPause.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						paused = false;
+						remove(pauseTitle);
+						remove(unPause);
+						remove(quit);
+						setLayout(normalLayout);
+						showTopMenu();
+						revalidate(); 
+					}
+			    });
+				add(unPause, "cell 5 4, alignx center");
+				add(quit, "cell 5 5, alignx center");
 				add(pauseTitle,"cell 5 2, alignx center");
 				revalidate();	
 			}
