@@ -35,6 +35,7 @@ public class HelpMenu extends JPanel{
 			"<li>Move Turret Down: Down Arrow Key</li>" +
 			"<li>Power Up: 			</li>" +
 			"<li>Power Down: 		</li>" +
+			"<li>Pause: Escape" +
 		"</ul></html>");
 		
 		add(controls, "cell 3 1, alignx 50%");
