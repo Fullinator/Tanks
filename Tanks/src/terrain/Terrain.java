@@ -10,6 +10,7 @@ import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -61,6 +62,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	LeftButton angleDown;
 	UpButton powerUp;
 	DownButton powerDown;
+	JButton quit;
+	JButton unpause;
 	
 	/**
 	 *
@@ -437,7 +440,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		if (paused) {
 			g2d.setColor(new Color(0x21a1cb));// The skies color
 			g2d.fillRect(0, 0, getXTerrain(), 70);
-			g2d.setColor(new Color(0,0,0,160));
+			g2d.setColor(new Color(0,0,0,180));
 			g2d.fillRect(0, 0, xPanel, yPanel);
 		}
 	}//end of paintComponent method
@@ -538,10 +541,12 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				revalidate();
 			} else {
 				paused = true;
-				pauseLayout = new MigLayout("", "["+ ((getXTerrain() - 500)/2) +"][29][29][26][26][26]["+ ((getXTerrain() - 500)/2) +"]", "[35][35][150][][][][][][]");
+				pauseLayout = new MigLayout("", "["+ ((getXTerrain() - 500)/2) +"][29][29][26][26][26]["+ ((getXTerrain() - 500)/2) +"]", "[150][35][][][][][][][]");
 				setLayout(pauseLayout);
 				hideTopMenu();
-				add(pauseTitle,"cell 2 4, alignx center");
+				
+				
+				add(pauseTitle,"cell 5 2, alignx center");
 				revalidate();	
 			}
 		}
