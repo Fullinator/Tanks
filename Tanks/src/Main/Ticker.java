@@ -13,16 +13,22 @@ public class Ticker implements Runnable {
 
 	private static final Map<Integer, LongConsumer> managedMethods = new HashMap<>();
 	private boolean stop;
+	private boolean pause;
 	private long sleepMillis;
 	private static int id = -1;
 
 	public Ticker(long sleepMillis) {
 		stop = false;
+		pause = false;
 		this.sleepMillis = sleepMillis;
 	}
 
 	public void stopTicking() {
 		stop = true;
+	}
+
+	public void setPaused(boolean pause) {
+		this.pause = pause;
 	}
 
 	public static int addMethod(LongConsumer consumer) {
@@ -46,10 +52,12 @@ public class Ticker implements Runnable {
 			// This temp final needed for lambda use
 			final long finalLastRunTime = lastRunTime;
 			final long curTime = System.nanoTime();
-			synchronized (managedMethods) {
-				managedMethods.values().forEach(f -> new Thread(() -> {
-					f.accept(curTime - finalLastRunTime);
-				}).start());
+			if (!pause) {
+				synchronized (managedMethods) {
+					managedMethods.values().forEach(f -> new Thread(() -> {
+						f.accept(curTime - finalLastRunTime);
+					}).start());
+				}
 			}
 			lastRunTime = curTime;
 			try {
