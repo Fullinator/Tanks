@@ -27,15 +27,13 @@ import javax.swing.JButton;
  * @author Joel Cherney
  */
 public class StartMenu extends JPanel implements ActionListener {
-	private JLabel player2 = new JLabel("Player 2's name:");
-	private JLabel player3 = new JLabel("Player 3's name:");
-	private JLabel player4 = new JLabel("Player 4's name:");
-	private JLabel player5 = new JLabel("Player 5's name:");
-	private JTextField player1Name = new JTextField();
-	private JTextField player2Name = new JTextField();
-	private JTextField player3Name = new JTextField();
-	private JTextField player4Name = new JTextField();
-	private JTextField player5Name = new JTextField();
+	//Maximum player
+	int maxPlayer = 5;
+	//The row in MigLayout to start adding the player name fields
+	int nameRow = 4;
+	
+	private JTextField[] nameFields = new JTextField[maxPlayer];
+	private JLabel[] nameLabels = new JLabel[maxPlayer];
 	private double y = 0,a = 613.0530044043094,b = 0.5723935937530484,c = -0.0017677556908674563,d = .0000010360170037339734, x = 0;
 	
 	private manualTank tank; 
@@ -48,6 +46,7 @@ public class StartMenu extends JPanel implements ActionListener {
 	private JComboBox AISelect;
 	private int currentNumberofPlayers = 1;
 	private int[][] terrain;
+	String[] names;
 
 	/**
 	 * @name StartMenu
@@ -60,6 +59,7 @@ public class StartMenu extends JPanel implements ActionListener {
 		//setBackground(Color.WHITE);
 		xLength = xDim;
 		yLength = yDim;
+		this.setSize(xDim, yDim);
 		tank = new manualTank(null, xDim);
 		
 		createBackground();
@@ -67,7 +67,7 @@ public class StartMenu extends JPanel implements ActionListener {
 		String xDimension = new String("[" + xDim/2 + "][" + xDim/2 + "]");
 
 		setLayout(new MigLayout("fillx", "[" + yLength/5 + "][" + yLength/5 + "][" + yLength/5 + "][" + yLength/5 + "][" + yLength/5 + "]"
-							    ,"[125][50][][][][][][][][][][][]"));//layout constraints, column, row
+							    ,"[125][50][][][][][][][][][][][][][][][][][]"));//layout constraints, column, row
 
 		//add the title
 		JLabel pageTitle = new JLabel("Game Options");
@@ -108,29 +108,21 @@ public class StartMenu extends JPanel implements ActionListener {
 	    });
 		
 		add(humanSelect, "cell 2 3, alignx center");
-		humanSelect.addItem("1");
-		humanSelect.addItem("2");
-		humanSelect.addItem("3");
-		humanSelect.addItem("4");
-		humanSelect.addItem("5");
+		for (int i = 0; i < maxPlayer; i++) {
+			humanSelect.addItem("" + (i+1));
+		}
 		
-		
-		JLabel player1 = new JLabel("Player 1's name:");
-		add(player1, "cell 2 4, alignx center");
-		this.setSize(1000, 700);
-
-		player1Name.setText("Username");
-		player2Name.setText("Username");
-		player3Name.setText("Username");
-		player4Name.setText("Username");
-		player5Name.setText("Username");
-		player1Name.setColumns(10);
-		player2Name.setColumns(10);
-		player3Name.setColumns(10);
-		player4Name.setColumns(10);
-		player5Name.setColumns(10);
-		
-		add(player1Name, "cell 2 4,alignx left, alignx center");
+		for (int i = 0; i < maxPlayer; i++) {
+			nameFields[i] = new JTextField();
+			nameFields[i].setText("Player " + (i+1));
+			nameFields[i].setColumns(10);
+		}
+		for (int i = 0; i < maxPlayer; i++) {
+			nameLabels[i] = new JLabel("Player " + (i+1) + "'s name:");
+		}
+		//JLabel player1 = new JLabel("Player 1's name:");
+		add(nameLabels[0], "cell 2 4, alignx center");
+		add(nameFields[0], "cell 2 4, alignx left, alignx center");
 		
 		//Add back button
 		JButton btnBack = new JButton("Back");
@@ -204,63 +196,20 @@ public class StartMenu extends JPanel implements ActionListener {
 	public void changeNumberOfPlayers(int numberOfPlayers) {
 		if (numberOfPlayers != currentNumberofPlayers) {
 			currentNumberofPlayers = numberOfPlayers;
+			int row = nameRow;
 			
-			if (numberOfPlayers == 1) {
-				remove(player2);
-				remove(player3);
-				remove(player4);
-				remove(player5);
-				remove(player2Name);
-				remove(player3Name);
-				remove(player4Name);
-				remove(player5Name);
-			} else if (numberOfPlayers == 2) {
-				//Add the relevant fields
-				add(player2, "cell 2 5, alignx center");
-				add(player2Name, "cell 2 5, alignx center");
-				
-				//Remove the relevant fields
-				remove(player3);
-				remove(player4);
-				remove(player5);
-				remove(player3Name);
-				remove(player4Name);
-				remove(player5Name);
-			} else if (numberOfPlayers == 3) {
-				//Add the relevant fields
-				add(player2, "cell 2 5, alignx center");
-				add(player2Name, "cell 2 5, alignx center");
-				add(player3, "cell 2 6, alignx center");
-				add(player3Name, "cell 2 6, alignx center");
-				
-				//Remove the relevant fields
-				remove(player4);
-				remove(player5);
-				remove(player4Name);
-				remove(player5Name);
-			} else if (numberOfPlayers == 4) {
-				//Add the relevant fields
-				add(player2, "cell 2 5, alignx center");
-				add(player2Name, "cell 2 5, alignx center");
-				add(player3, "cell 2 6, alignx center");
-				add(player3Name, "cell 2 6, alignx center");
-				add(player4, "cell 2 7, alignx center");
-				add(player4Name, "cell 2 7, alignx center");
-				
-				//Remove the relevant fields
-				remove(player5);
-				remove(player5Name);
-			}else if (numberOfPlayers == 5) {
-				//Add the relevant fields
-				add(player2, "cell 2 5, alignx center");
-				add(player2Name, "cell 2 5, alignx center");
-				add(player3, "cell 2 6, alignx center");
-				add(player3Name, "cell 2 6, alignx center");
-				add(player4, "cell 2 7, alignx center");
-				add(player4Name, "cell 2 7, alignx center");
-				add(player5, "cell 2 8, alignx center");
-				add(player5Name, "cell 2 8, alignx center");
-			} 
+			//remove all of the fields
+			for (int i = 0; i < maxPlayer; i++) {
+				remove(nameLabels[i]);
+				remove(nameFields[i]);
+			}
+			//Add all fields needed
+			for (int i = 0; i < currentNumberofPlayers; i++) {
+				add(nameLabels[i], "cell 2 " + row + ", alignx center");
+				add(nameFields[i], "cell 2 " + row + ", alignx left, alignx center");
+				row++;
+			}
+		
 			this.revalidate();
 			repaint();
 		}
@@ -325,15 +274,25 @@ public class StartMenu extends JPanel implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
+		names = new String[currentNumberofPlayers];
+		
+		for (int i = 0; i < currentNumberofPlayers; i++) {
+			if (nameFields[i].getText().length() > 10) {
+				names[i] = nameFields[i].getText().substring(0, 10);
+			}else {
+				names[i] = nameFields[i].getText();
+			}
+		}
+		
 		if (comboBox.getSelectedItem().equals("Sand")) {
 			Main.manualTanks = Integer.parseInt((String) humanSelect.getSelectedItem());;
-			Main.startSand();
+			Main.startSand(names);
 		}else if (comboBox.getSelectedItem().equals("Snow")) {
 			Main.manualTanks = Integer.parseInt((String) humanSelect.getSelectedItem());;
-			Main.startSnow();
+			Main.startSnow(names);
 		} else if (comboBox.getSelectedItem().equals("Forest")) {
 			Main.manualTanks = Integer.parseInt((String) humanSelect.getSelectedItem());;
-			Main.startForrest();
+			Main.startForrest(names);
 		}
 	}
 

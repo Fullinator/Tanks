@@ -9,8 +9,8 @@ import drawable.drawable;
 
 public class Snow extends Terrain {
 	
-	public Snow(int x, int y, int maxH) {
-		super(x, y, maxH);
+	public Snow(int x, int y, int maxH, String[] names) {
+		super(x, y, maxH, names);
 		
 		primary = new Color(0xFFFFFF);
 		secondary = new Color(0xf2f2f2);

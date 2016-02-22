@@ -21,6 +21,7 @@ public class RightButton extends JButton implements ActionListener {
 
 	public RightButton(String label, Terrain terrain) {
 		super(label);
+		collectButton();
 		setBorder(null);
 		setBorderPainted(false);
 		setContentAreaFilled(false);
@@ -41,7 +42,6 @@ public class RightButton extends JButton implements ActionListener {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		collectButton();
 		g.drawImage(button, 0, 0, null);
 	}
 
@@ -55,10 +55,12 @@ public class RightButton extends JButton implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		try {
 			this.setFocusable(false);
-			if (terrain.currentTank().getBarrelAngle() < Math.PI) {
-				terrain.currentTank().adjustBarrelAngle(0.1);
-				terrain.angle.setText(String.format("%2.1f", terrain.currentTank().getBarrelAngle()));
-				terrain.requestFocusInWindow();
+			if (!terrain.getGameStatus()) {
+				if (terrain.currentTank().getBarrelAngle() < Math.PI) {
+					terrain.currentTank().setBarrelAngle(terrain.currentTank().getBarrelAngle() + 0.1);
+					terrain.angle.setText(String.format("%2.1f", terrain.currentTank().getBarrelAngle()));
+					terrain.requestFocusInWindow();
+				}
 			}
 		}
 		catch (Exception e){Main.error(e);}

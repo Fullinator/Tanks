@@ -1,24 +1,33 @@
 package terrain;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import Jama.Matrix;
 import Main.Ticker;
+import buttons.DownButton;
+import buttons.LeftButton;
+import buttons.RightButton;
+import buttons.UpButton;
 import drawable.AITank;
 import drawable.Clouds;
 import drawable.drawable;
 import drawable.manualTank;
 import drawable.standardShell;
+import net.miginfocom.swing.MigLayout;
 import drawable.Drawable2;
 import drawable.Tank;
 import drawable.UserTank;
@@ -40,42 +49,64 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	public JLabel angle;
 	public JLabel power;
 	public JLabel playerName;
-    //protected ArrayList<drawable> drawable;
-    Color primary;
-    Color secondary;
-    protected ArrayList<Drawable2> drawable;
+	//protected ArrayList<drawable> drawable;
+	Color primary;
+	Color secondary;
+	protected ArrayList<Drawable2> drawable;
 	protected ArrayList<Tank> players;
-	protected java.util.List<Long> downKeys = new ArrayList<>();;
-	
+	protected java.util.List<Long> downKeys = new ArrayList<>();
+	private boolean paintLock;
+	protected boolean paused = false;
+	protected JLabel pauseTitle;
+	protected MigLayout normalLayout;
+	protected MigLayout pauseLayout;
+	RightButton angleUp;
+	LeftButton angleDown;
+	UpButton powerUp;
+	DownButton powerDown;
+	JButton quit;
+	JButton unPause;
+	protected boolean tabbed = false;
+
 	/**
 	 *
 	 * @param x width of JPanel
 	 * @param y height of JPanel
 	 */
-	protected Terrain(int x, int y, int maxH) {
+	protected Terrain(int x, int y, int maxH, String[] names) {
 		setXTerrain(x);
 		setYTerrain(y);
 		maxHuman = maxH;
+		maxPlayers = maxHuman; //ADD THE AI PLAYERS TO THIS LATER
+		pauseTitle = new JLabel("Game Paused");
+		pauseTitle.setFont(new Font("Arial", Font.BOLD, 35));
+		pauseTitle.setForeground(Color.white);
 		generate();
 		fill();// calls a method that fills in the points underneath the cubic
-		createTanks(maxHuman);
+		createTanks(maxHuman, names);
 		createClouds(2);
+		createTopMenu();
+		paintLock = false;
 		Ticker.addMethod(this::render);
 	}
 
 	private void render(long elapsedNanos) {
-		repaint();
+		if (!paintLock) {
+			paintLock = true;
+			repaint();
+			paintLock = false;
+		}
 	}
-	
+
 	public Tank currentTank() {
 		return players.get(currentPlayer - 1);
-//		for ( int i = 0; i < drawable.size(); i++) {
-//			if (drawable.get(i).playerNumber() == currentPlayer) {
-//				return drawable.get(i);
-//			}
-//		}
-//		assert false; //Execution should never reach this point
-//		return null;
+		//		for ( int i = 0; i < drawable.size(); i++) {
+		//			if (drawable.get(i).playerNumber() == currentPlayer) {
+		//				return drawable.get(i);
+		//			}
+		//		}
+		//		assert false; //Execution should never reach this point
+		//		return null;
 	}
 
 	/**
@@ -91,7 +122,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		this.drawable = drawable;
 	}
 
-	
 	/**
 	 * Returns the y coordinate of the top of the terrain from the boolean terrain array.
 	 * @param x the x coordinate to check for the y coordinate
@@ -139,7 +169,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	public int getYTerrain() {
 		return yPanel;
 	}
-	
+
 
 	/**
 	 * Generates a random 2D cubic terrain based off of Cubic Regression using JAMA
@@ -148,7 +178,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 * JAMA: http://math.nist.gov/javanumerics/jama/
 	 */
 	protected void generate() {
-		
+
 		terrain = new int[getXTerrain()][getYTerrain()];// holds the elements of the terrain to be drawn
 
 		double[] xPoints = new double[7]; // array that holds randomly created x coordinates 
@@ -188,8 +218,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			}
 		}// end of Y-coordinate generation
 
-
-
 		double[][] xArray = new double[7][4]; 
 
 		for (int i = 0; i < 7 ; i++) {  // creates a 2D array with the x-coordinates in the cubic regression formula
@@ -206,13 +234,11 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			xArray[i][j] = Math.pow(xPoints[i], 3);
 		}
 
-
 		double [][] yArray = new double[7][1]; 
 
 		for (int i = 0; i < yPoints.length; i++) {// creates a 2D array with the y-coordinates in the cubic regression formula
 			yArray[i][0] = yPoints[i]; 
 		} 
-
 
 		Matrix xMatrix = new Matrix(xArray);  // convert the x cubic regression styled 2D array to a matrix
 		Matrix yMatrix = new Matrix(yArray);  // convert the y cubic regression styled 2D array to a matrix
@@ -233,8 +259,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		c = bArray[2][0]; 
 		d = bArray[3][0]; 
 
-		System.out.println("A: " + a + " B: " + b +" C: " + c + " D: " + d);
-		
+		//System.out.println("A: " + a + " B: " + b +" C: " + c + " D: " + d);
+
 		y = a+b*x+c*Math.pow(x, 2)+d*Math.pow(x, 3);
 
 		while ((int)x <= getXTerrain()) {// Puts points in the array that will form the cubic line
@@ -257,20 +283,21 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			drawable.add(c);
 		}
 	}
-	
- 	protected void createTanks(int numberOfTanks) {
+
+	protected void createTanks(int numberOfTanks, String[] names) {
 		players  = new ArrayList<Tank>();
 		drawable = new ArrayList<Drawable2>();
 
 		for (int i = 0; i < maxHuman; i++) {
 			Tank t = new UserTank();
+			t.setName(names[i]);
 			drawable.add(t);
 			players.add(t);
 		}
 		setFocusTraversalKeysEnabled(false);
 		addKeyListener(this);
 	}
- 	
+
 	/**
 	 * fills the space underneath the cubic
 	 */
@@ -310,7 +337,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 *
 	 */
 	public void damage(int x, int y, int mag){
-		
+
 		//create the hole
 		for(int i = y + mag; i > y - mag; i -= 1){
 			int low = (int)(-Math.sqrt(Math.pow(mag, 2) - Math.pow(i - y, 2)) + x);// Finds the lower x coordinate for the given y coordinate
@@ -330,33 +357,33 @@ public abstract class Terrain extends JPanel implements KeyListener{
 						if (terrain[i][j] > 0 && !(terrain[i][j + 1] > 0)){
 							terrain[i][j+1] = terrain[i][j];
 							terrain[i][j] = 0;
-							repaint();
+							//repaint();
 						}
 					}
 				}
 			}
 		}
-		
+
 		//damage any tanks if necessary
-				for(int k = 0; k < drawable.size(); k++){
-					if(drawable.get(k) instanceof manualTank || drawable.get(k) instanceof AITank){
-						if(Math.abs((drawable.get(k).getX() + 19) - getX()) <= 19){
-							players.get(k).setHealth(players.get(k).getHealth() - 3);
-							if(players.get(k).getHealth() <= 0){
-								drawable.remove(k);
-								k -= 1;
-							}
-						}
-						else if(Math.abs((drawable.get(k).getX() + 19) - getX()) <= 39){
-							players.get(k).setHealth(players.get(k).getHealth() - 1);
-							if(players.get(k).getHealth() <= 0){
-								drawable.remove(k);
-								k -= 1;
-							}
-						}
+		for(int k = 0; k < drawable.size(); k++){
+			if(drawable.get(k) instanceof manualTank || drawable.get(k) instanceof AITank){
+				if(Math.abs((drawable.get(k).getX() + 19) - getX()) <= 19){
+					players.get(k).setHealth(players.get(k).getHealth() - 3);
+					if(players.get(k).getHealth() <= 0){
+						drawable.remove(k);
+						k -= 1;
 					}
 				}
-		repaint();
+				else if(Math.abs((drawable.get(k).getX() + 19) - getX()) <= 39){
+					players.get(k).setHealth(players.get(k).getHealth() - 1);
+					if(players.get(k).getHealth() <= 0){
+						drawable.remove(k);
+						k -= 1;
+					}
+				}
+			}
+		}
+		//repaint();
 	}//end of the remove method
 
 	/**
@@ -412,8 +439,22 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 		g2d.setColor(new Color(0xdfdfdf));
 		g2d.fillRect(0, 0, getXTerrain(), 70);// draws the top menu bar
+
+		if (tabbed) {
+			g2d.setColor(new Color(0x21a1cb));// The skies color
+			g2d.fillRect(0, 0, getXTerrain(), 70);
+			g2d.setColor(new Color(0,0,0,180));
+			g2d.fillRect(0, 0, xPanel, yPanel);
+		}
+
+		if (paused) {
+			g2d.setColor(new Color(0x21a1cb));// The skies color
+			g2d.fillRect(0, 0, getXTerrain(), 70);
+			g2d.setColor(new Color(0,0,0,180));
+			g2d.fillRect(0, 0, xPanel, yPanel);
+		}
 	}//end of paintComponent method
-	
+
 	/**
 	 * nextPlayerTurn
 	 */
@@ -423,11 +464,93 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		} else {
 			currentPlayer = currentPlayer + 1;
 		}
-		
+
 		//Change the status bar to the information
 		//of the current player
 		power.setText("" + currentTank().getLaunchPower());
-		
+		playerName.setText(currentTank().getName());
+	}
+
+	protected void createTopMenu() {
+		normalLayout = new MigLayout("", "["+ ((getXTerrain() - 600)/2) +"][26][26][26][26][26][26]["+ ((getXTerrain() - 500)/2) +"]", "[35][35][150][][][]");
+		setLayout(normalLayout);
+
+		//Player Name
+		playerName = new JLabel();
+		playerName.setText(currentTank().getName());
+		playerName.setFont(new Font("Arial", Font.PLAIN, 35));
+		add(playerName, "cell 0 0");
+
+		//Barrel Angle Up
+		angleUp = new RightButton("", this);
+		add(angleUp, "cell 4 0");
+		//Barrel Angle Down
+		angleDown = new LeftButton("",this);
+		add(angleDown, "cell 2 0");
+		//Angle Label
+		angle = new JLabel("0.0");
+		add(angle, "cell 3 0");
+
+		//Power Up
+		powerUp = new UpButton("", this);
+		add(powerUp, "cell 5 0");
+		//Power Down
+		powerDown = new DownButton("", this);
+		add(powerDown, "cell 7 0");
+		//Power Label
+		power = new JLabel("" + currentTank().getLaunchPower());
+		add(power, "cell 6 0");
+
+		//Health Label
+
+		//Fire Button
+
+	}
+
+	protected void hideTopMenu() {
+		remove(playerName);
+		remove(angleUp);
+		remove(angleDown);
+		remove(angle);
+		remove(powerUp);
+		remove(powerDown);
+		remove(power);
+	}
+
+	protected void showTopMenu() {
+		add(playerName, "cell 0 0");
+		this.add(angleUp, "cell 4 0");
+		add(angleDown, "cell 2 0");
+		add(angle, "cell 3 0");
+		add(powerUp, "cell 5 0");
+		add(powerDown, "cell 7 0");
+		add(power, "cell 6 0");
+	}
+
+	/**
+	 * @ getGameStatus
+	 * @params none
+	 * @return returns true if the game is paused and false if not
+	 * 
+	 */
+	public boolean getGameStatus() {
+		return paused;
+	}
+
+	protected void showPlayerStats() {
+		tabbed = true;
+		hideTopMenu();
+		pauseLayout = new MigLayout("", "["+ ((getXTerrain() - 500)/2) +"][29][29][26][26][26]["+ ((getXTerrain() - 500)/2) +"]", "[150][35][40][][][][][][]");
+		setLayout(pauseLayout);
+	}
+
+	protected void hidePlayerStats() {
+		tabbed = false;
+		if (!getGameStatus()) {//Make sure we don't bring back the top control menu 
+			//While the game is paused
+			showTopMenu();
+			setLayout(normalLayout);
+		}
 	}
 
 	@Override
@@ -435,34 +558,88 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		if (downKeys.contains((long) e.getKeyCode())) return;
 		else downKeys.add((long) e.getKeyCode());
 
-		//draws all of the drawables in the drawable array
-		Tank t = players.get(currentPlayer - 1);
-
-		// move left
-		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-			t.startMotion(true);
+		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+			if (paused) {
+				Main.Main.setTickerPause(false);
+				paused = false;
+				remove(pauseTitle);
+				remove(unPause);
+				remove(quit);
+				setLayout(normalLayout);
+				showTopMenu();
+				revalidate();
+			} else {
+				Main.Main.setTickerPause(true);
+				paused = true;
+				hidePlayerStats();
+				pauseLayout = new MigLayout("", "["+ ((getXTerrain() - 500)/2) +"][29][29][26][26][26]["+ ((getXTerrain() - 500)/2) +"]", "[150][35][40][][][][][][]");
+				setLayout(pauseLayout);
+				hideTopMenu();
+				quit = new JButton("Quit to Menu");
+				quit.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						Main.Main.loadMenu(); 
+					}
+				});
+				unPause = new JButton("UnPause");
+				unPause.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						paused = false;
+						remove(pauseTitle);
+						remove(unPause);
+						remove(quit);
+						setLayout(normalLayout);
+						showTopMenu();
+						revalidate(); 
+					}
+				});
+				add(unPause, "cell 5 4, alignx center");
+				add(quit, "cell 5 5, alignx center");
+				add(pauseTitle,"cell 5 2, alignx center");
+				tabbed = false;//Makes sure the tab and pause menus don't overlay
+				revalidate();	
+			}
 		}
+		if (!paused) {
 
-		// move right
-		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-			t.startMotion(false);
-		}
+			if (e.getKeyCode() == KeyEvent.VK_TAB) {
+				showPlayerStats();
+			}
 
-		// rotate cannon counter clockwise
-		if (e.getKeyCode() == KeyEvent.VK_UP) {
-			t.aimCannon(true);
-		}
+			//draws all of the drawables in the drawable array
+			Tank t = players.get(currentPlayer - 1);
 
-		// rotate cannon clockwise
-		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-			t.aimCannon(false);
-		}
+			// move left
+			if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+				t.startMotion(true);
+			}
 
-		// fire projectile
-		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-			System.out.println("fire");
-			Main.Main.sound.loadSound("sounds/Shot1.wav");
-			Main.Main.sound.run();
+			// move right
+			if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+				t.startMotion(false);
+			}
+
+			// rotate cannon counter clockwise
+			if (e.getKeyCode() == KeyEvent.VK_UP) {
+				t.aimCannon(true);
+			}
+
+			// rotate cannon clockwise
+			if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+				t.aimCannon(false);
+			}
+
+			// fire projectile
+			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+				t.stopMotion();
+				System.out.println("fire");
+				Main.Main.sound.loadSound("sounds/Shot1.wav");
+				Main.Main.sound.run();
+
+				nextPlayerTurn();
+			}
 		}
 		/*for ( int i = 0; i < players.size(); i++) {
 			if (i == currentPlayer && (drawable.get(i) instanceof manualTank || drawable.get(i) instanceof AITank)) {// PLAYER NUMBER HERE FOR THE EVENTUAL TURNS
@@ -485,7 +662,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 						System.out.println("2");
 					}
 					System.out.println(drawable.get(i).getHealth());
-					
+
 					nextPlayerTurn();
 					repaint();
 					break;
@@ -502,25 +679,27 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		Tank t = players.get(currentPlayer - 1);
 
 		switch (e.getKeyCode()) {
-			// Stop moving tank when motion key released
-			case KeyEvent.VK_LEFT:
-			case KeyEvent.VK_RIGHT:
-				t.stopMotion();
-				break;
+		// Stop moving tank when motion key released
+		case KeyEvent.VK_LEFT:
+		case KeyEvent.VK_RIGHT:
+			t.stopMotion();
+			break;
 
 			// Stop adjusting cannon angle when aim key released
-			case KeyEvent.VK_UP:
-			case KeyEvent.VK_DOWN:
-				t.stopAimCannon();
-				break;
+		case KeyEvent.VK_UP:
+		case KeyEvent.VK_DOWN:
+			t.stopAimCannon();
+			break;
+		case KeyEvent.VK_TAB:
+			hidePlayerStats();
+			break;
 		}
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// Unused
 
 	}
-	
-	
+
+
 }// End of abstract Terrain Class

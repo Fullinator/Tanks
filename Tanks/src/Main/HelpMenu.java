@@ -28,18 +28,23 @@ public class HelpMenu extends JPanel{
 		
 		JLabel controls = new JLabel("<html><center><h1>Controls</h1></center>" + 
 		"<ul>" + 
-			"<li>Move Left:  		</li>" +
-			"<li>Move Right: 		</li>" +
-			"<li>Fire: 				</li>" +
-			"<li>Move Turret Up: 	</li>" +
-			"<li>Move Turret Down:	</li>" +
+			"<li>Move Left: Left Arrow Key</li>" +
+			"<li>Move Right: Right Arrow Key</li>" +
+			"<li>Fire: Space</li>" +
+			"<li>Move Turret Up: Up Arrow Key</li>" +
+			"<li>Move Turret Down: Down Arrow Key</li>" +
 			"<li>Power Up: 			</li>" +
 			"<li>Power Down: 		</li>" +
+			"<li>Pause: Escape" +
+			"<li>Player Stats: Tab</li>" +
 		"</ul></html>");
 		
 		add(controls, "cell 3 1, alignx 50%");
 		
-		JLabel about = new JLabel("<html><center><h1>About</h1><br><p>Tanks is a reimagining of an old flash 2-dimensional game where players could battle to be the last man standing.</p></center></html>");
+		JLabel about = new JLabel("<html><center><h1>About</h1><br><p>Tanks is a reimagining of an old flash 2-dimensional game where players could battle to be the last man standing.<br>" + 
+								  "Tanks uses JAMA 1.0.3 and MigLayout 4.0:<br>" + 
+								  "http://www.miglayout.com<br>" + 
+								  "http://math.nist.gov/javanumerics/jama/</p></center></html>");
 		add(about, "cell 3 2, aligny -100%, alignx 50%");
 		
 		//Add back button
@@ -51,48 +56,6 @@ public class HelpMenu extends JPanel{
 			}
 		});
 		add(btnBack, "cell 3 3, alignx center");
-	/*
-
-	    java.net.URL helpURL = getClass( ).getResource("/html/help.html");
-
-	    if (helpURL != null) {
-	        try {
-	            setPage(helpURL);
-	        } catch (IOException e) {
-	            System.err.println("Attempted to read a bad URL: " + helpURL);
-	        }
-	    } else {
-	        System.err.println("Couldn't find file: help.html");
-	    }
-
-	    JScrollPane editorScrollPane = new JScrollPane(this);
-
-	    editorScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-	    editorScrollPane.setPreferredSize(new Dimension(xDim, yDim));
-	    editorScrollPane.setMinimumSize(new Dimension(xDim, yDim));
-	*/
-/*
-
-	    JLabel emptyLabel = new JLabel("");
-
-	    emptyLabel.setPreferredSize(new Dimension(300, 300));
-
-	    JButton launch = new JButton("Launch!");
-
-	    launch.setPreferredSize(new Dimension(350, 50));
-
-	    JFrame f = new JFrame();
-
-	    f.setTitle("Stonelore Launcher");
-	    f.setSize(350, 400);
-	    f.setLocationRelativeTo(null);
-	    f.getContentPane().add(emptyLabel, BorderLayout.CENTER);
-	    f.getContentPane().add(editorScrollPane, BorderLayout.NORTH);
-	    f.getContentPane().add(launch, BorderLayout.SOUTH);
-	    f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    f.setResizable(false);
-	    f.setVisible(true);
-	*/
 	}
 
 }//END OF HELPMENU
