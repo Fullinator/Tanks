@@ -646,34 +646,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				nextPlayerTurn();
 			}
 		}
-		/*for ( int i = 0; i < players.size(); i++) {
-			if (i == currentPlayer && (drawable.get(i) instanceof manualTank || drawable.get(i) instanceof AITank)) {// PLAYER NUMBER HERE FOR THE EVENTUAL TURNS
-				//fires a shell
-				if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-					double theta = Math.PI - drawable.get(i).barrelAngle;				
-					sound.loadSound("sounds/Shot1.wav");
-					sound.run();
-					int barrelX = (int)(drawable.get(i).getX() + 20 + 20 * Math.cos(theta));
-					int barrelY = (int)(findY(drawable.get(i).getX()) - 18 - 20 * Math.sin(theta));
-					standardShell shell = new standardShell(this, terrain, getXTerrain(), getYTerrain(), barrelX, barrelY, drawable.get(i).barrelAngle + drawable.get(i).tankAngle+ Math.PI, drawable, drawable.get(i).v0);
-					drawable.add(shell);
-					setDrawable(drawable);
-					if(Math.abs((drawable.get(i).getX() + 19) - shell.getX()) <= 19){
-						drawable.get(i).setHealth(drawable.get(i).getHealth() - 3);
-						System.out.println("1");
-					}
-					else if(Math.abs((drawable.get(i).getX() + 19) - shell.getX()) <= 39){
-						drawable.get(i).setHealth(drawable.get(i).getHealth() - 1);
-						System.out.println("2");
-					}
-					System.out.println(drawable.get(i).getHealth());
-
-					nextPlayerTurn();
-					repaint();
-					break;
-				}
-			}
-		}*/
 	}//end of keyPressed method
 
 
