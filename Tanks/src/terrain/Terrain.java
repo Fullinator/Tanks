@@ -560,6 +560,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			if (paused) {
+				Main.Main.setTickerPause(false);
 				paused = false;
 				remove(pauseTitle);
 				remove(unPause);
@@ -568,6 +569,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				showTopMenu();
 				revalidate();
 			} else {
+				Main.Main.setTickerPause(true);
 				paused = true;
 				hidePlayerStats();
 				pauseLayout = new MigLayout("", "["+ ((getXTerrain() - 500)/2) +"][29][29][26][26][26]["+ ((getXTerrain() - 500)/2) +"]", "[150][35][40][][][][][][]");

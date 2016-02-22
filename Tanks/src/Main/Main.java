@@ -145,6 +145,10 @@ public class Main extends JFrame {
 		frame.dispose();
 		ticker.stopTicking();
 	}
+
+	public static void setTickerPause(boolean pause) {
+		ticker.setPaused(pause);
+	}
 	
 }
 // TO DO:
