@@ -17,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import Jama.Matrix;
+import Main.Main;
 import Main.Ticker;
 import buttons.DownButton;
 import buttons.LeftButton;
@@ -553,6 +554,47 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		}
 	}
 
+	protected void pause() {
+		Main.setTickerPause(true);
+		paused = true;
+		hidePlayerStats();
+		pauseLayout = new MigLayout("", "["+ ((getXTerrain() - 500)/2) +"][29][29][26][26][26]["+ ((getXTerrain() - 500)/2) +"]", "[150][35][40][][][][][][]");
+		setLayout(pauseLayout);
+		hideTopMenu();
+		quit = new JButton("Quit to Menu");
+		quit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Main.loadMenu(); 
+				Main.setTickerPause(true);
+			}
+		});
+		unPause = new JButton("UnPause");
+		unPause.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				unPause();
+			}
+		});
+		add(unPause, "cell 5 4, alignx center");
+		add(quit, "cell 5 5, alignx center");
+		add(pauseTitle,"cell 5 2, alignx center");
+		tabbed = false;//Makes sure the tab and pause menus don't overlay
+		revalidate();
+	}
+	
+	protected void unPause() {
+		Main.setTickerPause(false);
+		paused = false;
+		remove(pauseTitle);
+		remove(unPause);
+		remove(quit);
+		setLayout(normalLayout);
+		showTopMenu();
+		revalidate();
+		requestFocusInWindow();
+	}
+	
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (downKeys.contains((long) e.getKeyCode())) return;
@@ -560,46 +602,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			if (paused) {
-				Main.Main.setTickerPause(false);
-				paused = false;
-				remove(pauseTitle);
-				remove(unPause);
-				remove(quit);
-				setLayout(normalLayout);
-				showTopMenu();
-				revalidate();
+				unPause();
 			} else {
-				Main.Main.setTickerPause(true);
-				paused = true;
-				hidePlayerStats();
-				pauseLayout = new MigLayout("", "["+ ((getXTerrain() - 500)/2) +"][29][29][26][26][26]["+ ((getXTerrain() - 500)/2) +"]", "[150][35][40][][][][][][]");
-				setLayout(pauseLayout);
-				hideTopMenu();
-				quit = new JButton("Quit to Menu");
-				quit.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						Main.Main.loadMenu(); 
-					}
-				});
-				unPause = new JButton("UnPause");
-				unPause.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						paused = false;
-						remove(pauseTitle);
-						remove(unPause);
-						remove(quit);
-						setLayout(normalLayout);
-						showTopMenu();
-						revalidate(); 
-					}
-				});
-				add(unPause, "cell 5 4, alignx center");
-				add(quit, "cell 5 5, alignx center");
-				add(pauseTitle,"cell 5 2, alignx center");
-				tabbed = false;//Makes sure the tab and pause menus don't overlay
-				revalidate();	
+				pause();
 			}
 		}
 		if (!paused) {
@@ -635,8 +640,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				t.stopMotion();
 				System.out.println("fire");
-				Main.Main.sound.loadSound("sounds/Shot1.wav");
-				Main.Main.sound.run();
+				Main.sound.loadSound("sounds/Shot1.wav");
+				Main.sound.run();
 
 				nextPlayerTurn();
 			}
