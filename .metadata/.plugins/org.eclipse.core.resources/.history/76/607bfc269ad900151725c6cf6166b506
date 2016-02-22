@@ -67,13 +67,9 @@ public  class Projectile{
 	}
 	
 	
-	public void setX(double x){
+	public void setLoc(double x,double y){
 		intX = x;
-		
-	}
-	public void setY(double y){
 		intY = y;
-		
 	}
 	
 	public double[] fire(long time, double x, double y){
@@ -82,11 +78,9 @@ public  class Projectile{
 		this.time = time + this.time;
 		//get time in seconds
 		vX = vX + wind*time;
-		x = (double) x0 + vX * (double) time;
-		y = (double) y0 + vY * (double) time + 0.5  * Math.pow(time, 2);
+		x = (double) x + vX * (double) time;
+		y = (double) y + vY * (double) time + 0.5  * Math.pow(time, 2);
 		points = new double[2];
-		
-		//cordinates are stored in the points array
 		points[0] = x;
 		points[1] = y;
 		System.out.println(points[0] +" " + points[1]);

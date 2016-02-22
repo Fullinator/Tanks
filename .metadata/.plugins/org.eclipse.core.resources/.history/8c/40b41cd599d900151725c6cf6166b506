@@ -16,7 +16,7 @@ import terrain.Terrain;
  * @author Joel Cherney
  *
  */
-public class standardShell implements Runnable {
+public class standardShell extends Projectile implements Runnable {
 
 	private Thread t;
 	private int[][] terrain;
@@ -135,13 +135,10 @@ public class standardShell implements Runnable {
 
 	
 	public int getX() {
-		projectile.setX(x);
 		return (int) x;
-		
 	}
 
 	public int getY() {
-		projectile.setY(y);
 		return (int) y;
 	}
 
