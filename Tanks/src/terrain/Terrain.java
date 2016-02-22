@@ -357,7 +357,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 						if (terrain[i][j] > 0 && !(terrain[i][j + 1] > 0)){
 							terrain[i][j+1] = terrain[i][j];
 							terrain[i][j] = 0;
-							repaint();
+							//repaint();
 						}
 					}
 				}
@@ -383,7 +383,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				}
 			}
 		}
-		repaint();
+		//repaint();
 	}//end of the remove method
 
 	/**
@@ -537,6 +537,22 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		return paused;
 	}
 
+	protected void showPlayerStats() {
+		tabbed = true;
+		hideTopMenu();
+		pauseLayout = new MigLayout("", "["+ ((getXTerrain() - 500)/2) +"][29][29][26][26][26]["+ ((getXTerrain() - 500)/2) +"]", "[150][35][40][][][][][][]");
+		setLayout(pauseLayout);
+	}
+
+	protected void hidePlayerStats() {
+		tabbed = false;
+		if (!getGameStatus()) {//Make sure we don't bring back the top control menu 
+			//While the game is paused
+			showTopMenu();
+			setLayout(normalLayout);
+		}
+	}
+
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (downKeys.contains((long) e.getKeyCode())) return;
@@ -553,6 +569,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				revalidate();
 			} else {
 				paused = true;
+				hidePlayerStats();
 				pauseLayout = new MigLayout("", "["+ ((getXTerrain() - 500)/2) +"][29][29][26][26][26]["+ ((getXTerrain() - 500)/2) +"]", "[150][35][40][][][][][][]");
 				setLayout(pauseLayout);
 				hideTopMenu();
@@ -586,8 +603,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		if (!paused) {
 
 			if (e.getKeyCode() == KeyEvent.VK_TAB) {
-				tabbed = true;
-				hideTopMenu();
+				showPlayerStats();
 			}
 
 			//draws all of the drawables in the drawable array
@@ -672,11 +688,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			t.stopAimCannon();
 			break;
 		case KeyEvent.VK_TAB:
-			tabbed = false;
-			if (!paused) {//Make sure we don't bring back the top control menu 
-						  //While the game is paused
-				showTopMenu();
-			}
+			hidePlayerStats();
 			break;
 		}
 	}
