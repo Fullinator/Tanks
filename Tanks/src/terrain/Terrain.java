@@ -638,6 +638,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 			// fire projectile
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+				t.stopAimCannon();
 				t.stopMotion();
 				System.out.println("fire");
 				Main.sound.loadSound("sounds/Shot1.wav");
