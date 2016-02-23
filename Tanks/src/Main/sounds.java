@@ -7,7 +7,6 @@ public class sounds {
 
 	private Clip myClip;
 	private boolean soundPlayed = false;
-	private boolean runOnce = false;
 	private AudioFormat af = null;
 	private AudioInputStream audioInputStream = null;
 	private int size = 0;
@@ -58,7 +57,6 @@ public class sounds {
 	}
 
 	public void runLoop() {
-		if (!runOnce) {
 			try {
 				myClip = (Clip) AudioSystem.getLine(info);
 				myClip.open(af, audio, 0, size);
@@ -66,8 +64,6 @@ public class sounds {
 				e.printStackTrace();
 			}
 			myClip.loop(Clip.LOOP_CONTINUOUSLY);
-			runOnce = true;
-		}
 	}
 
 	public void stop() {
