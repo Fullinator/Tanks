@@ -21,7 +21,6 @@ public class Main extends JFrame {
 	private static JFrame frame = new JFrame();
 	private static MainMenu menu;
 	private static HelpMenu help;
-
 	private static Ticker ticker;
 
 	public static sounds sound = new sounds();
@@ -43,7 +42,8 @@ public class Main extends JFrame {
 		menu.setVisible(true);
 		frame.setFocusable(false);
 		frame.setVisible(true);
-
+		sound.loadSound("sounds/titleSong2.wav");
+		sound.runLoop();
 		ticker = new Ticker(10);
 		new Thread(ticker).start();
 	}
@@ -62,6 +62,7 @@ public class Main extends JFrame {
 		menu.setVisible(true);
 		frame.setFocusable(false);
 		frame.setVisible(true);
+		
 	}
 	
 	public static void settings() {
@@ -109,6 +110,7 @@ public class Main extends JFrame {
 	}
 	
 	public static void startSand(String[] names) {
+		sound.stop();
 		frame.getContentPane().removeAll();
 		map = new Sand(xLength, yLength, manualTanks, names);
 		frame.add(map);
@@ -120,6 +122,7 @@ public class Main extends JFrame {
 	}
 	
 	public static void startSnow(String[] names) {
+		sound.stop();
 		frame.getContentPane().removeAll();
 		map = new Snow(xLength, yLength, manualTanks, names);
 		frame.add(map);
@@ -131,6 +134,7 @@ public class Main extends JFrame {
 	}
 	
 	public static void startForrest(String[] names) {
+		sound.stop();
 		frame.getContentPane().removeAll();
 		map = new Forest(xLength, yLength, manualTanks, names);
 		frame.add(map);
@@ -142,6 +146,7 @@ public class Main extends JFrame {
 	}
 	
 	public static void exitGame() {
+		sound.stop();
 		frame.dispose();
 		ticker.stopTicking();
 	}
