@@ -1,6 +1,7 @@
 package terrain;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -12,9 +13,13 @@ import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
 
 import Jama.Matrix;
 import Main.Main;
@@ -541,23 +546,41 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	protected void showPlayerStats() {
 		tabbed = true;
 		hideTopMenu();
-		pauseLayout = new MigLayout("", "["+ ((getXTerrain() - 500)/2) +"][29][29][26][26][26]["+ ((getXTerrain() - 500)/2) +"]", "[150][35][40][][][][][][]");
+		removeAll();
+		pauseLayout = new MigLayout("", "[300][][][][][]", "[150][][]");
 		setLayout(pauseLayout);
+		for (int i = 0; i < players.size(); i ++) {
+			JLabel name = new JLabel(players.get(i).getName());
+			name.setFont(new Font("Arial", Font.CENTER_BASELINE, 30));
+			name.setForeground(Color.WHITE);
+			add(name, "cell 1 " + i + 1);
+
+			UIManager.put("ProgressBar.selectionForeground",Color.WHITE);  //colour of precentage counter on red background
+			JProgressBar health = new JProgressBar(0,100);
+			health.setForeground(Color.orange);
+		    health.setBackground(Color.green);
+			health.setValue( players.get(i).getHealth());
+			health.setStringPainted(true);
+			add(health , "cell 3 " + i + 1);
+		}
+		revalidate();
 	}
 
 	protected void hidePlayerStats() {
 		tabbed = false;
 		if (!getGameStatus()) {//Make sure we don't bring back the top control menu 
 			//While the game is paused
-			showTopMenu();
 			setLayout(normalLayout);
+			removeAll();
+			showTopMenu();
+			revalidate();
 		}
 	}
 
 	protected void pause() {
+		hidePlayerStats();
 		Main.setTickerPause(true);
 		paused = true;
-		hidePlayerStats();
 		pauseLayout = new MigLayout("", "["+ ((getXTerrain() - 500)/2) +"][29][29][26][26][26]["+ ((getXTerrain() - 500)/2) +"]", "[150][35][40][][][][][][]");
 		setLayout(pauseLayout);
 		hideTopMenu();
