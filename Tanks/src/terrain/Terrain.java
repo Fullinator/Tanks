@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -35,6 +36,7 @@ import drawable.manualTank;
 import drawable.standardShell;
 import net.miginfocom.swing.MigLayout;
 import drawable.Drawable2;
+import drawable.Pyramid;
 import drawable.Tank;
 import drawable.UserTank;
 
@@ -94,7 +96,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		createTopMenu();
 		paintLock = false;
 		Ticker.addMethod(this::render);
-		findPlacement(2);
+		int[] foo = findPlacement(2);
+		drawable.add(new Pyramid(true, new Point(foo[0],findY(foo[1]))));
 	}
 
 	private void render(long elapsedNanos) {
@@ -459,7 +462,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		AffineTransform old = g2d.getTransform();// Saves a copy of the old transform so the rotation can be reset later
 
 		for (int i = 0; i < drawable.size(); i++) {// draws the clouds and tanks and eventually trees and whatever else needs to be drawn
-
+			
 			if (drawable.get(i) instanceof Tank) {// draws player controlled tanks
 				g2d.rotate(((Tank)drawable.get(i)).angle(drawable.get(i).getX() + 20, terrain), drawable.get(i).getX(), findY(drawable.get(i).getX()));// this takes a radian. It has to be a very small radian
 				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), findY(drawable.get(i).getX()) - 18, null);
@@ -468,15 +471,12 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				g2d.setColor(Color.BLACK);
 				g2d.rotate(((Tank)drawable.get(i)).getBarrelAngle(), drawable.get(i).getX() + 20, findY(drawable.get(i).getX()) - 15 );
 				g2d.fillRect(drawable.get(i).getX(), findY(drawable.get(i).getX()) - 17, 20, 4);
-			}
-
-			if (drawable.get(i) instanceof standardShell) {// draws the missile
+				g2d.setTransform(old);// resets the rotation back to how it was before the painting began
+			} else if (drawable.get(i) instanceof standardShell) {// draws the missile
 				g2d.fillOval(drawable.get(i).getX(), drawable.get(i).getY(), 5, 5);
-			}
-
-			g2d.setTransform(old);// resets the rotation back to how it was before the painting began
-
-			if (drawable.get(i) instanceof Clouds) {// draws clouds
+			} else if (drawable.get(i) instanceof Clouds) {// draws clouds
+				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY(), null);
+			} else {
 				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY(), null);
 			}
 
