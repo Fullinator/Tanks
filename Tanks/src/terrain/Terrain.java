@@ -100,12 +100,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		createTopMenu();
 		paintLock = false;
 		Ticker.addMethod(this::render);
-<<<<<<< HEAD
-		
-=======
 		int[] foo = findPlacement(2);
 		drawable.add(new Pyramid(true, new Point(foo[0],findY(foo[1]))));
->>>>>>> 98fb4cbd4a5b93d8b126cb0368297b38ac81ca6c
 	}
 
 	private void render(long elapsedNanos) {
@@ -714,15 +710,10 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				t.stopAimCannon();
 				t.stopMotion();
 				System.out.println("fire");
-<<<<<<< HEAD
 				projectile = new Projectile(currentTank());
 				Ticker.addMethod(projectile::fire);
-				Main.Main.sound.loadSound("sounds/Shot1.wav");
-				Main.Main.sound.run();
-=======
 				Main.sound.loadSound("sounds/TNT.wav");
 				Main.sound.run();
->>>>>>> 98fb4cbd4a5b93d8b126cb0368297b38ac81ca6c
 
 				nextPlayerTurn();
 			}
