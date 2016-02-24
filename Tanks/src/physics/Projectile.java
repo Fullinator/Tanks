@@ -7,6 +7,8 @@ import drawable.drawable;
 import drawable.standardShell;
 
 import java.math.*;
+import java.util.function.IntFunction;
+
 import drawable.Tank;
 import Main.Ticker;
 import terrain.Terrain;
@@ -32,7 +34,7 @@ public  class Projectile{
 	double mass;
 	Tank tank;
 
-	public Projectile(Tank tank){
+	public Projectile(Tank tank, IntFunction<Integer> findY){
 		this.tank = tank;
 		intX = tank.getX();
 		System.out.println("X:" + intX);
@@ -48,7 +50,7 @@ public  class Projectile{
 		System.out.println("WindSpeed:" + windSpeed);
 		double[] points = new double[2];
 		points[0] = intX;
-		points[1] = intY;
+		points[1] = findY.apply((int)intX);
 		System.out.println("Points:" + points);
 		height = intY;
 		time = 0;
