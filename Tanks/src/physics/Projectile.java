@@ -98,11 +98,11 @@ public  class Projectile{
 		//get time in seconds
 		vX = vX + windSpeed*this.time;
 		points = new double[2];
-		intX = x0 + vX * this.time;
-		intY = y0 + vY * this.time + 0.5  * Math.pow(this.time, 2);
+		points[0] = x0 + vX * this.time;
+		points[1] = y0 + vY * this.time + 0.5  * Math.pow(this.time, 2);
 
 
-		System.out.println("Velocity: <" + vX + ", " + vY + ">\tLocation: (" + intX +", " + intY + ")");
+		System.out.println("Velocity: <" + vX + ", " + vY + ">\tLocation: (" + points[0] +", " + points[1] + ")");
 		return points;
 	}
 
