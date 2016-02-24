@@ -59,7 +59,7 @@ public class standardShell implements Runnable {
 		t.start(); // Start the thread
 		this.power = power;
 		this.wind = wind;
-		projectile = new Projectile(x0,y0,wind,power);
+		
 	}
 	
 	

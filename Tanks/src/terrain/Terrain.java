@@ -16,6 +16,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import physics.Projectile;
+import physics.Wind;
 import Jama.Matrix;
 import Main.Ticker;
 import buttons.DownButton;
@@ -67,6 +69,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	JButton quit;
 	JButton unPause;
 	protected boolean tabbed = false;
+	Wind wind;
+	Projectile projectile;
 
 	/**
 	 *
@@ -88,6 +92,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		createTopMenu();
 		paintLock = false;
 		Ticker.addMethod(this::render);
+		
 	}
 
 	private void render(long elapsedNanos) {
@@ -99,6 +104,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	}
 
 	public Tank currentTank() {
+		
 		return players.get(currentPlayer - 1);
 		//		for ( int i = 0; i < drawable.size(); i++) {
 		//			if (drawable.get(i).playerNumber() == currentPlayer) {
@@ -287,15 +293,17 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	protected void createTanks(int numberOfTanks, String[] names) {
 		players  = new ArrayList<Tank>();
 		drawable = new ArrayList<Drawable2>();
-
 		for (int i = 0; i < maxHuman; i++) {
 			Tank t = new UserTank();
 			t.setName(names[i]);
 			drawable.add(t);
 			players.add(t);
+			
+			
 		}
 		setFocusTraversalKeysEnabled(false);
 		addKeyListener(this);
+		
 	}
 
 	/**
@@ -616,6 +624,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			// fire projectile
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				System.out.println("fire");
+				projectile = new Projectile(currentTank());
+				Ticker.addMethod(projectile::fire);
 				Main.Main.sound.loadSound("sounds/Shot1.wav");
 				Main.Main.sound.run();
 

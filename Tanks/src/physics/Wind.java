@@ -1,7 +1,7 @@
 package physics;
 
 public class Wind {
-	protected double windSpeed;
+	 double windSpeed = 0;
 
 
 
