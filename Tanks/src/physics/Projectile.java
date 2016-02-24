@@ -1,18 +1,9 @@
 package physics;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
-
-import drawable.drawable;
-import drawable.standardShell;
-
-import java.math.*;
 import drawable.Tank;
-import Main.Ticker;
 import terrain.Terrain;
-
+import java.util.function.*;
 public  class Projectile{
-	private Terrain painter;
 	double intX;
 	double intY;
 	double x0;
@@ -21,7 +12,6 @@ public  class Projectile{
 	double angle;
 	double power;
 	Terrain terrain;
-	private standardShell std;
 	Wind wind;
 	private static double windSpeed;
 	public  double vX;
@@ -55,7 +45,7 @@ public  class Projectile{
 		mass = 1;
 		this.power = tank.getLaunchPower()/mass;
 		setPower(this.power);
-		
+
 	}
 
 
@@ -90,10 +80,11 @@ public  class Projectile{
 		//get time in seconds
 		vX = vX + windSpeed*this.time;
 		System.out.println(vX);
+		System.out.println(vY);
 		points = new double[2];
 		intX = (double) x0 + vX * (double) this.time;
 		intY = (double) y0 + vY * (double) this.time + 0.5  * Math.pow(this.time, 2);
-		
+
 
 		System.out.println(intX +" " + intY);
 		return points;
@@ -107,7 +98,7 @@ public  class Projectile{
 		System.out.println(points);
 		fire(time);
 		System.out.println(points);
-		
+
 
 	}
 
