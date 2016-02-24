@@ -138,13 +138,13 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 * @return returns the y coordinate of the terrain or -1 if one cannot be found
 	 */
 	public int findY(int x){
-		if(x > 0 && x < xLength){
+	/*	if(x > 0 && x < xLength){
 			for(int i = 0; i < terrain[0].length; i += 1){
 				if(terrain[x][i] > 0){
 					return i;
 				}
 			}
-		}
+		}*/
 		return (int)(a + b * x + c * Math.pow(x, 2) + d * Math.pow(x, 3));	
 	}
 
@@ -477,7 +477,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			} else if (drawable.get(i) instanceof Clouds) {// draws clouds
 				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY(), null);
 			} else {
-				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY(), null);
+				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY() - drawable.get(i).queryImage().getHeight(), null);
 			}
 
 		}// End of loop to draw objects
