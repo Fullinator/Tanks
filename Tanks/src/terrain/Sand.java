@@ -1,19 +1,6 @@
 package terrain;
 
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.geom.AffineTransform;
-import java.util.ArrayList;
-import java.util.Random;
-
-import javax.swing.JLabel;
-
-import buttons.*;
-import drawable.*;
-import Jama.Matrix;
-import Main.sounds;
-import net.miginfocom.swing.MigLayout;
+import java.awt.Color;
 
 /**
  * The sand terrain. This creates the random 2D terrain and coordinates all of the events and painting for the game to happen
@@ -22,7 +9,7 @@ import net.miginfocom.swing.MigLayout;
  *
  */
 @SuppressWarnings("serial")
-public class Sand extends Terrain implements KeyListener{
+public class Sand extends Terrain{
 
 	/**
 	 * Sand's constructor

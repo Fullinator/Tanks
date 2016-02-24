@@ -1,9 +1,11 @@
 package terrain;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -12,13 +14,18 @@ import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
 
 import physics.Projectile;
 import physics.Wind;
 import Jama.Matrix;
+import Main.Main;
 import Main.Ticker;
 import buttons.DownButton;
 import buttons.LeftButton;
@@ -31,6 +38,7 @@ import drawable.manualTank;
 import drawable.standardShell;
 import net.miginfocom.swing.MigLayout;
 import drawable.Drawable2;
+import drawable.Pyramid;
 import drawable.Tank;
 import drawable.UserTank;
 
@@ -38,8 +46,8 @@ import drawable.UserTank;
 @SuppressWarnings("serial")
 public abstract class Terrain extends JPanel implements KeyListener{
 	protected int[][] terrain; // This will hold all of the points that will be painted
-	protected int xPanel = 0;// This will be set to the JPanels width
-	protected int yPanel = 0;// This will be set to the JPanels height
+	protected int xLength = 0;// This will be set to the JPanels width
+	protected int yLength = 0;// This will be set to the JPanels height
 	public int maxPlayers;
 	protected int currentPlayer = 1;
 	protected double y;
@@ -92,7 +100,12 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		createTopMenu();
 		paintLock = false;
 		Ticker.addMethod(this::render);
+<<<<<<< HEAD
 		
+=======
+		int[] foo = findPlacement(2);
+		drawable.add(new Pyramid(true, new Point(foo[0],findY(foo[1]))));
+>>>>>>> 98fb4cbd4a5b93d8b126cb0368297b38ac81ca6c
 	}
 
 	private void render(long elapsedNanos) {
@@ -134,7 +147,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 * @return returns the y coordinate of the terrain or -1 if one cannot be found
 	 */
 	public int findY(int x){
-		if(x > 0 && x < xPanel){
+		if(x > 0 && x < xLength){
 			for(int i = 0; i < terrain[0].length; i += 1){
 				if(terrain[x][i] > 0){
 					return i;
@@ -149,7 +162,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 * @param x the JPanels width
 	 */
 	public void setXTerrain(int x) {
-		xPanel = x;
+		xLength = x;
 	}
 
 	/**
@@ -157,7 +170,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 * @param y the JPanels height
 	 */
 	public void setYTerrain(int y) {
-		yPanel = y;
+		yLength = y;
 	}
 
 	/**
@@ -165,7 +178,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 * @return the JPanels width
 	 */
 	public int getXTerrain() {
-		return xPanel;
+		return xLength;
 	}
 
 	/**
@@ -173,7 +186,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 * @return the JPanels height
 	 */
 	public int getYTerrain() {
-		return yPanel;
+		return yLength;
 	}
 
 
@@ -283,6 +296,44 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		} 
 	}//END OF GENERATE
 
+	
+	/**
+	 * findPlacement returns the x and y position of where to place an image
+	 * @param width the width of the base of the image to place
+	 */
+	protected int[] findPlacement(int width) {
+		int start = -1, end = -1, tempStart = 0, tempEnd = 0, pastHeight = -1, length = 0;
+		int[] location = new int[2];
+		//loop through terrain
+		for (int i = 0; i < xLength; i++) {
+			for (int j = 0; j < yLength; j++) {
+				if (terrain[i][j] > 0) {
+					if (j == pastHeight) {//The heights are equal
+						break;
+					} else  {//The heights are not equal
+						tempEnd = i;
+						if (length < (tempEnd - tempStart)) {//The new length is greater than the old
+							start = tempStart;
+							end = tempEnd;
+							pastHeight = j;
+							length = (tempEnd - tempStart);
+							tempStart = i++;
+						} else {//The new length is not greater than the old
+							tempStart = i;
+						}
+						break;
+					}
+				}
+			}
+		}
+		//find the longest flattest area
+		location[0] = start;
+		location[1] = end;
+		//System.out.println(location[0] + "   end:"  + location[1]);
+		return location;
+	}
+	
+	
 	protected void createClouds(int numberOfClouds) {
 		for (int i = 0; i < numberOfClouds; i++) {
 			Clouds c = new Clouds(this, getXTerrain(), getYTerrain(), getXTerrain() - (getXTerrain() + 1));
@@ -351,21 +402,21 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			int low = (int)(-Math.sqrt(Math.pow(mag, 2) - Math.pow(i - y, 2)) + x);// Finds the lower x coordinate for the given y coordinate
 			int high = (int)(Math.sqrt(Math.pow(mag, 2) - Math.pow(i - y, 2)) + x);// Finds the upper x coordiante for the given y corrdinate
 			for(int j = low; j < high; j += 1){// loops from the lower x to the upper x
-				if(j >= 0 && j < xPanel && i >= 0 && i < yPanel){
+				if(j >= 0 && j < xLength && i >= 0 && i < yLength){
 					terrain[j][i] = 0;//sets points equal to false
 				}
 			}
 		}
 
 		//implement gravity
-		for(int k = 0; k < yPanel; k += 1){
+		for(int k = 0; k < yLength; k += 1){
 			for(int i = x - mag; i < x + mag; i += 1){
 				for(int j = y + mag; j > 0; j -= 1){
-					if(j + 1 < yPanel && j > 0 && i > 0 && i < xPanel){
+					if(j + 1 < yLength && j > 0 && i > 0 && i < xLength){
 						if (terrain[i][j] > 0 && !(terrain[i][j + 1] > 0)){
 							terrain[i][j+1] = terrain[i][j];
 							terrain[i][j] = 0;
-							repaint();
+							//repaint();
 						}
 					}
 				}
@@ -391,7 +442,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				}
 			}
 		}
-		repaint();
+		//repaint();
 	}//end of the remove method
 
 	/**
@@ -422,7 +473,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		AffineTransform old = g2d.getTransform();// Saves a copy of the old transform so the rotation can be reset later
 
 		for (int i = 0; i < drawable.size(); i++) {// draws the clouds and tanks and eventually trees and whatever else needs to be drawn
-
+			
 			if (drawable.get(i) instanceof Tank) {// draws player controlled tanks
 				g2d.rotate(((Tank)drawable.get(i)).angle(drawable.get(i).getX() + 20, terrain), drawable.get(i).getX(), findY(drawable.get(i).getX()));// this takes a radian. It has to be a very small radian
 				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), findY(drawable.get(i).getX()) - 18, null);
@@ -431,15 +482,12 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				g2d.setColor(Color.BLACK);
 				g2d.rotate(((Tank)drawable.get(i)).getBarrelAngle(), drawable.get(i).getX() + 20, findY(drawable.get(i).getX()) - 15 );
 				g2d.fillRect(drawable.get(i).getX(), findY(drawable.get(i).getX()) - 17, 20, 4);
-			}
-
-			if (drawable.get(i) instanceof standardShell) {// draws the missile
+				g2d.setTransform(old);// resets the rotation back to how it was before the painting began
+			} else if (drawable.get(i) instanceof standardShell) {// draws the missile
 				g2d.fillOval(drawable.get(i).getX(), drawable.get(i).getY(), 5, 5);
-			}
-
-			g2d.setTransform(old);// resets the rotation back to how it was before the painting began
-
-			if (drawable.get(i) instanceof Clouds) {// draws clouds
+			} else if (drawable.get(i) instanceof Clouds) {// draws clouds
+				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY(), null);
+			} else {
 				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY(), null);
 			}
 
@@ -452,14 +500,14 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			g2d.setColor(new Color(0x21a1cb));// The skies color
 			g2d.fillRect(0, 0, getXTerrain(), 70);
 			g2d.setColor(new Color(0,0,0,180));
-			g2d.fillRect(0, 0, xPanel, yPanel);
+			g2d.fillRect(0, 0, xLength, yLength);
 		}
 
 		if (paused) {
 			g2d.setColor(new Color(0x21a1cb));// The skies color
 			g2d.fillRect(0, 0, getXTerrain(), 70);
 			g2d.setColor(new Color(0,0,0,180));
-			g2d.fillRect(0, 0, xPanel, yPanel);
+			g2d.fillRect(0, 0, xLength, yLength);
 		}
 	}//end of paintComponent method
 
@@ -545,6 +593,81 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		return paused;
 	}
 
+	protected void showPlayerStats() {
+		tabbed = true;
+		hideTopMenu();
+		removeAll();
+		pauseLayout = new MigLayout("", "[300][][][][][]", "[150][][]");
+		setLayout(pauseLayout);
+		for (int i = 0; i < players.size(); i ++) {
+			JLabel name = new JLabel(players.get(i).getName());
+			name.setFont(new Font("Arial", Font.CENTER_BASELINE, 30));
+			name.setForeground(Color.WHITE);
+			add(name, "cell 1 " + i + 1);
+
+			UIManager.put("ProgressBar.selectionForeground",Color.WHITE);  //colour of precentage counter on red background
+			JProgressBar health = new JProgressBar(0,100);
+			health.setForeground(Color.orange);
+		    health.setBackground(Color.green);
+			health.setValue( players.get(i).getHealth());
+			health.setStringPainted(true);
+			add(health , "cell 3 " + i + 1);
+		}
+		revalidate();
+	}
+
+	protected void hidePlayerStats() {
+		tabbed = false;
+		if (!getGameStatus()) {//Make sure we don't bring back the top control menu 
+			//While the game is paused
+			setLayout(normalLayout);
+			removeAll();
+			showTopMenu();
+			revalidate();
+		}
+	}
+
+	protected void pause() {
+		hidePlayerStats();
+		Main.setTickerPause(true);
+		paused = true;
+		pauseLayout = new MigLayout("", "["+ ((getXTerrain() - 500)/2) +"][29][29][26][26][26]["+ ((getXTerrain() - 500)/2) +"]", "[150][35][40][][][][][][]");
+		setLayout(pauseLayout);
+		hideTopMenu();
+		quit = new JButton("Quit to Menu");
+		quit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Main.loadMenu(); 
+				Main.setTickerPause(true);
+			}
+		});
+		unPause = new JButton("UnPause");
+		unPause.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				unPause();
+			}
+		});
+		add(unPause, "cell 5 4, alignx center");
+		add(quit, "cell 5 5, alignx center");
+		add(pauseTitle,"cell 5 2, alignx center");
+		tabbed = false;//Makes sure the tab and pause menus don't overlay
+		revalidate();
+	}
+	
+	protected void unPause() {
+		Main.setTickerPause(false);
+		paused = false;
+		remove(pauseTitle);
+		remove(unPause);
+		remove(quit);
+		setLayout(normalLayout);
+		showTopMenu();
+		revalidate();
+		requestFocusInWindow();
+	}
+	
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (downKeys.contains((long) e.getKeyCode())) return;
@@ -552,50 +675,15 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			if (paused) {
-				paused = false;
-				remove(pauseTitle);
-				remove(unPause);
-				remove(quit);
-				setLayout(normalLayout);
-				showTopMenu();
-				revalidate();
+				unPause();
 			} else {
-				paused = true;
-				pauseLayout = new MigLayout("", "["+ ((getXTerrain() - 500)/2) +"][29][29][26][26][26]["+ ((getXTerrain() - 500)/2) +"]", "[150][35][40][][][][][][]");
-				setLayout(pauseLayout);
-				hideTopMenu();
-				quit = new JButton("Quit to Menu");
-				quit.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						Main.Main.loadMenu(); 
-					}
-				});
-				unPause = new JButton("UnPause");
-				unPause.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						paused = false;
-						remove(pauseTitle);
-						remove(unPause);
-						remove(quit);
-						setLayout(normalLayout);
-						showTopMenu();
-						revalidate(); 
-					}
-				});
-				add(unPause, "cell 5 4, alignx center");
-				add(quit, "cell 5 5, alignx center");
-				add(pauseTitle,"cell 5 2, alignx center");
-				tabbed = false;//Makes sure the tab and pause menus don't overlay
-				revalidate();	
+				pause();
 			}
 		}
 		if (!paused) {
 
 			if (e.getKeyCode() == KeyEvent.VK_TAB) {
-				tabbed = true;
-				hideTopMenu();
+				showPlayerStats();
 			}
 
 			//draws all of the drawables in the drawable array
@@ -623,43 +711,22 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 			// fire projectile
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+				t.stopAimCannon();
+				t.stopMotion();
 				System.out.println("fire");
+<<<<<<< HEAD
 				projectile = new Projectile(currentTank());
 				Ticker.addMethod(projectile::fire);
 				Main.Main.sound.loadSound("sounds/Shot1.wav");
 				Main.Main.sound.run();
+=======
+				Main.sound.loadSound("sounds/TNT.wav");
+				Main.sound.run();
+>>>>>>> 98fb4cbd4a5b93d8b126cb0368297b38ac81ca6c
 
 				nextPlayerTurn();
 			}
 		}
-		/*for ( int i = 0; i < players.size(); i++) {
-			if (i == currentPlayer && (drawable.get(i) instanceof manualTank || drawable.get(i) instanceof AITank)) {// PLAYER NUMBER HERE FOR THE EVENTUAL TURNS
-				//fires a shell
-				if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-					double theta = Math.PI - drawable.get(i).barrelAngle;				
-					sound.loadSound("sounds/Shot1.wav");
-					sound.run();
-					int barrelX = (int)(drawable.get(i).getX() + 20 + 20 * Math.cos(theta));
-					int barrelY = (int)(findY(drawable.get(i).getX()) - 18 - 20 * Math.sin(theta));
-					standardShell shell = new standardShell(this, terrain, getXTerrain(), getYTerrain(), barrelX, barrelY, drawable.get(i).barrelAngle + drawable.get(i).tankAngle+ Math.PI, drawable, drawable.get(i).v0);
-					drawable.add(shell);
-					setDrawable(drawable);
-					if(Math.abs((drawable.get(i).getX() + 19) - shell.getX()) <= 19){
-						drawable.get(i).setHealth(drawable.get(i).getHealth() - 3);
-						System.out.println("1");
-					}
-					else if(Math.abs((drawable.get(i).getX() + 19) - shell.getX()) <= 39){
-						drawable.get(i).setHealth(drawable.get(i).getHealth() - 1);
-						System.out.println("2");
-					}
-					System.out.println(drawable.get(i).getHealth());
-
-					nextPlayerTurn();
-					repaint();
-					break;
-				}
-			}
-		}*/
 	}//end of keyPressed method
 
 
@@ -682,11 +749,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			t.stopAimCannon();
 			break;
 		case KeyEvent.VK_TAB:
-			tabbed = false;
-			if (!paused) {//Make sure we don't bring back the top control menu 
-						  //While the game is paused
-				showTopMenu();
-			}
+			hidePlayerStats();
 			break;
 		}
 	}

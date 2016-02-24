@@ -85,8 +85,8 @@ public  class Projectile{
 
 	public double[] fire(long time){
 		System.out.println("do I get here?");
-//		double Ttime = (time * Math.pow(10,-9));
-		this.time = time + this.time;
+		double Ttime = (time * Math.pow(10,-9));
+		this.time = Ttime + this.time;
 		//get time in seconds
 		vX = vX + windSpeed*this.time;
 		System.out.println(vX);
