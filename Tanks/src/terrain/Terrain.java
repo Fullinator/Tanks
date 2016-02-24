@@ -13,6 +13,7 @@ import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.function.*;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -710,7 +711,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				t.stopAimCannon();
 				t.stopMotion();
 				System.out.println("fire");
-				projectile = new Projectile(currentTank());
+				projectile = new Projectile(currentTank(),currentPlayer, findY(currentPlayer));
 				Ticker.addMethod(projectile::fire);
 				Main.sound.loadSound("sounds/TNT.wav");
 				Main.sound.run();
