@@ -1,5 +1,17 @@
 package physics;
 
+<<<<<<< HEAD
+=======
+import java.awt.*;
+import java.awt.image.BufferedImage;
+
+import drawable.drawable;
+import drawable.standardShell;
+
+import java.math.*;
+import java.util.function.IntFunction;
+
+>>>>>>> 03eb4b0532cd3d3bb74f69d2ae78cdcd35c03a8b
 import drawable.Tank;
 import terrain.Terrain;
 import java.util.function.*;
@@ -22,7 +34,7 @@ public  class Projectile{
 	double mass;
 	Tank tank;
 
-	public Projectile(Tank tank){
+	public Projectile(Tank tank, IntFunction<Integer> findY){
 		this.tank = tank;
 		intX = tank.getX();
 		System.out.println("X:" + intX);
@@ -38,7 +50,7 @@ public  class Projectile{
 		System.out.println("WindSpeed:" + windSpeed);
 		double[] points = new double[2];
 		points[0] = intX;
-		points[1] = intY;
+		points[1] = findY.apply((int)intX);
 		System.out.println("Points:" + points);
 		height = intY;
 		time = 0;
