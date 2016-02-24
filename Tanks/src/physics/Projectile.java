@@ -1,7 +1,5 @@
 package physics;
 
-<<<<<<< HEAD
-=======
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -11,10 +9,8 @@ import drawable.standardShell;
 import java.math.*;
 import java.util.function.IntFunction;
 
->>>>>>> 03eb4b0532cd3d3bb74f69d2ae78cdcd35c03a8b
 import drawable.Tank;
 import terrain.Terrain;
-import java.util.function.*;
 public  class Projectile{
 	double intX;
 	double intY;
@@ -37,8 +33,8 @@ public  class Projectile{
 	public Projectile(Tank tank, IntFunction<Integer> findY){
 		this.tank = tank;
 		intX = tank.getX();
+		intY = findY.apply((int)intX);
 		System.out.println("X:" + intX);
-		intY = tank.getY();
 		System.out.println("Y:" + intY);
 		x0 = intX;
 		y0 = intY;
@@ -48,10 +44,6 @@ public  class Projectile{
 		wind = new Wind();
 		windSpeed= wind.getWindSpeed();
 		System.out.println("WindSpeed:" + windSpeed);
-		double[] points = new double[2];
-		points[0] = intX;
-		points[1] = findY.apply((int)intX);
-		System.out.println("Points:" + points);
 		height = intY;
 		time = 0;
 		mass = 1;
@@ -86,32 +78,22 @@ public  class Projectile{
 	}
 
 	public double[] fire(long time){
-		System.out.println("do I get here?");
 		double Ttime = (time * Math.pow(10,-9));
 		this.time = Ttime + this.time;
 		//get time in seconds
 		vX = vX + windSpeed*this.time;
-		System.out.println(vX);
-		System.out.println(vY);
 		points = new double[2];
-		intX = (double) x0 + vX * (double) this.time;
-		intY = (double) y0 + vY * (double) this.time + 0.5  * Math.pow(this.time, 2);
+		intX = x0 + vX * this.time;
+		intY = y0 + vY * this.time + 0.5  * Math.pow(this.time, 2);
 
 
-		System.out.println(intX +" " + intY);
+		System.out.println("Velocity: <" + vX + ", " + vY + ">\tLocation: (" + intX +", " + intY + ")");
 		return points;
 	}
 
 	public double getAngle() {
 
 		return angle;
-	}
-	public void run(long time){
-		System.out.println(points);
-		fire(time);
-		System.out.println(points);
-
-
 	}
 
 }
