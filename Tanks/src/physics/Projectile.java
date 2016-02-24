@@ -11,7 +11,6 @@ import java.util.function.IntFunction;
 
 import drawable.Tank;
 import terrain.Terrain;
-import java.util.function.*;
 public  class Projectile{
 	double intX;
 	double intY;
@@ -31,11 +30,17 @@ public  class Projectile{
 	double mass;
 	Tank tank;
 
-	public Projectile(Tank tank,int X, int Y){
+	public Projectile(Tank tank,IntFunction<Integer> findY){
 		this.tank = tank;
-		intX = X;
+
+		
 		System.out.println("X:" + intX);
-		intY = Y;
+		
+
+		intX = tank.getX();
+		intY = findY.apply((int)intX);
+		System.out.println("X:" + intX);
+
 		System.out.println("Y:" + intY);
 		x0 = intX;
 		y0 = intY;
@@ -45,10 +50,12 @@ public  class Projectile{
 		wind = new Wind();
 		windSpeed= wind.getWindSpeed();
 		System.out.println("WindSpeed:" + windSpeed);
+
 		double[] points = new double[2];
 		points[0] = intX;
 		points[1] = intY;
 		System.out.println("Points:" + points);
+
 		height = intY;
 		time = 0;
 		mass = 1;
@@ -56,6 +63,9 @@ public  class Projectile{
 		setPower(this.power);
 
 	}
+
+
+	
 
 
 	public double getPower() {
@@ -83,32 +93,22 @@ public  class Projectile{
 	}
 
 	public double[] fire(long time){
-		System.out.println("do I get here?");
 		double Ttime = (time * Math.pow(10,-9));
 		this.time = Ttime + this.time;
 		//get time in seconds
 		vX = vX + windSpeed*this.time;
-		System.out.println(vX);
-		System.out.println(vY);
 		points = new double[2];
-		intX = (double) x0 + vX * (double) this.time;
-		intY = (double) y0 + vY * (double) this.time + 0.5  * Math.pow(this.time, 2);
+		intX = x0 + vX * this.time;
+		intY = y0 + vY * this.time + 0.5  * Math.pow(this.time, 2);
 
 
-		System.out.println(intX +" " + intY);
+		System.out.println("Velocity: <" + vX + ", " + vY + ">\tLocation: (" + intX +", " + intY + ")");
 		return points;
 	}
 
 	public double getAngle() {
 
 		return angle;
-	}
-	public void run(long time){
-		System.out.println(points);
-		fire(time);
-		System.out.println(points);
-
-
 	}
 
 }
