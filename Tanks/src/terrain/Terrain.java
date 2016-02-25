@@ -45,6 +45,7 @@ import drawable.standardShell;
 import net.miginfocom.swing.MigLayout;
 import drawable.Drawable2;
 import drawable.Pyramid;
+import drawable.Sun;
 import drawable.Tank;
 import drawable.UserTank;
 
@@ -106,10 +107,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		createTopMenu();
 		paintLock = false;
 		Ticker.addMethod(this::render);
-		
-		//foo is a debug varaible for adding a pyramid. It will be removed eventually. DO NOT rely on its' existence
-		int[] foo = new int[2];
-		drawable.add(new Pyramid(true, new Point(foo[0],findY(foo[1]))));
+		drawable.add(new Sun(xLength,yLength));
 	}
 
 	private void render(long elapsedNanos) {
