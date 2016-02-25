@@ -1,16 +1,21 @@
 package terrain;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.MultipleGradientPaint.CycleMethod;
 import java.awt.Point;
+import java.awt.RadialGradientPaint;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -96,7 +101,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		createTopMenu();
 		paintLock = false;
 		Ticker.addMethod(this::render);
-		int[] foo = findPlacement(2);
+		
+		//foo is a debug varaible for adding a pyramid. It will be removed eventually. DO NOT rely on its' existence
+		int[] foo = new int[2];
 		drawable.add(new Pyramid(true, new Point(foo[0],findY(foo[1]))));
 	}
 
@@ -482,6 +489,15 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 		}// End of loop to draw objects
 
+		/*
+		int r = 150;
+		Point2D center = new Point2D.Float(r*2, r*2);
+        float radius = 200;
+        float[] dist = {0.05f, .95f};
+        Color[] colors = {Color.YELLOW, new Color(0x21a1cb)};
+        g2d.setPaint(new RadialGradientPaint(center, radius, dist, colors,CycleMethod.REFLECT));
+        g2d.fill((new Ellipse2D.Float(r,r,r*2 + 1,r*2 + 1)));
+        */
 		g2d.setColor(new Color(0xdfdfdf));
 		g2d.fillRect(0, 0, getXTerrain(), 70);// draws the top menu bar
 
