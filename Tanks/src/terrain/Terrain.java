@@ -18,6 +18,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.function.*;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -27,6 +28,8 @@ import javax.swing.JProgressBar;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 
+import physics.Projectile;
+import physics.Wind;
 import Jama.Matrix;
 import Main.Main;
 import Main.Ticker;
@@ -80,6 +83,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	JButton quit;
 	JButton unPause;
 	protected boolean tabbed = false;
+	Wind wind;
+	Projectile projectile;
 
 	/**
 	 *
@@ -116,6 +121,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	}
 
 	public Tank currentTank() {
+		
 		return players.get(currentPlayer - 1);
 		//		for ( int i = 0; i < drawable.size(); i++) {
 		//			if (drawable.get(i).playerNumber() == currentPlayer) {
@@ -342,15 +348,17 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	protected void createTanks(int numberOfTanks, String[] names) {
 		players  = new ArrayList<Tank>();
 		drawable = new ArrayList<Drawable2>();
-
 		for (int i = 0; i < maxHuman; i++) {
 			Tank t = new UserTank();
 			t.setName(names[i]);
 			drawable.add(t);
 			players.add(t);
+			
+			
 		}
 		setFocusTraversalKeysEnabled(false);
 		addKeyListener(this);
+		
 	}
 
 	/**
@@ -719,6 +727,12 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				t.stopAimCannon();
 				t.stopMotion();
 				System.out.println("fire");
+
+//				projectile = new Projectile(currentTank(),currentPlayer, findY(currentPlayer));
+
+				projectile = new Projectile(currentTank(), this::findY);
+
+				Ticker.addMethod(projectile::fire);
 				Main.sound.loadSound("sounds/TNT.wav");
 				Main.sound.run();
 

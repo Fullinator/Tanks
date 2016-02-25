@@ -7,84 +7,108 @@ import drawable.drawable;
 import drawable.standardShell;
 
 import java.math.*;
+import java.util.function.IntFunction;
 
+import drawable.Tank;
 import terrain.Terrain;
-
 public  class Projectile{
-	protected int power;
-	protected static double intX;
-	protected static double intY;
-	protected static double x0;
-	protected static double y0;
-	protected static double g;
-	protected double angle;
-	protected double maxPower;
-	private Terrain terrain;
-	private standardShell std;
-	private static double wind;
-	public static double vX;
-	public static double vY;
+	double intX;
+	double intY;
+	double x0;
+	double y0;
+	double g;
+	double angle;
+	double power;
+	Terrain terrain;
+	Wind wind;
+	private static double windSpeed;
+	public  double vX;
+	public  double vY;
 	public double height;
-	public static double[] points;
+	public double[] points;
+	double time;
+	double mass;
+	Tank tank;
 
-	public Projectile(double x, double y, Terrain terr, Wind wind){
-		terrain = terr;
-		intX = x;
-		intY= y;
-		x0 = x;
-		y0 = y;
-		g = 1;
-		angle = Math.tan(y/x);
-		maxPower = 100;
-		this.wind = wind.getWindSpeed();
-		vX = 0;
-		vY = 0;
-		double[] points = new double[2];
-		height = 0;
+	public Projectile(Tank tank,IntFunction<Integer> findY){
+		this.tank = tank;
+
 		
+		System.out.println("X:" + intX);
+		
+
+		intX = tank.getX();
+		intY = findY.apply((int)intX);
+		System.out.println("X:" + intX);
+
+		System.out.println("Y:" + intY);
+		x0 = intX;
+		y0 = intY;
+		g = 1;
+		angle = tank.getBarrelAngle();
+		System.out.println("Angle:" + angle);
+		wind = new Wind();
+		windSpeed= wind.getWindSpeed();
+		System.out.println("WindSpeed:" + windSpeed);
+
+		double[] points = new double[2];
+		points[0] = intX;
+		points[1] = intY;
+		System.out.println("Points:" + points);
+
+		height = intY;
+		time = 0;
+		mass = 1;
+		this.power = tank.getLaunchPower()/mass;
+		setPower(this.power);
+
 	}
 
-	public Projectile() {
-		// TODO Auto-generated constructor stub
-	}
 
-	public int getPower() {
+	
+
+
+	public double getPower() {
 		return power;
 	}
 
-	public void setPower(int power){
-		this.power = power;
+	public void setPower(double power){
+		this.power = power/mass;
 		vX = (double) this.power * Math.cos(angle);
 		vY = (double) this.power* Math.sin(angle);
 	}
-	
+
 	public void setAngle(double ang){
 		angle = ang;
 	}
-	
-	public void setAngle(){
-		angle = Math.tan(y0/x0);
+
+
+	public void setX(double x){
+		intX = x;
+
 	}
-	
-	public double[] fire(int tick,double freq, double x, double y){
-		//freq is frequency of calls per second: ie freq = 10, 10 ticks per sec
-		System.out.println("do I get here?");
-		double time = tick/freq;
-		
-		vX = vX - wind;
-		x = (double) x + vX * (double) time;
-		y = (double) y + vY * (double) time + 0.5  * Math.pow(time, 2);
+	public void setY(double y){
+		intY = y;
+
+	}
+
+	public double[] fire(long time){
+		double Ttime = (time * Math.pow(10,-9));
+		this.time = Ttime + this.time;
+		//get time in seconds
+		vX = vX + windSpeed*this.time;
 		points = new double[2];
-		points[0] = x;
-		points[1] = y;
-		System.out.println(points[0] +" " + points[1]);
+		points[0] = x0 + vX * this.time;
+		points[1] = y0 + vY * this.time + 0.5  * Math.pow(this.time, 2);
+
+
+		System.out.println("Velocity: <" + vX + ", " + vY + ">\tLocation: (" + points[0] +", " + points[1] + ")");
 		return points;
 	}
 
 	public double getAngle() {
-		
+
 		return angle;
 	}
 
-	
 }
