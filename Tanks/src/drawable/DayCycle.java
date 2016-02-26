@@ -13,12 +13,10 @@ public class DayCycle implements Drawable2 {
 	private int x = -150;
 	private int y = 0;
 	private int radius;
-	private int wait = 2;
+	private int wait = 0;
 	private int count = 0;
 	private int yLength;
 	private int xLength;
-	private int xEquation = (int) Math.sqrt(Math.pow(y, 2) - radius);
-	private int yEquation;
 	private boolean day = true;
 
 	public DayCycle(int xLength, int yLength) {
@@ -36,7 +34,6 @@ public class DayCycle implements Drawable2 {
 		this.xLength = xLength;
 
 		radius = xLength/2;
-		yEquation  = (int) Math.sqrt(Math.pow((x - xLength/2), 2) - radius);
 	}
 
 	@Override
@@ -44,7 +41,7 @@ public class DayCycle implements Drawable2 {
 		if ( count == wait) {
 			x++;
 			count = 0;
-			return new Point(x, yEquation);
+			return new Point(x, Y());
 		} else {
 			count++;
 			return new Point(x,y);
@@ -69,8 +66,32 @@ public class DayCycle implements Drawable2 {
 
 	@Override
 	public int getY() { 
-		//System.out.println("x: " + x + "       Y: " + (int) (850 - (Math.sqrt(Math.abs(-Math.pow(x, 2)+800*x+200000)))));
+		//System.out.println("x: " + x + "       Y: " + Y());
+		return Y();
+	}
+
+	private int Y() {
 		return (int) (800 - (Math.sqrt(Math.abs(-Math.pow(x, 2)+800*x+200000))));
+	}
+
+	public boolean shiftNight() {
+		if (x >= xLength - 10) {
+			return true;
+		} else if (!day) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public int shiftNightAmount() {
+		for (int i = 1; i <= 10; i++ ) {
+			if ((xLength - i) == xLength) {
+				return i;
+			}
+		}
+
+		return 10;
 	}
 
 	@Override

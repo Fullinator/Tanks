@@ -17,6 +17,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.function.*;
 
@@ -85,9 +86,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	JButton unPause;
 	protected boolean tabbed = false;
 	Wind wind;
-	Projectile projectile;
-	double shotX;
-	double shotY;
+	protected int nightShiftAmount;
+	protected boolean nightShift;
+	private List<Projectile> projectiles;
 
 	/**
 	 *
@@ -112,10 +113,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 		int[] foo = findPlacement(2);
 		drawable.add(new Pyramid(true, new Point(foo[0],findY(foo[1]))));
-		shotX = 0;
-		shotY = 0;
 
 		drawable.add(new DayCycle(xLength,yLength));
+		projectiles = new ArrayList<>();
 	}
 
 	private void render(long elapsedNanos) {
@@ -157,13 +157,13 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 * @return returns the y coordinate of the terrain or -1 if one cannot be found
 	 */
 	public int findY(int x){
-		/*	if(x > 0 && x < xLength){
+			if(x > 0 && x < xLength){//find Y position from damage
 			for(int i = 0; i < terrain[0].length; i += 1){
 				if(terrain[x][i] > 0){
 					return i;
 				}
 			}
-		}*/
+		}
 		return (int)(a + b * x + c * Math.pow(x, 2) + d * Math.pow(x, 3));	
 	}
 
@@ -471,6 +471,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		for (int i = 0; i < drawable.size(); i++) {
 			if (drawable.get(i) instanceof DayCycle) {//Make sure to draw the sun/moon first.
 				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY() - drawable.get(i).queryImage().getHeight(), null);
+				nightShiftAmount = ((DayCycle) drawable.get(i)).shiftNightAmount();
+				nightShift = ((DayCycle) drawable.get(i)).shiftNight();
 			}
 		}
 		
@@ -509,7 +511,16 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 			}
 		}
+		//draw night shift
 		
+		if (nightShift) {
+			g2d.setColor(new Color(66,98,255,nightShiftAmount * 10));
+			g2d.fillRect(0, 0, xLength, yLength);
+		}
+
+		projectiles.forEach(p -> {
+			g2d.drawImage(p.queryImage(), p.getX(), p.getY(), null);
+		});
 		g2d.setColor(new Color(0xdfdfdf));
 		g2d.fillRect(0, 0, getXTerrain(), 70);// draws the top menu bar
 
@@ -738,8 +749,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				//				projectile = new Projectile(currentTank(),currentPlayer, findY(currentPlayer));
 
 
-				projectile = new Projectile(currentTank(), this::findY);
-				//start ticker
+				Projectile projectile = new Projectile(currentTank(), this::findY);
+				projectiles.add(projectile);
+
 				Ticker.addMethod(projectile::fire);
 				Main.sound.run("shot1");
 				nextPlayerTurn();
