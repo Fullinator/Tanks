@@ -45,7 +45,7 @@ import drawable.standardShell;
 import net.miginfocom.swing.MigLayout;
 import drawable.Drawable2;
 import drawable.Pyramid;
-import drawable.Sun;
+import drawable.DayCycle;
 import drawable.Tank;
 import drawable.UserTank;
 
@@ -107,7 +107,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		createTopMenu();
 		paintLock = false;
 		Ticker.addMethod(this::render);
-		drawable.add(new Sun(xLength,yLength));
+		drawable.add(new DayCycle(xLength,yLength));
 	}
 
 	private void render(long elapsedNanos) {
