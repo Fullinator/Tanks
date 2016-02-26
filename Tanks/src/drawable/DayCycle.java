@@ -18,6 +18,7 @@ public class DayCycle implements Drawable2 {
 	private int yLength;
 	private int xLength;
 	private boolean day = true;
+	private int shiftAmount = 0;
 
 	public DayCycle(int xLength, int yLength) {
 		try {                
@@ -85,14 +86,23 @@ public class DayCycle implements Drawable2 {
 	}
 
 	public int shiftNightAmount() {
-		for (int i = 1; i <= 80; i++ ) {
-			if ((xLength - i) == x) {
-				return i;
+		if (day) {
+			for (int i = 80; i > 0; i-- ) {
+				if ((xLength - i) == x) {
+					shiftAmount = 80 - i;
+					return shiftAmount;
+				}
+			}
+		} else if(!day) {
+			for (int i = 0; i <= 80; i++ ) {
+				if ((xLength - i) == x) {
+					shiftAmount = i;
+					return shiftAmount;
+				}
 			}
 		}
-
 		System.out.println("COULDN'T FIND XLENGTH MATCH");
-		return 0;
+		return shiftAmount;
 	}
 
 	@Override
