@@ -17,6 +17,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.function.*;
 
@@ -85,7 +86,11 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	JButton unPause;
 	protected boolean tabbed = false;
 	Wind wind;
+<<<<<<< HEAD
 	Projectile projectile;
+=======
+	private List<Projectile> projectiles;
+>>>>>>> 29733a34b60394c7962cae5070e463e523b7550b
 
 	/**
 	 *
@@ -110,8 +115,14 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 		int[] foo = findPlacement(2);
 		drawable.add(new Pyramid(true, new Point(foo[0],findY(foo[1]))));
+<<<<<<< HEAD
+=======
+//		shotX = 0;
+//		shotY = 0;
+>>>>>>> 29733a34b60394c7962cae5070e463e523b7550b
 
 		drawable.add(new DayCycle(xLength,yLength));
+		projectiles = new ArrayList<>();
 	}
 
 	private void render(long elapsedNanos) {
@@ -505,7 +516,11 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 			}
 		}
-		
+
+		projectiles.forEach(p -> {
+			g2d.drawImage(p.queryImage(), p.getX(), p.getY(), null);
+		});
+
 		g2d.setColor(new Color(0xdfdfdf));
 		g2d.fillRect(0, 0, getXTerrain(), 70);// draws the top menu bar
 
@@ -734,8 +749,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				//				projectile = new Projectile(currentTank(),currentPlayer, findY(currentPlayer));
 
 
-				projectile = new Projectile(currentTank(), this::findY);
-				//start ticker
+				Projectile projectile = new Projectile(currentTank(), this::findY);
+				projectiles.add(projectile);
+
 				Ticker.addMethod(projectile::fire);
 				Main.sound.loadSound("sounds/TNT.wav");
 				Main.sound.run();
