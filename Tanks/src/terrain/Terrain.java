@@ -741,8 +741,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				projectile = new Projectile(currentTank(), this::findY);
 				//start ticker
 				Ticker.addMethod(projectile::fire);
-				Main.sound.loadSound("sounds/TNT.wav");
-				Main.sound.run();
+				Main.sound.run("shot1");
 				nextPlayerTurn();
 			}
 		}
