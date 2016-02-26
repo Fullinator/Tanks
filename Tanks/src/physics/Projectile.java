@@ -28,35 +28,35 @@ public  class Projectile implements Drawable2 {
 	Tank tank;
 	private BufferedImage image;
 
-	public Projectile(Tank tank,IntFunction<Integer> findY){
+	public Projectile(Tank tank,Terrain terrain){
 		this.tank = tank;
 
-		
+		this.terrain = terrain;
 		System.out.println("X:" + intX);
 		
 
-		intX = tank.getX();
-		intY = findY.apply((int)intX);
+		intX = tank.getX()+10;
+		intY = terrain.findY((int)intX+10);
 		System.out.println("X:" + intX);
 
 		System.out.println("Y:" + intY);
 		x0 = intX;
 		y0 = intY;
 		g = 1;
-		angle = tank.getBarrelAngle();
+		angle = tank.getBarrelAngle() + tank.angle((int)intX, terrain.getTerrain());
 		System.out.println("Angle:" + angle);
-		windSpeed= wind.getWindSpeed();
+		//windSpeed= wind.getWindSpeed();
 		System.out.println("WindSpeed:" + windSpeed);
 
 		double[] points = new double[2];
-		points[0] = intX;
-		points[1] = intY;
+		points[0] = intX + 5;
+		points[1] = intY + 15;
 		System.out.println("Points:" + points);
 
 		height = intY;
 		time = 0;
 		mass = 1;
-		this.power = tank.getLaunchPower()/mass;
+		this.power = tank.getLaunchPower()/mass  + 15;
 		setPower(this.power);
 
 		image = new BufferedImage(5, 5, BufferedImage.TYPE_INT_ARGB);
@@ -77,8 +77,8 @@ public  class Projectile implements Drawable2 {
 
 	public void setPower(double power){
 		this.power = power/mass;
-		vX = (double) this.power * Math.cos(angle);
-		vY = (double) this.power* Math.sin(angle);
+		vX = (double) this.power * Math.cos(angle+ Math.PI);
+		vY = (double) this.power* Math.sin(angle+ Math.PI);
 	}
 
 	public void setAngle(double ang){
@@ -96,13 +96,13 @@ public  class Projectile implements Drawable2 {
 	}
 
 	public double[] fire(long time){
-		double Ttime = (time * Math.pow(10,-9));
+		double Ttime = (time * Math.pow(10,-8));
 		this.time = Ttime + this.time;
 		//get time in seconds
 		//deduct wind from x velocity
 		vX = vX + windSpeed*this.time;
 		points = new double[2];
-		points[0] = x0 + vX * this.time;
+		points[0] = (x0 + vX * this.time);
 		points[1] = y0 + vY * this.time + 0.5  * Math.pow(this.time, 2);
 
 
@@ -135,4 +135,6 @@ public  class Projectile implements Drawable2 {
 	public BufferedImage queryImage() {
 		return image;
 	}
+	
+	
 }
