@@ -149,13 +149,13 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 * @return returns the y coordinate of the terrain or -1 if one cannot be found
 	 */
 	public int findY(int x){
-		/*	if(x > 0 && x < xLength){
+			if(x > 0 && x < xLength){//find Y position from damage
 			for(int i = 0; i < terrain[0].length; i += 1){
 				if(terrain[x][i] > 0){
 					return i;
 				}
 			}
-		}*/
+		}
 		return (int)(a + b * x + c * Math.pow(x, 2) + d * Math.pow(x, 3));	
 	}
 
