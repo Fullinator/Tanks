@@ -34,9 +34,10 @@ public  class Projectile implements Drawable2 {
 		this.terrain = terrain;
 		System.out.println("X:" + intX);
 		
-
-		intX = tank.getX()+10;
-		intY = terrain.findY((int)intX+10);
+//		intY = tank.queryImage().getHeight() + tank.getY();
+//		intX = tank.queryImage().getWidth()+tank.getX();
+		intX = tank.getX()+tank.queryImage().getWidth()/2;
+		intY = terrain.findY((int)intX+10)- 1.25* tank.queryImage().getHeight();
 		System.out.println("X:" + intX);
 
 		System.out.println("Y:" + intY);
@@ -50,20 +51,20 @@ public  class Projectile implements Drawable2 {
 
 		double[] points = new double[2];
 		points[0] = intX + 5;
-		points[1] = intY + 15;
+		points[1] = intY + 30;
 		System.out.println("Points:" + points);
 
 		height = intY;
 		time = 0;
 		mass = 1;
-		this.power = tank.getLaunchPower()/mass  + 15;
+		this.power = tank.getLaunchPower()/mass  + 10;
 		setPower(this.power);
 
 		image = new BufferedImage(5, 5, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = image.createGraphics();
 		g2d.setColor(new Color(0, 0, 0, 0));
 		g2d.drawRect(0, 0, 5, 5);
-		g2d.setColor(Color.MAGENTA);
+		g2d.setColor(Color.BLACK);
 		g2d.fillOval(0, 0, 5, 5);
 	}
 
