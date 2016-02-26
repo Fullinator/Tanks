@@ -89,6 +89,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	Wind wind;
 	private List<Projectile> projectiles;
 	protected int nightShiftAmount;
+	protected Color nightShiftColor;
 	protected boolean nightShift;
 	private BufferedImage currentTerrainImage;
 	private boolean staleTerrainImage;
