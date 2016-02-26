@@ -541,18 +541,26 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		}
 
 		g2d.setColor(new Color(0xdfdfdf));
-		g2d.fillRect(0, 0, getXTerrain(), 70);// draws the top menu bar
+		g2d.fillRect(0, 0, getXTerrain(), 60);// draws the top menu bar
 
 		if (tabbed) {
 			g2d.setColor(new Color(0x21a1cb));// The skies color
-			g2d.fillRect(0, 0, getXTerrain(), 70);
+			g2d.fillRect(0, 0, getXTerrain(), 60);
+			if (nightShift) {
+				g2d.setColor(new Color(66,98,255,nightShiftAmount));
+				g2d.fillRect(0, 0, getXTerrain(), 60);
+			}
 			g2d.setColor(new Color(0,0,0,180));
 			g2d.fillRect(0, 0, xLength, yLength);
 		}
 
 		if (paused) {
 			g2d.setColor(new Color(0x21a1cb));// The skies color
-			g2d.fillRect(0, 0, getXTerrain(), 70);
+			g2d.fillRect(0, 0, getXTerrain(), 60);
+			if (nightShift) {
+				g2d.setColor(new Color(66,98,255,nightShiftAmount));
+				g2d.fillRect(0, 0, getXTerrain(), 60);
+			}
 			g2d.setColor(new Color(0,0,0,180));
 			g2d.fillRect(0, 0, xLength, yLength);
 		}
