@@ -110,8 +110,7 @@ public class standardShell implements Runnable {
 		*/
 		//damage the terrain if relevant
 		if ( (int) x >= 0 && (int) x <= frameX ) {
-			sound.loadSound("sounds/TNT.wav");
-			sound.run();
+			sound.run("impact");
 			painter.damage((int) x, (int)y, 25);
 		}
 
