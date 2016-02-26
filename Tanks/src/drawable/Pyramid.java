@@ -20,7 +20,7 @@ public class Pyramid implements Drawable2 {
 		if (size) {
 			this.size = new Dimension(100,100);
 			try {
-				image = ImageIO.read(getClass().getResourceAsStream("/img/pyramid_100x100.png"));
+				image = ImageIO.read(getClass().getResourceAsStream("/img/pyramid_big.png"));
 			} catch (IOException e) {
 				System.out.println("The pyramid file requested does not exist! Please fix this before continuing!");
 			}
