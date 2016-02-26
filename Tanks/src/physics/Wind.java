@@ -1,6 +1,6 @@
 package physics;
 
-public class Wind {
+public abstract class Wind {
 	 double windSpeed = 0;
 
 

@@ -2,16 +2,13 @@ package physics;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-
-import drawable.drawable;
-import drawable.standardShell;
-
-import java.math.*;
 import java.util.function.IntFunction;
+import drawable.Drawable2;
 
 import drawable.Tank;
 import terrain.Terrain;
-public  class Projectile{
+
+public  class Projectile implements Drawable2 {
 	double intX;
 	double intY;
 	double x0;
@@ -29,6 +26,7 @@ public  class Projectile{
 	double time;
 	double mass;
 	Tank tank;
+	private BufferedImage image;
 
 	public Projectile(Tank tank,IntFunction<Integer> findY){
 		this.tank = tank;
@@ -47,7 +45,6 @@ public  class Projectile{
 		g = 1;
 		angle = tank.getBarrelAngle();
 		System.out.println("Angle:" + angle);
-		wind = new Wind();
 		windSpeed= wind.getWindSpeed();
 		System.out.println("WindSpeed:" + windSpeed);
 
@@ -62,6 +59,12 @@ public  class Projectile{
 		this.power = tank.getLaunchPower()/mass;
 		setPower(this.power);
 
+		image = new BufferedImage(5, 5, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2d = image.createGraphics();
+		g2d.setColor(new Color(0, 0, 0, 0));
+		g2d.drawRect(0, 0, 5, 5);
+		g2d.setColor(Color.MAGENTA);
+		g2d.fillOval(0, 0, 5, 5);
 	}
 
 
@@ -96,6 +99,7 @@ public  class Projectile{
 		double Ttime = (time * Math.pow(10,-9));
 		this.time = Ttime + this.time;
 		//get time in seconds
+		//deduct wind from x velocity
 		vX = vX + windSpeed*this.time;
 		points = new double[2];
 		points[0] = x0 + vX * this.time;
@@ -103,6 +107,7 @@ public  class Projectile{
 
 
 		System.out.println("Velocity: <" + vX + ", " + vY + ">\tLocation: (" + points[0] +", " + points[1] + ")");
+		
 		return points;
 	}
 
@@ -111,4 +116,23 @@ public  class Projectile{
 		return angle;
 	}
 
+	@Override
+	public Point getLocation() {
+		return new Point((int) points[0], (int) points[1]);
+	}
+
+	@Override
+	public int getX() {
+		return (int) points[0];
+	}
+
+	@Override
+	public int getY() {
+		return (int) points[1];
+	}
+
+	@Override
+	public BufferedImage queryImage() {
+		return image;
+	}
 }
