@@ -111,8 +111,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 		int[] foo = findPlacement(2);
 		drawable.add(new Pyramid(true, new Point(foo[0],findY(foo[1]))));
-		shotX = 0;
-		shotY = 0;
+//		shotX = 0;
+//		shotY = 0;
 
 		drawable.add(new DayCycle(xLength,yLength));
 		projectiles = new ArrayList<>();

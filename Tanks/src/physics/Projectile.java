@@ -1,10 +1,13 @@
 package physics;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.function.IntFunction;
 import drawable.Drawable2;
 
 import drawable.Tank;
 import terrain.Terrain;
+
 public  class Projectile implements Drawable2 {
 	double intX;
 	double intY;
