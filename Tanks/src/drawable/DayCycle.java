@@ -103,7 +103,6 @@ public class DayCycle implements Drawable2 {
 				}
 			}
 		}
-		System.out.println("COULDN'T FIND XLENGTH MATCH");
 		return shiftAmount;
 	}
 
