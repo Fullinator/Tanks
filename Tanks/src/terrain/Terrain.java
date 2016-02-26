@@ -87,6 +87,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	JButton unPause;
 	protected boolean tabbed = false;
 	Wind wind;
+<<<<<<< HEAD
 
 
 	Projectile projectile;
@@ -94,10 +95,16 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	private List<Projectile> projectiles;
 
 
+=======
+>>>>>>> 69441ed837eaa1dcfd6fac8d35d9b0b9cde8b77e
 	protected int nightShiftAmount;
 	protected boolean nightShift;
 	private BufferedImage currentTerrainImage;
 	private boolean staleTerrainImage;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 69441ed837eaa1dcfd6fac8d35d9b0b9cde8b77e
 
 	/**
 	 *
@@ -538,7 +545,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		//draw night shift
 
 		if (nightShift) {
-			g2d.setColor(new Color(66,98,255,nightShiftAmount * 10));
+			g2d.setColor(new Color(66,98,255,nightShiftAmount));
 			g2d.fillRect(0, 0, xLength, yLength);
 		}
 
