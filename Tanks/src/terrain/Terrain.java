@@ -16,6 +16,7 @@ import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -89,6 +90,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	protected int nightShiftAmount;
 	protected boolean nightShift;
 	private List<Projectile> projectiles;
+	private BufferedImage currentTerrainImage;
+	private boolean staleTerrainImage;
 
 	/**
 	 *
@@ -116,6 +119,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 		drawable.add(new DayCycle(xLength,yLength));
 		projectiles = new ArrayList<>();
+
+		staleTerrainImage = true;
 	}
 
 	private void render(long elapsedNanos) {
@@ -498,29 +503,39 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			
 		}// End of loop to draw objects
 
-		for (int i = 0; i < getXTerrain() ; i++) {// draws the terrain from the boolean terrain array
-			for (int j = 0; j < getYTerrain(); j++) {
-				if (terrain[i][j] == 1) {
-					g2d.setColor(primary);// The sand color
-					g.drawRect(i, j, 1, 1);
-				} else if (terrain[i][j] == 2) {
-					g2d.setColor(secondary);// The sand color
-					g.drawRect(i, j, 1, 1);
+		if (staleTerrainImage) {
+			currentTerrainImage = new BufferedImage(xLength, yLength, BufferedImage.TYPE_INT_ARGB);
+			Graphics2D terrainGraphics = currentTerrainImage.createGraphics();
+			terrainGraphics.setColor(new Color(0, 0, 0, 0));
+			terrainGraphics.fillRect(0, 0, xLength, yLength);
+			for (int i = 0; i < getXTerrain(); i++) {// draws the terrain from the boolean terrain array
+				for (int j = 0; j < getYTerrain(); j++) {
+					if (terrain[i][j] == 1) {
+						terrainGraphics.setColor(primary);// The sand color
+						terrainGraphics.drawRect(i, j, 1, 1);
+					} else if (terrain[i][j] == 2) {
+						terrainGraphics.setColor(secondary);// The sand color
+						terrainGraphics.drawRect(i, j, 1, 1);
+					}
+
+
 				}
-
-
 			}
+			staleTerrainImage = false;
 		}
+		g2d.drawImage(currentTerrainImage, 0, 0, null);
+
+		projectiles.forEach(p -> {
+			g2d.drawImage(p.queryImage(), p.getX(), p.getY(), null);
+		});
+
 		//draw night shift
-		
+
 		if (nightShift) {
 			g2d.setColor(new Color(66,98,255,nightShiftAmount * 10));
 			g2d.fillRect(0, 0, xLength, yLength);
 		}
 
-		projectiles.forEach(p -> {
-			g2d.drawImage(p.queryImage(), p.getX(), p.getY(), null);
-		});
 		g2d.setColor(new Color(0xdfdfdf));
 		g2d.fillRect(0, 0, getXTerrain(), 70);// draws the top menu bar
 
