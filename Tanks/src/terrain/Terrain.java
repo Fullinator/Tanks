@@ -514,7 +514,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		//draw night shift
 		
 		if (nightShift) {
-			g2d.setColor(new Color(66,98,255,nightShiftAmount * 10));
+			g2d.setColor(new Color(66,98,255,nightShiftAmount));
 			g2d.fillRect(0, 0, xLength, yLength);
 		}
 
