@@ -87,19 +87,17 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	JButton unPause;
 	protected boolean tabbed = false;
 	Wind wind;
-<<<<<<< HEAD
+
 
 	Projectile projectile;
 
 	private List<Projectile> projectiles;
 
-=======
+
 	protected int nightShiftAmount;
 	protected boolean nightShift;
-	private List<Projectile> projectiles;
 	private BufferedImage currentTerrainImage;
 	private boolean staleTerrainImage;
->>>>>>> 29891697d9eb45335f700560f9976392fdb273f6
 
 	/**
 	 *
@@ -124,11 +122,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 		int[] foo = findPlacement(2);
 		drawable.add(new Pyramid(true, new Point(foo[0],findY(foo[1]))));
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 29891697d9eb45335f700560f9976392fdb273f6
 
 		drawable.add(new DayCycle(xLength,yLength));
 		projectiles = new ArrayList<>();
