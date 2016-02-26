@@ -368,8 +368,12 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			t.setName(names[i]);
 			drawable.add(t);
 			players.add(t);
-
-
+		}
+		for (int i = maxHuman; i < numberOfTanks; i++) {
+			Tank t = new AITank(players);
+			t.setName(names[i]);
+			drawable.add(t);
+			players.add(t);
 		}
 		setFocusTraversalKeysEnabled(false);
 		addKeyListener(this);
@@ -701,7 +705,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		quit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Main.loadMenu(); 
+				Main.loadMenu();
 				Main.setTickerPause(true);
 			}
 		});
