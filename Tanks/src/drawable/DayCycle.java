@@ -13,7 +13,7 @@ public class DayCycle implements Drawable2 {
 	private int x = -150;
 	private int y = 0;
 	private int radius;
-	private int wait = 2;
+	private int wait = 0;
 	private int count = 0;
 	private int yLength;
 	private int xLength;
@@ -73,7 +73,27 @@ public class DayCycle implements Drawable2 {
 	private int Y() {
 		return (int) (800 - (Math.sqrt(Math.abs(-Math.pow(x, 2)+800*x+200000))));
 	}
-	
+
+	public boolean shiftNight() {
+		if (x >= xLength - 10) {
+			return true;
+		} else if (!day) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public int shiftNightAmount() {
+		for (int i = 1; i <= 10; i++ ) {
+			if ((xLength - i) == xLength) {
+				return i;
+			}
+		}
+
+		return 10;
+	}
+
 	@Override
 	public BufferedImage queryImage() {
 		if (day) {

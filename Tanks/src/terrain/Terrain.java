@@ -86,6 +86,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	protected boolean tabbed = false;
 	Wind wind;
 	Projectile projectile;
+	protected int nightShiftAmount;
+	protected boolean nightShift;
 
 	/**
 	 *
@@ -463,6 +465,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		for (int i = 0; i < drawable.size(); i++) {
 			if (drawable.get(i) instanceof DayCycle) {//Make sure to draw the sun/moon first.
 				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY() - drawable.get(i).queryImage().getHeight(), null);
+				nightShiftAmount = ((DayCycle) drawable.get(i)).shiftNightAmount();
+				nightShift = ((DayCycle) drawable.get(i)).shiftNight();
 			}
 		}
 		
@@ -500,6 +504,13 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 
 			}
+		}
+		
+		//draw night shift
+		
+		if (nightShift) {
+			g2d.setColor(new Color(66,98,255,nightShiftAmount * 10));
+			g2d.fillRect(0, 0, xLength, yLength);
 		}
 		
 		g2d.setColor(new Color(0xdfdfdf));
