@@ -1,5 +1,7 @@
 package Main;
 import java.io.File;
+import java.util.HashMap;
+
 import javax.sound.sampled.*;
 
 
@@ -12,12 +14,12 @@ public class sounds {
 	private int size = 0;
 	byte[] audio = null;
 	DataLine.Info info = null;
-
-	public void loadSound(String fileName) {
-
+	private HashMap<String, Clip> snd = new HashMap<>();
+	
+	public sounds(){
+		//Add menu song
 		try {
-			audioInputStream = AudioSystem.getAudioInputStream(new File(
-					fileName));
+			audioInputStream = AudioSystem.getAudioInputStream(new File("sounds/titleSong2.wav"));
 			af = audioInputStream.getFormat();
 			size = (int) (af.getFrameSize() * audioInputStream.getFrameLength());
 			audio = new byte[size];
@@ -27,10 +29,7 @@ public class sounds {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	public void run() {
-
+		
 		try {
 			myClip = (Clip) AudioSystem.getLine(info);
 			myClip.open(af, audio, 0, size);
@@ -39,7 +38,109 @@ public class sounds {
 		catch (LineUnavailableException e) {
 			e.printStackTrace();
 		}
-		myClip.start();
+		
+		snd.put("song", myClip);
+		
+		//Add movement sound
+		try {
+			audioInputStream = AudioSystem.getAudioInputStream(new File("sounds/vehicle.wav"));
+			af = audioInputStream.getFormat();
+			size = (int) (af.getFrameSize() * audioInputStream.getFrameLength());
+			audio = new byte[size];
+			info = new DataLine.Info(Clip.class, af, size);
+			audioInputStream.read(audio, 0, size);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			myClip = (Clip) AudioSystem.getLine(info);
+			myClip.open(af, audio, 0, size);
+		}
+
+		catch (LineUnavailableException e) {
+			e.printStackTrace();
+		}
+		
+		snd.put("movement", myClip);
+		
+		//Add turret sound
+		try {
+			audioInputStream = AudioSystem.getAudioInputStream(new File("sounds/turret.wav"));
+			af = audioInputStream.getFormat();
+			size = (int) (af.getFrameSize() * audioInputStream.getFrameLength());
+			audio = new byte[size];
+			info = new DataLine.Info(Clip.class, af, size);
+			audioInputStream.read(audio, 0, size);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			myClip = (Clip) AudioSystem.getLine(info);
+			myClip.open(af, audio, 0, size);
+		}
+
+		catch (LineUnavailableException e) {
+			e.printStackTrace();
+		}
+		
+		snd.put("turret", myClip);
+		
+		//Add shot sound
+		try {
+			audioInputStream = AudioSystem.getAudioInputStream(new File("sounds/TNT.wav"));
+			af = audioInputStream.getFormat();
+			size = (int) (af.getFrameSize() * audioInputStream.getFrameLength());
+			audio = new byte[size];
+			info = new DataLine.Info(Clip.class, af, size);
+			audioInputStream.read(audio, 0, size);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			myClip = (Clip) AudioSystem.getLine(info);
+			myClip.open(af, audio, 0, size);
+		}
+
+		catch (LineUnavailableException e) {
+			e.printStackTrace();
+		}
+		
+		snd.put("shot1", myClip);
+		
+		//Add explosion sound
+		try {
+			audioInputStream = AudioSystem.getAudioInputStream(new File("sounds/TNT.wav"));
+			af = audioInputStream.getFormat();
+			size = (int) (af.getFrameSize() * audioInputStream.getFrameLength());
+			audio = new byte[size];
+			info = new DataLine.Info(Clip.class, af, size);
+			audioInputStream.read(audio, 0, size);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			myClip = (Clip) AudioSystem.getLine(info);
+			myClip.open(af, audio, 0, size);
+		}
+
+		catch (LineUnavailableException e) {
+			e.printStackTrace();
+		}
+		
+		snd.put("impact", myClip);
+		
+	}
+
+	public void run(String name) {
+		snd.get(name).start();
 	}
 
 	public void runOnce() {
@@ -56,17 +157,12 @@ public class sounds {
 		}
 	}
 
-	public void runLoop() {
-			try {
-				myClip = (Clip) AudioSystem.getLine(info);
-				myClip.open(af, audio, 0, size);
-			} catch (LineUnavailableException e) {
-				e.printStackTrace();
-			}
-			myClip.loop(Clip.LOOP_CONTINUOUSLY);
+	public void runLoop(String name) {
+
+			snd.get(name).loop(Clip.LOOP_CONTINUOUSLY);
 	}
 
-	public void stop() {
-		myClip.stop();
+	public void stop(String name) {
+		snd.get(name).stop();
 	}
 }

@@ -109,27 +109,25 @@ public abstract class Tank implements Drawable2 {
 	public void startMotion(boolean goLeft) {
 		this.goLeft = goLeft;
 		if (motionTickerID == -1) motionTickerID = Ticker.addMethod(this::moveTank);
-		Main.sound.loadSound("sounds/vehicle.wav");
-		Main.sound.runLoop();
+		Main.sound.runLoop("movement");
 	}
 
 	public void stopMotion() {
 		Ticker.removeMethod(motionTickerID);
 		motionTickerID = -1;
-		Main.sound.stop();
+		Main.sound.stop("movement");
 	}
 
 	public void aimCannon(boolean counterClockWise) {
 		this.counterClockwise = counterClockWise;
 		if (cannonTickerID == -1) cannonTickerID = Ticker.addMethod(this::rotateCannon);
-		Main.sound.loadSound("sounds/turret.wav");
-		Main.sound.runLoop();
+		Main.sound.runLoop("turret");
 	}
 
 	public void stopAimCannon() {
 		Ticker.removeMethod(cannonTickerID);
 		cannonTickerID = -1;
-		Main.sound.stop();
+		Main.sound.stop("turret");
 	}
 
 	private void moveTank(long elapsedNanos) {
