@@ -1,12 +1,5 @@
 package physics;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
-
-import drawable.drawable;
-import drawable.standardShell;
-
-import java.math.*;
 import java.util.function.IntFunction;
 import drawable.Drawable2;
 
@@ -104,6 +97,7 @@ public  class Projectile implements Drawable2 {
 		double Ttime = (time * Math.pow(10,-9));
 		this.time = Ttime + this.time;
 		//get time in seconds
+		//deduct wind from x velocity
 		vX = vX + windSpeed*this.time;
 		points = new double[2];
 		points[0] = x0 + vX * this.time;
@@ -111,6 +105,7 @@ public  class Projectile implements Drawable2 {
 
 
 		System.out.println("Velocity: <" + vX + ", " + vY + ">\tLocation: (" + points[0] +", " + points[1] + ")");
+		
 		return points;
 	}
 

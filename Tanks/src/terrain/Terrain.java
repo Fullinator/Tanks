@@ -108,6 +108,12 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		createTopMenu();
 		paintLock = false;
 		Ticker.addMethod(this::render);
+
+		int[] foo = findPlacement(2);
+		drawable.add(new Pyramid(true, new Point(foo[0],findY(foo[1]))));
+		shotX = 0;
+		shotY = 0;
+
 		drawable.add(new DayCycle(xLength,yLength));
 		projectiles = new ArrayList<>();
 	}
@@ -730,7 +736,11 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				t.stopMotion();
 				System.out.println("fire");
 
+
+//				projectile = new Projectile(currentTank(),currentPlayer, findY(currentPlayer));
+				//make new projectile
 				//				projectile = new Projectile(currentTank(),currentPlayer, findY(currentPlayer));
+
 
 				Projectile projectile = new Projectile(currentTank(), this::findY);
 				projectiles.add(projectile);
@@ -738,7 +748,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				Ticker.addMethod(projectile::fire);
 				Main.sound.loadSound("sounds/TNT.wav");
 				Main.sound.run();
-
 				nextPlayerTurn();
 			}
 		}
