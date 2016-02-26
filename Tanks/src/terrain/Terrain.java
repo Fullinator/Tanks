@@ -80,6 +80,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	protected boolean tabbed = false;
 	Wind wind;
 	Projectile projectile;
+	double shotX;
+	double shotY;
 
 	/**
 	 *
@@ -103,6 +105,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		Ticker.addMethod(this::render);
 		int[] foo = findPlacement(2);
 		drawable.add(new Pyramid(true, new Point(foo[0],findY(foo[1]))));
+		shotX = 0;
+		shotY = 0;
 	}
 
 	private void render(long elapsedNanos) {
@@ -713,13 +717,12 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				System.out.println("fire");
 
 //				projectile = new Projectile(currentTank(),currentPlayer, findY(currentPlayer));
-
+				//make new projectile
 				projectile = new Projectile(currentTank(), this::findY);
-
+				//start ticker
 				Ticker.addMethod(projectile::fire);
 				Main.sound.loadSound("sounds/TNT.wav");
 				Main.sound.run();
-
 				nextPlayerTurn();
 			}
 		}
