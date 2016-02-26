@@ -7,7 +7,7 @@ import java.math.*;
 
 import javax.imageio.ImageIO;
 
-public class Sun implements Drawable2 {
+public class DayCycle implements Drawable2 {
 	private BufferedImage sun;
 	private int x = -150;
 	private int y = 0;
@@ -19,7 +19,7 @@ public class Sun implements Drawable2 {
 	private int xEquation = (int) Math.sqrt(Math.pow(y, 2) - radius);
 	private int yEquation;
 
-	public Sun(int xLength, int yLength) {
+	public DayCycle(int xLength, int yLength) {
 		try {                
 			sun = ImageIO.read(getClass().getResourceAsStream("/img/sun.png"));
 		} catch (IOException ex) {
