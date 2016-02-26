@@ -9,10 +9,10 @@ import javax.imageio.ImageIO;
 
 public class Sun implements Drawable2 {
 	private BufferedImage sun;
-	private int x = 0;
+	private int x = -150;
 	private int y = 0;
 	private int radius;
-	private int wait = 2;
+	private int wait = 0;
 	private int count = 0;
 	private int yLength;
 	private int xLength;
@@ -49,7 +49,6 @@ public class Sun implements Drawable2 {
 		if ( count == wait) {
 			x++;
 			count = 0;
-//			System.out.println(x + "       y:" + y);
 			return x;
 		} else {
 			count++;
@@ -58,10 +57,9 @@ public class Sun implements Drawable2 {
 	}
 
 	@Override
-	public int getY() {
-		//return 250;
-		System.out.println((int) Math.sqrt(Math.pow((x - xLength/2), 2) - radius));
-		return (int) (-1 * Math.sqrt(-(x-xLength)*x) + 400);//Math.sqrt(Math.pow((x - xLength/2), 2) + Math.pow(radius,2));
+	public int getY() { 
+		//System.out.println("x: " + x + "       Y: " + (int) (850 - (Math.sqrt(Math.abs(-Math.pow(x, 2)+800*x+200000)))));
+		return (int) (850 - (Math.sqrt(Math.abs(-Math.pow(x, 2)+800*x+200000))));
 	}
 
 	@Override
