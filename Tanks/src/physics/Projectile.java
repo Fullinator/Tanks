@@ -40,7 +40,6 @@ public  class Projectile{
 		g = 1;
 		angle = tank.getBarrelAngle();
 		System.out.println("Angle:" + angle);
-		wind = new Wind();
 		windSpeed= wind.getWindSpeed();
 		System.out.println("WindSpeed:" + windSpeed);
 
