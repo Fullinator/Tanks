@@ -119,7 +119,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	}
 
 	public Tank currentTank() {
-		
+
 		return players.get(currentPlayer - 1);
 		//		for ( int i = 0; i < drawable.size(); i++) {
 		//			if (drawable.get(i).playerNumber() == currentPlayer) {
@@ -149,7 +149,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 * @return returns the y coordinate of the terrain or -1 if one cannot be found
 	 */
 	public int findY(int x){
-	/*	if(x > 0 && x < xLength){
+		/*	if(x > 0 && x < xLength){
 			for(int i = 0; i < terrain[0].length; i += 1){
 				if(terrain[x][i] > 0){
 					return i;
@@ -298,7 +298,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		} 
 	}//END OF GENERATE
 
-	
+
 	/**
 	 * findPlacement returns the x and y position of where to place an image
 	 * @param width the width of the base of the image to place
@@ -334,8 +334,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		//System.out.println(location[0] + "   end:"  + location[1]);
 		return location;
 	}
-	
-	
+
+
 	protected void createClouds(int numberOfClouds) {
 		for (int i = 0; i < numberOfClouds; i++) {
 			Clouds c = new Clouds(this, getXTerrain(), getYTerrain(), getXTerrain() - (getXTerrain() + 1));
@@ -351,12 +351,12 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			t.setName(names[i]);
 			drawable.add(t);
 			players.add(t);
-			
-			
+
+
 		}
 		setFocusTraversalKeysEnabled(false);
 		addKeyListener(this);
-		
+
 	}
 
 	/**
@@ -458,25 +458,18 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		g2d.setColor(new Color(0x21a1cb));// The skies color
 		g2d.fillRect(0, 0, getXTerrain(), getYTerrain());// fills the entire background with the sky       
 
-		for (int i = 0; i < getXTerrain() ; i++) {// draws the terrain from the boolean terrain array
-			for (int j = 0; j < getYTerrain(); j++) {
-				if (terrain[i][j] == 1) {
-					g2d.setColor(primary);// The sand color
-					g.drawRect(i, j, 1, 1);
-				} else if (terrain[i][j] == 2) {
-					g2d.setColor(secondary);// The sand color
-					g.drawRect(i, j, 1, 1);
-				}
-
-
-			}
-		}
-
 		AffineTransform old = g2d.getTransform();// Saves a copy of the old transform so the rotation can be reset later
 
+		for (int i = 0; i < drawable.size(); i++) {
+			if (drawable.get(i) instanceof DayCycle) {//Make sure to draw the sun/moon first.
+				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY() - drawable.get(i).queryImage().getHeight(), null);
+			}
+		}
+		
 		for (int i = 0; i < drawable.size(); i++) {// draws the clouds and tanks and eventually trees and whatever else needs to be drawn
-			
-			if (drawable.get(i) instanceof Tank) {// draws player controlled tanks
+			if (drawable.get(i) instanceof DayCycle) {
+				//We already drew this
+			} else if (drawable.get(i) instanceof Tank) {// draws player controlled tanks
 				g2d.rotate(((Tank)drawable.get(i)).angle(drawable.get(i).getX() + 20, terrain), drawable.get(i).getX(), findY(drawable.get(i).getX()));// this takes a radian. It has to be a very small radian
 				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), findY(drawable.get(i).getX()) - 18, null);
 
@@ -492,18 +485,23 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			} else {
 				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY() - drawable.get(i).queryImage().getHeight(), null);
 			}
-
+			
 		}// End of loop to draw objects
 
-		/*
-		int r = 150;
-		Point2D center = new Point2D.Float(r*2, r*2);
-        float radius = 200;
-        float[] dist = {0.05f, .95f};
-        Color[] colors = {Color.YELLOW, new Color(0x21a1cb)};
-        g2d.setPaint(new RadialGradientPaint(center, radius, dist, colors,CycleMethod.REFLECT));
-        g2d.fill((new Ellipse2D.Float(r,r,r*2 + 1,r*2 + 1)));
-        */
+		for (int i = 0; i < getXTerrain() ; i++) {// draws the terrain from the boolean terrain array
+			for (int j = 0; j < getYTerrain(); j++) {
+				if (terrain[i][j] == 1) {
+					g2d.setColor(primary);// The sand color
+					g.drawRect(i, j, 1, 1);
+				} else if (terrain[i][j] == 2) {
+					g2d.setColor(secondary);// The sand color
+					g.drawRect(i, j, 1, 1);
+				}
+
+
+			}
+		}
+		
 		g2d.setColor(new Color(0xdfdfdf));
 		g2d.fillRect(0, 0, getXTerrain(), 70);// draws the top menu bar
 
@@ -619,7 +617,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			UIManager.put("ProgressBar.selectionForeground",Color.WHITE);  //colour of precentage counter on red background
 			JProgressBar health = new JProgressBar(0,100);
 			health.setForeground(Color.orange);
-		    health.setBackground(Color.green);
+			health.setBackground(Color.green);
 			health.setValue( players.get(i).getHealth());
 			health.setStringPainted(true);
 			add(health , "cell 3 " + i + 1);
@@ -666,7 +664,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		tabbed = false;//Makes sure the tab and pause menus don't overlay
 		revalidate();
 	}
-	
+
 	protected void unPause() {
 		Main.setTickerPause(false);
 		paused = false;
@@ -678,7 +676,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		revalidate();
 		requestFocusInWindow();
 	}
-	
+
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (downKeys.contains((long) e.getKeyCode())) return;
@@ -726,7 +724,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				t.stopMotion();
 				System.out.println("fire");
 
-//				projectile = new Projectile(currentTank(),currentPlayer, findY(currentPlayer));
+				//				projectile = new Projectile(currentTank(),currentPlayer, findY(currentPlayer));
 
 				projectile = new Projectile(currentTank(), this::findY);
 
