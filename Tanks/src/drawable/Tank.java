@@ -133,7 +133,7 @@ public abstract class Tank implements Drawable2 {
 	private void moveTank(long elapsedNanos) {
 		double speed = 100.0 * ((double) elapsedNanos / 1000000000);
 		double newX = location.getX() + (goLeft ? -speed : speed);
-		if (newX > 0 && newX < Main.xLength) location.setLocation(newX, 1000);
+		if (newX > 0 && newX < Main.xLength - queryImage().getWidth()) location.setLocation(newX, 1000);
 	}
 
 	private void rotateCannon(long elapsedNanos) {
