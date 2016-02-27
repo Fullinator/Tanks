@@ -615,6 +615,20 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		//Buy weapons
 		
 	}
+	
+	protected void fire() {
+		Tank tank = players.get(currentPlayer - 1);
+		tank.stopAimCannon();
+		tank.stopMotion();
+
+		Projectile projectile = new Projectile(currentTank(), this);
+		projectiles.add(projectile);
+
+		Ticker.addMethod(projectile::fire);
+		Main.sound.run("shot1");
+		nextPlayerTurn();
+		
+	}
 
 	protected void hideTopMenu() {
 		remove(playerName);
@@ -767,22 +781,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 			// fire projectile
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-				t.stopAimCannon();
-				t.stopMotion();
-				System.out.println("fire");
-
-
-//				projectile = new Projectile(currentTank(),currentPlayer, findY(currentPlayer));
-				//make new projectile
-				//				projectile = new Projectile(currentTank(),currentPlayer, findY(currentPlayer));
-
-
-				Projectile projectile = new Projectile(currentTank(), this);
-				projectiles.add(projectile);
-
-				Ticker.addMethod(projectile::fire);
-				Main.sound.run("shot1");
-				nextPlayerTurn();
+				fire();
+				
 			}
 		}
 	}//end of keyPressed method
