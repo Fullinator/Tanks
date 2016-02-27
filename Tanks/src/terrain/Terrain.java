@@ -616,7 +616,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		
 	}
 	
-	protected void fire() {
+	public void fire() {
 		Tank tank = players.get(currentPlayer - 1);
 		tank.stopAimCannon();
 		tank.stopMotion();

@@ -56,8 +56,7 @@ public class FireButton extends JButton implements ActionListener {
 		try {
 			this.setFocusable(false);
 			if (!terrain.getGameStatus()) {
-				
-					//terrain.currentTank().setLaunchPower(terrain.currentTank().getLaunchPower() - 1);
+					terrain.fire();
 					terrain.requestFocusInWindow();
 				
 			}
