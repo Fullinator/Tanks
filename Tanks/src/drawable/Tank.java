@@ -139,6 +139,9 @@ public abstract class Tank implements Drawable2 {
 	private void rotateCannon(long elapsedNanos) {
 		double rate = 3.0 * ((double) elapsedNanos / 1000000000);
 		barrelAngle += (counterClockwise ? rate : -rate);
+		if(barrelAngle > Math.PI || barrelAngle < 0){
+			barrelAngle -= (counterClockwise ? rate : -rate);
+		}
 	}
 
 	/**

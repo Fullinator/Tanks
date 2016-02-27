@@ -87,7 +87,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	JButton unPause;
 	protected boolean tabbed = false;
 	Wind wind;
-<<<<<<< HEAD
+
 
 
 	Projectile projectile;
@@ -95,16 +95,12 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	private List<Projectile> projectiles;
 
 
-=======
->>>>>>> 69441ed837eaa1dcfd6fac8d35d9b0b9cde8b77e
+
 	protected int nightShiftAmount;
 	protected boolean nightShift;
 	private BufferedImage currentTerrainImage;
 	private boolean staleTerrainImage;
-<<<<<<< HEAD
-=======
 
->>>>>>> 69441ed837eaa1dcfd6fac8d35d9b0b9cde8b77e
 
 	/**
 	 *
