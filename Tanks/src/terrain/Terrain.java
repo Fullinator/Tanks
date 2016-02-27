@@ -79,19 +79,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	protected FireButton fire;
 	protected boolean tabbed = false;
 	Wind wind;
-<<<<<<< HEAD
-
-
-
-	Projectile projectile;
-
 	private List<Projectile> projectiles;
-
-
-
-=======
-	private List<Projectile> projectiles;
->>>>>>> e29b202d487eaa3101a34d7846e6e9b9ee1f0187
 	protected int nightShiftAmount;
 	protected Color nightShiftColor;
 	protected boolean nightShift;
