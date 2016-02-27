@@ -35,6 +35,7 @@ import physics.Wind;
 import Jama.Matrix;
 import Main.Main;
 import Main.Ticker;
+import Main.sounds;
 import buttons.DownButton;
 import buttons.FireButton;
 import buttons.LeftButton;
@@ -95,6 +96,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	protected boolean nightShift;
 	private BufferedImage currentTerrainImage;
 	private boolean staleTerrainImage;
+	
 
 
 	/**
@@ -705,6 +707,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		quit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				Main.sound.runLoop("song");
 				Main.loadMenu();
 				Main.setTickerPause(true);
 			}

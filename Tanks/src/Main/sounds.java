@@ -140,7 +140,7 @@ public class sounds {
 	}
 
 	public void run(String name) {
-		snd.get(name).start();
+		snd.get(name).loop(1);
 	}
 
 	public void runOnce() {
