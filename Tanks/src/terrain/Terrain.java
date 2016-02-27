@@ -1,33 +1,24 @@
 package terrain;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.MultipleGradientPaint.CycleMethod;
 import java.awt.Point;
-import java.awt.RadialGradientPaint;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.function.*;
-
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 
 import physics.Projectile;
@@ -42,7 +33,6 @@ import buttons.RightButton;
 import buttons.UpButton;
 import drawable.AITank;
 import drawable.Clouds;
-import drawable.drawable;
 import drawable.manualTank;
 import drawable.standardShell;
 import net.miginfocom.swing.MigLayout;
@@ -95,6 +85,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	protected boolean nightShift;
 	private BufferedImage currentTerrainImage;
 	private boolean staleTerrainImage;
+	protected JComboBox<Projectile> weapons;
 
 
 	/**
@@ -583,7 +574,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	}
 
 	protected void createTopMenu() {
-		normalLayout = new MigLayout("aligny -7px", "[150][40][20][40][30][20][30][80][40][60][60][60][60]", "[60]"  + (yLength - 70) + "");
+		normalLayout = new MigLayout("aligny -7px", "[150][40][20][40][30][20][30][100][80][60][60][60][60]", "[60]"  + (yLength - 70) + "");
 		setLayout(normalLayout);
 
 		//Player Name
@@ -613,10 +604,12 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		add(power, "cell 5 0, alignx center");
 
 		//Weapon selection
+		weapons = new JComboBox<Projectile>();
+		add(weapons, "cell 7 0, alignx center");
 		
 		//Fire Button
 		fire = new FireButton("", this);
-		add(fire, "cell 7 0, alignx center");
+		add(fire, "cell 8 0, alignx center");
 		//Health Label
 
 		//Buy weapons
