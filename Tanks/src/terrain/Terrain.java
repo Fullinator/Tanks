@@ -79,7 +79,19 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	protected FireButton fire;
 	protected boolean tabbed = false;
 	Wind wind;
+<<<<<<< HEAD
+
+
+
+	Projectile projectile;
+
 	private List<Projectile> projectiles;
+
+
+
+=======
+	private List<Projectile> projectiles;
+>>>>>>> e29b202d487eaa3101a34d7846e6e9b9ee1f0187
 	protected int nightShiftAmount;
 	protected Color nightShiftColor;
 	protected boolean nightShift;
@@ -359,8 +371,12 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			t.setName(names[i]);
 			drawable.add(t);
 			players.add(t);
-
-
+		}
+		for (int i = maxHuman; i < numberOfTanks; i++) {
+			Tank t = new AITank(players);
+			t.setName(names[i]);
+			drawable.add(t);
+			players.add(t);
 		}
 		setFocusTraversalKeysEnabled(false);
 		addKeyListener(this);
@@ -708,7 +724,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		quit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Main.loadMenu(); 
+				Main.loadMenu();
 				Main.setTickerPause(true);
 			}
 		});

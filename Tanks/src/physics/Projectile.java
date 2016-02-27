@@ -32,20 +32,31 @@ public  class Projectile implements Drawable2 {
 		this.tank = tank;
 
 		this.terrain = terrain;
-		System.out.println("X:" + intX);
+		//System.out.println("X:" + intX);
 		
 //		intY = tank.queryImage().getHeight() + tank.getY();
-//		intX = tank.queryImage().getWidth()+tank.getX();
-		intX = tank.getX()+tank.queryImage().getWidth()/2;
-		intY = terrain.findY((int)intX+10)- 1.25* tank.queryImage().getHeight();
+		intX = tank.queryImage().getWidth()+tank.getX();
+		// drawable.get(i).getX(), findY(drawable.get(i).getX()) - 17, 20, 4
+		
+		g = 1;
+		double tankAngle = tank.angle((int)intX, terrain.getTerrain());
+		angle = tank.getBarrelAngle() + tank.angle((int)intX, terrain.getTerrain());
+		System.out.println("Angle:" + angle);
+		intX = .5*tank.queryImage().getWidth() + tank.getX()- 20*Math.cos(angle);
+		intY = terrain.findY(tank.getX())- 20*Math.sin(angle)- tank.queryImage().getHeight();
+		if(tankAngle < Math.PI/2){
+			intY += 20*Math.sin( tankAngle);
+			intX += tank.queryImage().getWidth()*Math.sin( tankAngle);
+		}
+		if(tankAngle > Math.PI/2){
+			intY -= 20*Math.sin(tankAngle);
+			intX -= tank.queryImage().getWidth()*Math.cos( tankAngle);
+		}
 		System.out.println("X:" + intX);
 
 		System.out.println("Y:" + intY);
 		x0 = intX;
 		y0 = intY;
-		g = 1;
-		angle = tank.getBarrelAngle() + tank.angle((int)intX, terrain.getTerrain());
-		System.out.println("Angle:" + angle);
 		//windSpeed= wind.getWindSpeed();
 		System.out.println("WindSpeed:" + windSpeed);
 
@@ -57,7 +68,7 @@ public  class Projectile implements Drawable2 {
 		height = intY;
 		time = 0;
 		mass = 1;
-		this.power = tank.getLaunchPower()/mass  + 10;
+		this.power = tank.getLaunchPower()/mass;
 		setPower(this.power);
 
 		image = new BufferedImage(5, 5, BufferedImage.TYPE_INT_ARGB);

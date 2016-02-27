@@ -294,6 +294,8 @@ public class StartMenu extends JPanel implements ActionListener {
 			Main.manualTanks = Integer.parseInt((String) humanSelect.getSelectedItem());;
 			Main.startForrest(names);
 		}
+
+		Main.setTickerPause(false);
 	}
 
 }
