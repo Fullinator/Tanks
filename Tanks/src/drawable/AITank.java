@@ -1,31 +1,21 @@
 package drawable;
 
-import java.awt.image.BufferedImage;
+import java.util.List;
 
 /**
- * Class to create AITank object
+ * Artifically intelligent player.
  * 
- * @author Joel Cherney
+ * @author Nicholas Muggio
  *
  */
-public class AITank extends drawable{
+public class AITank extends Tank {
+	private List<Tank> tanks;
 
-	@Override
-	public int getX() {
-		// TODO Auto-generated method stub
-		return 0;
+	public AITank(List<Tank> tanks) {
+		this.tanks = tanks;
 	}
 
-	@Override
-	public int getY() {
-		// TODO Auto-generated method stub
-		return 0;
+	public void takeTurn() {
+		// select target
 	}
-
-	@Override
-	public BufferedImage queryImage() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }//end of AITank class

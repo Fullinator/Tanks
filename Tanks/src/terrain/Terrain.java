@@ -36,6 +36,7 @@ import Jama.Matrix;
 import Main.Main;
 import Main.Ticker;
 import buttons.DownButton;
+import buttons.FireButton;
 import buttons.LeftButton;
 import buttons.RightButton;
 import buttons.UpButton;
@@ -79,14 +80,16 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	protected JLabel pauseTitle;
 	protected MigLayout normalLayout;
 	protected MigLayout pauseLayout;
-	RightButton angleUp;
-	LeftButton angleDown;
-	UpButton powerUp;
-	DownButton powerDown;
-	JButton quit;
-	JButton unPause;
+	protected RightButton angleUp;
+	protected LeftButton angleDown;
+	protected UpButton powerUp;
+	protected DownButton powerDown;
+	protected JButton quit;
+	protected JButton unPause;
+	protected FireButton fire;
 	protected boolean tabbed = false;
 	Wind wind;
+<<<<<<< HEAD
 
 
 
@@ -96,7 +99,11 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 
 
+=======
+	private List<Projectile> projectiles;
+>>>>>>> e29b202d487eaa3101a34d7846e6e9b9ee1f0187
 	protected int nightShiftAmount;
+	protected Color nightShiftColor;
 	protected boolean nightShift;
 	private BufferedImage currentTerrainImage;
 	private boolean staleTerrainImage;
@@ -373,8 +380,12 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			t.setName(names[i]);
 			drawable.add(t);
 			players.add(t);
-
-
+		}
+		for (int i = maxHuman; i < numberOfTanks; i++) {
+			Tank t = new AITank(players);
+			t.setName(names[i]);
+			drawable.add(t);
+			players.add(t);
 		}
 		setFocusTraversalKeysEnabled(false);
 		addKeyListener(this);
@@ -546,18 +557,26 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		}
 
 		g2d.setColor(new Color(0xdfdfdf));
-		g2d.fillRect(0, 0, getXTerrain(), 70);// draws the top menu bar
+		g2d.fillRect(0, 0, getXTerrain(), 60);// draws the top menu bar
 
 		if (tabbed) {
 			g2d.setColor(new Color(0x21a1cb));// The skies color
-			g2d.fillRect(0, 0, getXTerrain(), 70);
+			g2d.fillRect(0, 0, getXTerrain(), 60);
+			if (nightShift) {
+				g2d.setColor(new Color(66,98,255,nightShiftAmount));
+				g2d.fillRect(0, 0, getXTerrain(), 60);
+			}
 			g2d.setColor(new Color(0,0,0,180));
 			g2d.fillRect(0, 0, xLength, yLength);
 		}
 
 		if (paused) {
 			g2d.setColor(new Color(0x21a1cb));// The skies color
-			g2d.fillRect(0, 0, getXTerrain(), 70);
+			g2d.fillRect(0, 0, getXTerrain(), 60);
+			if (nightShift) {
+				g2d.setColor(new Color(66,98,255,nightShiftAmount));
+				g2d.fillRect(0, 0, getXTerrain(), 60);
+			}
 			g2d.setColor(new Color(0,0,0,180));
 			g2d.fillRect(0, 0, xLength, yLength);
 		}
@@ -580,7 +599,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	}
 
 	protected void createTopMenu() {
-		normalLayout = new MigLayout("", "["+ ((getXTerrain() - 600)/2) +"][26][26][26][26][26][26]["+ ((getXTerrain() - 500)/2) +"]", "[35][35][150][][][]");
+		normalLayout = new MigLayout("aligny -7px", "[150][40][20][40][30][20][30][80][40][60][60][60][60]", "[60]"  + (yLength - 70) + "");
 		setLayout(normalLayout);
 
 		//Player Name
@@ -591,28 +610,33 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 		//Barrel Angle Up
 		angleUp = new RightButton("", this);
-		add(angleUp, "cell 4 0");
+		add(angleUp, "cell 3 0, alignx center");
 		//Barrel Angle Down
 		angleDown = new LeftButton("",this);
-		add(angleDown, "cell 2 0");
+		add(angleDown, "cell 1 0, alignx center");
 		//Angle Label
 		angle = new JLabel("0.0");
-		add(angle, "cell 3 0");
+		add(angle, "cell 2 0, alignx center");
 
 		//Power Up
 		powerUp = new UpButton("", this);
-		add(powerUp, "cell 5 0");
+		add(powerUp, "cell 4 0, alignx center");
 		//Power Down
 		powerDown = new DownButton("", this);
-		add(powerDown, "cell 7 0");
+		add(powerDown, "cell 6 0, alignx center");
 		//Power Label
 		power = new JLabel("" + currentTank().getLaunchPower());
-		add(power, "cell 6 0");
+		add(power, "cell 5 0, alignx center");
 
+		//Weapon selection
+		
+		//Fire Button
+		fire = new FireButton("", this);
+		add(fire, "cell 7 0, alignx center");
 		//Health Label
 
-		//Fire Button
-
+		//Buy weapons
+		
 	}
 
 	protected void hideTopMenu() {
@@ -623,16 +647,19 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		remove(powerUp);
 		remove(powerDown);
 		remove(power);
+		removeAll();
 	}
 
 	protected void showTopMenu() {
 		add(playerName, "cell 0 0");
-		this.add(angleUp, "cell 4 0");
-		add(angleDown, "cell 2 0");
-		add(angle, "cell 3 0");
-		add(powerUp, "cell 5 0");
-		add(powerDown, "cell 7 0");
-		add(power, "cell 6 0");
+		add(angleUp, "cell 3 0, alignx center");
+		add(angleDown, "cell 1 0, alignx center");
+		add(angle, "cell 2 0, alignx center");
+		add(powerUp, "cell 4 0, alignx center");
+		add(powerDown, "cell 6 0, alignx center");
+		add(power, "cell 5 0, alignx center");
+		add(fire, "cell 7 0, alignx center");
+		
 	}
 
 	/**
@@ -690,7 +717,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		quit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Main.loadMenu(); 
+				Main.loadMenu();
 				Main.setTickerPause(true);
 			}
 		});

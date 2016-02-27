@@ -1,5 +1,6 @@
 package drawable;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -86,6 +87,7 @@ public class DayCycle implements Drawable2 {
 	}
 
 	public int shiftNightAmount() {
+		//new Color(66,98,255,nightShiftAmount));
 		if (day) {
 			for (int i = 80; i > 0; i-- ) {
 				if ((xLength - i) == x) {
@@ -101,10 +103,32 @@ public class DayCycle implements Drawable2 {
 				}
 			}
 		}
-		System.out.println("COULDN'T FIND XLENGTH MATCH");
 		return shiftAmount;
 	}
 
+	/*
+	public Color shiftNightColor() {
+		if (day) {
+			for (int i = 80; i > 0; i-- ) {
+				if ((xLength - i) == x) {
+					shiftAmount = 120 - i;
+					//return shiftAmount;
+				}
+			}
+		} else if(!day) {
+			for (int i = 0; i <= 120; i++ ) {
+				if ((xLength - i) == x) {
+					shiftAmount = i;
+					//return shiftAmount;
+				}
+			}
+		}
+		
+		
+		return new Color(66,98,255,shiftNightAmount());
+		
+	}
+*/
 	@Override
 	public BufferedImage queryImage() {
 		if (day) {
