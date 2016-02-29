@@ -37,20 +37,22 @@ public  class Projectile implements Drawable2 {
 //		intY = tank.queryImage().getHeight() + tank.getY();
 		intX = tank.queryImage().getWidth()+tank.getX();
 		// drawable.get(i).getX(), findY(drawable.get(i).getX()) - 17, 20, 4
-		
+		Point tankLoc = tank.getLocation();
+		double tankX = tankLoc.getX();
+		double tankY = tankLoc.getY();
 		g = 1;
 		double tankAngle = tank.angle((int)intX, terrain.getTerrain());
-		angle = tank.getBarrelAngle() + tank.angle((int)intX, terrain.getTerrain());
+		angle = tank.getBarrelAngle() + tankAngle;
 		System.out.println("Angle:" + angle);
 		intX = .5*tank.queryImage().getWidth() + tank.getX()- 20*Math.cos(angle);
 		intY = terrain.findY(tank.getX())- 20*Math.sin(angle)- tank.queryImage().getHeight();
 		if(tankAngle < Math.PI/2){
 			intY += 20*Math.sin( tankAngle);
-			intX += tank.queryImage().getWidth()*Math.sin( tankAngle);
+			intX += 20*Math.cos( tankAngle);
 		}
-		if(tankAngle > Math.PI/2){
+		if(tankAngle > -Math.PI/2){
 			intY -= 20*Math.sin(tankAngle);
-			intX -= tank.queryImage().getWidth()*Math.cos( tankAngle);
+			intX -= 20*Math.cos( tankAngle);
 		}
 		System.out.println("X:" + intX);
 
@@ -61,8 +63,8 @@ public  class Projectile implements Drawable2 {
 		System.out.println("WindSpeed:" + windSpeed);
 
 		double[] points = new double[2];
-		points[0] = intX + 5;
-		points[1] = intY + 30;
+		points[0] = intX;
+		points[1] = intY;
 		System.out.println("Points:" + points);
 
 		height = intY;
@@ -75,12 +77,10 @@ public  class Projectile implements Drawable2 {
 		Graphics2D g2d = image.createGraphics();
 		g2d.setColor(new Color(0, 0, 0, 0));
 		g2d.drawRect(0, 0, 5, 5);
-		g2d.setColor(Color.BLACK);
+		g2d.setColor(Color.MAGENTA);
 		g2d.fillOval(0, 0, 5, 5);
 	}
 
-
-	
 
 
 	public double getPower() {
@@ -104,11 +104,10 @@ public  class Projectile implements Drawable2 {
 	}
 	public void setY(double y){
 		intY = y;
-
 	}
 
 	public double[] fire(long time){
-		double Ttime = (time * Math.pow(10,-8));
+		double Ttime = (time * Math.pow(10,-7.75));
 		this.time = Ttime + this.time;
 		//get time in seconds
 		//deduct wind from x velocity
