@@ -30,7 +30,7 @@ public class StartMenu extends JPanel implements ActionListener {
 	//Maximum player
 	int maxPlayer = 5;
 	//The row in MigLayout to start adding the player name fields
-	int nameRow = 5;
+	int nameRow = 4;
 	
 	private JTextField[] nameFields = new JTextField[maxPlayer];
 	private JLabel[] nameLabels = new JLabel[maxPlayer];
@@ -137,11 +137,11 @@ public class StartMenu extends JPanel implements ActionListener {
 				Main.loadMenu();
 			}
 		});
-		add(btnBack, "cell 2 10, alignx center");
+		add(btnBack, "cell 2 9, alignx center");
 		
 		//Add start button
 		JButton btnStart = new JButton("Start!");
-		add(btnStart, "cell 2 10, alignx center");
+		add(btnStart, "cell 2 9, alignx center");
 		btnStart.addActionListener(this);
 	}
 
