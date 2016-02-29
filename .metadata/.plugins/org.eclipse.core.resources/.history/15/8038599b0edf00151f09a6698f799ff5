@@ -27,7 +27,7 @@ public abstract class Tank implements Drawable2 {
 	private boolean counterClockwise;
 
 	public Tank() {
-		launchPower = 10;
+		launchPower = 1;
 		healthPercent = 100;
 		name = "";
 		try {
