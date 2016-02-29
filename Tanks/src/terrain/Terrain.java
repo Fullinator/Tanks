@@ -610,8 +610,11 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		//Weapon selection
 		weapons = new JComboBox<String>();
 		weapons.addItem("Standard Shot");
-		//weapons.addItem("test");
-		
+		weapons.addActionListener(e -> {
+			this.requestFocus();
+		});
+		weapons.addItem("test");
+
 		add(weapons, "cell 7 0, alignx center");
 		
 		//Fire Button
