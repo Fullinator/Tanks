@@ -18,8 +18,8 @@ public class Snow extends Terrain {
 	 * @param y The height of the panel
 	 * @param names The List of names for the players
 	 */
-	public Snow(int x, int y, int maxH, String[] names) {
-		super(x, y, maxH, names);
+	public Snow(int x, int y, int maxH, int maxAI, String[] names) {
+		super(x, y, maxH, maxAI, names);
 		
 		primary = new Color(0xFFFFFF);
 		secondary = new Color(0xf2f2f2);

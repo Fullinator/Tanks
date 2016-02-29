@@ -26,7 +26,6 @@ import physics.Wind;
 import Jama.Matrix;
 import Main.Main;
 import Main.Ticker;
-import Main.sounds;
 import buttons.DownButton;
 import buttons.FireButton;
 import buttons.LeftButton;
@@ -56,7 +55,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	protected double b;
 	protected double c;
 	protected double d;
-	protected int maxHuman = -1;
+	protected int numHuman = -1;
+	protected int numAI = -1;
 	public JLabel angle;
 	public JLabel power;
 	public JLabel playerName;
@@ -94,17 +94,18 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 * @param x width of JPanel
 	 * @param y height of JPanel
 	 */
-	protected Terrain(int x, int y, int maxH, String[] names) {
+	protected Terrain(int x, int y, int numHuman, int numAI, String[] names) {
 		xLength = x;
 		yLength = y;
-		maxHuman = maxH;
-		maxPlayers = maxHuman; //ADD THE AI PLAYERS TO THIS LATER
+		this.numHuman = numHuman;
+		this.numAI = numAI;
+		maxPlayers = this.numHuman + this.numAI;
 		pauseTitle = new JLabel("Game Paused");
 		pauseTitle.setFont(new Font("Arial", Font.BOLD, 35));
 		pauseTitle.setForeground(Color.white);
 		generate();
 		fill();// calls a method that fills in the points underneath the cubic
-		createTanks(maxHuman, names);
+		createTanks(this.numHuman, this.numAI, names);
 		createClouds(2);
 		createTopMenu();
 		paintLock = false;
@@ -349,16 +350,16 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 * @param numberOfTanks number of total tanks to create
 	 * @param names names of the tanks 
 	 */
-	protected void createTanks(int numberOfTanks, String[] names) {
+	protected void createTanks(int numHumans, int numAI, String[] names) {
 		players  = new ArrayList<Tank>();
 		drawable = new ArrayList<Drawable2>();
-		for (int i = 0; i < maxHuman; i++) {
+		for (int i = 0; i < numHumans; i++) {
 			Tank t = new UserTank();
 			t.setName(names[i]);
 			drawable.add(t);
 			players.add(t);
 		}
-		for (int i = maxHuman; i < numberOfTanks; i++) {
+		for (int i = 0; i < numAI; i++) {
 			Tank t = new AITank(players);
 			t.setName(names[i]);
 			drawable.add(t);
@@ -572,6 +573,11 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		//of the current player
 		power.setText("" + currentTank().getLaunchPower());
 		playerName.setText(currentTank().getName());
+
+		if (players.get(currentPlayer - 1) instanceof AITank) {
+			((AITank) players.get(currentPlayer - 1)).takeTurn();
+			nextPlayerTurn();
+		}
 	}
 
 	/**

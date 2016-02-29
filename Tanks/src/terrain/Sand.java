@@ -18,8 +18,8 @@ public class Sand extends Terrain{
 	 * @param y The height of the panel
 	 * @param names The List of names for the players
 	 */
-	public Sand(int x, int y, int maxH, String[] names) {
-		super(x, y, maxH, names);
+	public Sand(int x, int y, int maxH, int maxAI, String[] names) {
+		super(x, y, maxH, maxAI, names);
 
 		primary = new Color(0xe3bb1d);
 		secondary = new Color(0xe7db8e);

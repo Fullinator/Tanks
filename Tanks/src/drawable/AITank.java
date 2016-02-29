@@ -17,5 +17,6 @@ public class AITank extends Tank {
 
 	public void takeTurn() {
 		// select target
+		System.out.println("Take AI turn");
 	}
 }//end of AITank class
