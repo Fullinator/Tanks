@@ -79,6 +79,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	protected FireButton fire;
 	protected boolean tabbed = false;
 	Wind wind;
+<<<<<<< HEAD
 
 
 
@@ -91,14 +92,21 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 
 
+=======
+	private List<Projectile> projectiles;
+>>>>>>> 72eed7b92f2f0faef92e23b4701df25e54347e5e
 	protected int nightShiftAmount;
 	protected Color nightShiftColor;
 	protected boolean nightShift;
 	private BufferedImage currentTerrainImage;
 	private boolean staleTerrainImage;
+<<<<<<< HEAD
 
 	protected JComboBox<String> weapons;
 
+=======
+	protected JComboBox<String> weapons;
+>>>>>>> 72eed7b92f2f0faef92e23b4701df25e54347e5e
 
 
 	/**
@@ -623,8 +631,11 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		//Weapon selection
 		weapons = new JComboBox<String>();
 		weapons.addItem("Standard Shot");
-		//weapons.addItem("test");
-		
+		weapons.addActionListener(e -> {
+			this.requestFocus();
+		});
+		weapons.addItem("test");
+
 		add(weapons, "cell 7 0, alignx center");
 		
 		//Fire Button
