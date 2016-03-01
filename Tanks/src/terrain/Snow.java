@@ -25,4 +25,10 @@ public class Snow extends Terrain {
 		secondary = new Color(0xf2f2f2);
 	}
 
+	@Override
+	protected void createTerrainSpecificItems(int amount) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -13,4 +13,10 @@ public class Forest extends Terrain {
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override
+	protected void createTerrainSpecificItems(int amount) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

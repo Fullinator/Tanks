@@ -1,6 +1,10 @@
 package terrain;
 
 import java.awt.Color;
+import java.awt.Point;
+import java.util.Random;
+
+import drawable.Cactus;
 
 /**
  * The sand terrain. This creates the random 2D terrain and coordinates all of the events and painting for the game to happen
@@ -23,6 +27,25 @@ public class Sand extends Terrain{
 
 		primary = new Color(0xe3bb1d);
 		secondary = new Color(0xe7db8e);
+		
+		createTerrainSpecificItems(3);
 	}// End of Sand constructor
+
+	/**
+	 * Creates the unique element on the terrain
+	 * 
+	 * @param amount number of objects to create
+	 */
+	@Override
+	protected void createTerrainSpecificItems(int amount) {
+		Random random = new Random();
+		int max = xLength;
+		int min = 1;
+		int type;
+		for (int i = 0; i < amount; i++) {
+			type = random.nextInt(max - min + 1) + min;
+			drawable.add(new Cactus(new Point(type, findY(type))));
+		}
+	}
 
 }

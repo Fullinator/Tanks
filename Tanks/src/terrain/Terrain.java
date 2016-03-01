@@ -37,7 +37,7 @@ import drawable.manualTank;
 import drawable.standardShell;
 import net.miginfocom.swing.MigLayout;
 import drawable.Drawable2;
-import drawable.Pyramid;
+import drawable.Cactus;
 import drawable.DayCycle;
 import drawable.Tank;
 import drawable.UserTank;
@@ -121,6 +121,12 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		staleTerrainImage = true;
 	}
 
+	/**
+	 * Creates the unique element on the terrain
+	 * 
+	 * @param amount number of objects to create
+	 */
+	protected abstract void createTerrainSpecificItems(int amount);
 	
 	private void render(long elapsedNanos) {
 		if (!paintLock) {
