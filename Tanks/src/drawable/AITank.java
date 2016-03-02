@@ -1,5 +1,6 @@
 package drawable;
 
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -16,6 +17,14 @@ public class AITank extends Tank {
 	}
 
 	public void takeTurn() {
-		// select target
+		System.out.println("Take AI turn");
+
+		// Select target
+		Tank target = tanks.parallelStream().min((o1, o2) -> o1.getHealth() - o2.getHealth()).get();
+		if (target == null) {
+			target = tanks.parallelStream().filter(tank -> tank != this).findAny().get();
+		}
+
+		System.out.println("Target health: " + target.getHealth());
 	}
 }//end of AITank class

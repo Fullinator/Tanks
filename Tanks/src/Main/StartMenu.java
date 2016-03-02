@@ -30,7 +30,7 @@ public class StartMenu extends JPanel implements ActionListener {
 	//Maximum player
 	int maxPlayer = 5;
 	//The row in MigLayout to start adding the player name fields
-	int nameRow = 4;
+	int nameRow = 5;
 	
 	private JTextField[] nameFields = new JTextField[maxPlayer];
 	private JLabel[] nameLabels = new JLabel[maxPlayer];
@@ -90,11 +90,16 @@ public class StartMenu extends JPanel implements ActionListener {
 		//TODO
 		
 		//add number of AI player selection
-		//TODO
+		JLabel lblNumAI = new JLabel("Number of AI players");
+		add(lblNumAI, "cell 2 3 , alignx center");
+
+		AISelect = new JComboBox();
+		add(AISelect, "cell 2 3 , alignx center");
+		for (int i = 0; i <= maxPlayer; i++) AISelect.addItem("" + i);
 		
 		//add number of human player selection
 		JLabel lblPleaseSelectThe_1 = new JLabel("Number of human players");
-		add(lblPleaseSelectThe_1, "cell 2 3 , alignx center");
+		add(lblPleaseSelectThe_1, "cell 2 4 , alignx center");
 
 		humanSelect = new JComboBox();
 		
@@ -107,7 +112,7 @@ public class StartMenu extends JPanel implements ActionListener {
 			}
 	    });
 		
-		add(humanSelect, "cell 2 3, alignx center");
+		add(humanSelect, "cell 2 4, alignx center");
 		for (int i = 0; i < maxPlayer; i++) {
 			humanSelect.addItem("" + (i+1));
 		}
@@ -121,8 +126,8 @@ public class StartMenu extends JPanel implements ActionListener {
 			nameLabels[i] = new JLabel("Player " + (i+1) + "'s name:");
 		}
 		//JLabel player1 = new JLabel("Player 1's name:");
-		add(nameLabels[0], "cell 2 4, alignx center");
-		add(nameFields[0], "cell 2 4, alignx left, alignx center");
+		add(nameLabels[0], "cell 2 5, alignx center");
+		add(nameFields[0], "cell 2 5, alignx left, alignx center");
 		
 		//Add back button
 		JButton btnBack = new JButton("Back");
@@ -132,11 +137,11 @@ public class StartMenu extends JPanel implements ActionListener {
 				Main.loadMenu();
 			}
 		});
-		add(btnBack, "cell 2 9, alignx center");
+		add(btnBack, "cell 2 10, alignx center");
 		
 		//Add start button
 		JButton btnStart = new JButton("Start!");
-		add(btnStart, "cell 2 9, alignx center");
+		add(btnStart, "cell 2 10, alignx center");
 		btnStart.addActionListener(this);
 	}
 
@@ -286,6 +291,7 @@ public class StartMenu extends JPanel implements ActionListener {
 		
 		if (comboBox.getSelectedItem().equals("Sand")) {
 			Main.manualTanks = Integer.parseInt((String) humanSelect.getSelectedItem());;
+			Main.AITanks = Integer.parseInt((String) AISelect.getSelectedItem());
 			Main.startSand(names);
 		}else if (comboBox.getSelectedItem().equals("Snow")) {
 			Main.manualTanks = Integer.parseInt((String) humanSelect.getSelectedItem());;
