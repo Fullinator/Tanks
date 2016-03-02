@@ -79,8 +79,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	protected FireButton fire;
 	protected boolean tabbed = false;
 	Wind wind;
-<<<<<<< HEAD
-
 
 
 
@@ -88,25 +86,13 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	Projectile projectile;
 
 	private List<Projectile> projectiles;
-
-
-
-
-=======
-	private List<Projectile> projectiles;
->>>>>>> 72eed7b92f2f0faef92e23b4701df25e54347e5e
 	protected int nightShiftAmount;
 	protected Color nightShiftColor;
 	protected boolean nightShift;
 	private BufferedImage currentTerrainImage;
 	private boolean staleTerrainImage;
-<<<<<<< HEAD
-
 	protected JComboBox<String> weapons;
 
-=======
-	protected JComboBox<String> weapons;
->>>>>>> 72eed7b92f2f0faef92e23b4701df25e54347e5e
 
 
 	/**
@@ -117,7 +103,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 */
 	protected Terrain(int x, int y, int maxH, String[] names) {
 		xLength = x;
-		yLength = y;
+		yLength = y+200;
 		maxHuman = maxH;
 		maxPlayers = maxHuman; //ADD THE AI PLAYERS TO THIS LATER
 		pauseTitle = new JLabel("Game Paused");
@@ -138,8 +124,17 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		projectiles = new ArrayList<>();
 
 		staleTerrainImage = true;
+//		screenMove();
 	}
 
+//	private void screenMove(){
+//		if (projectile == null){
+//		}
+//		else if(projectile.getY() < 0){ //screen is 1200
+//			while(true){
+//			System.out.println("Out of Screen: Y =" + projectile.getY()); }
+//		}
+//	}
 	
 	private void render(long elapsedNanos) {
 		if (!paintLock) {
@@ -659,7 +654,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		projectiles.add(projectile);
 
 		Ticker.addMethod(projectile::fire);
-		Main.sound.run("shot1");
+//		Main.sound.run("shot1");
 		nextPlayerTurn();
 	}
 
@@ -756,7 +751,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		quit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Main.sound.runLoop("song");
+//				Main.sound.runLoop("song");
 				Main.loadMenu();
 				Main.setTickerPause(true);
 			}

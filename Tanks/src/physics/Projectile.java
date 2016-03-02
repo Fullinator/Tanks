@@ -27,6 +27,7 @@ public  class Projectile implements Drawable2 {
 	double mass;
 	Tank tank;
 	private BufferedImage image;
+	public static boolean outOfScreen;
 
 	public Projectile(Tank tank,Terrain terrain){
 		this.tank = tank;
@@ -116,9 +117,15 @@ public  class Projectile implements Drawable2 {
 		points[0] = (x0 + vX * this.time);
 		points[1] = y0 + vY * this.time + 0.5  * Math.pow(this.time, 2);
 
-
 		System.out.println("Velocity: <" + vX + ", " + vY + ">\tLocation: (" + points[0] +", " + points[1] + ")");
-		
+			
+		if(points[1] < 20){ 
+			outOfScreen = true; 
+		}
+		else{
+			outOfScreen = false;
+		}
+		System.out.println("Out Of Screen:"+outOfScreen);
 		return points;
 	}
 
