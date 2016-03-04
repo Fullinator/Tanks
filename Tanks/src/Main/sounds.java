@@ -19,7 +19,7 @@ public class sounds {
 	public sounds(){
 		//Add menu song
 		try {
-			audioInputStream = AudioSystem.getAudioInputStream(new File("sounds/titleSong2.wav"));
+			audioInputStream = AudioSystem.getAudioInputStream(new File("src/sound/titleSong2.wav"));
 			af = audioInputStream.getFormat();
 			size = (int) (af.getFrameSize() * audioInputStream.getFrameLength());
 			audio = new byte[size];
@@ -43,7 +43,7 @@ public class sounds {
 		
 		//Add movement sound
 		try {
-			audioInputStream = AudioSystem.getAudioInputStream(new File("sounds/vehicle.wav"));
+			audioInputStream = AudioSystem.getAudioInputStream(new File("src/sound/vehicle.wav"));
 			af = audioInputStream.getFormat();
 			size = (int) (af.getFrameSize() * audioInputStream.getFrameLength());
 			audio = new byte[size];
@@ -67,7 +67,7 @@ public class sounds {
 		
 		//Add turret sound
 		try {
-			audioInputStream = AudioSystem.getAudioInputStream(new File("sounds/turret.wav"));
+			audioInputStream = AudioSystem.getAudioInputStream(new File("src/sound/turret.wav"));
 			af = audioInputStream.getFormat();
 			size = (int) (af.getFrameSize() * audioInputStream.getFrameLength());
 			audio = new byte[size];
@@ -91,7 +91,7 @@ public class sounds {
 		
 		//Add shot sound
 		try {
-			audioInputStream = AudioSystem.getAudioInputStream(new File("sounds/TNT.wav"));
+			audioInputStream = AudioSystem.getAudioInputStream(new File("src/sound/TNT.wav"));
 			af = audioInputStream.getFormat();
 			size = (int) (af.getFrameSize() * audioInputStream.getFrameLength());
 			audio = new byte[size];
@@ -115,7 +115,7 @@ public class sounds {
 		
 		//Add explosion sound
 		try {
-			audioInputStream = AudioSystem.getAudioInputStream(new File("sounds/TNT.wav"));
+			audioInputStream = AudioSystem.getAudioInputStream(new File("src/sound/TNT.wav"));
 			af = audioInputStream.getFormat();
 			size = (int) (af.getFrameSize() * audioInputStream.getFrameLength());
 			audio = new byte[size];
