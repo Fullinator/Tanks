@@ -11,9 +11,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -79,6 +82,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	protected FireButton fire;
 	protected boolean tabbed = false;
 	Wind wind;
+
 	private List<Projectile> projectiles;
 	protected int nightShiftAmount;
 	protected Color nightShiftColor;
@@ -97,6 +101,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 */
 	protected Terrain(int x, int y, int numHuman, int numAI, String[] names) {
 		xLength = x;
+
 		yLength = y;
 		this.numHuman = numHuman;
 		this.numAI = numAI;
@@ -115,7 +120,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		projectiles = new ArrayList<>();
 
 		staleTerrainImage = true;
+//		screenMove();
 	}
+
 
 	/**
 	 * Creates the unique element on the terrain
@@ -350,7 +357,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	/**
 	 * Creates tank objects and adds them to the list of players and drawables
 	 * 
-	 * @param numberOfTanks number of total tanks to create
+	 * @param numHumans number of human players
+	 * @param numAI number of AI players
 	 * @param names names of the tanks 
 	 */
 	protected void createTanks(int numHumans, int numAI, String[] names) {
@@ -362,12 +370,23 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			drawable.add(t);
 			players.add(t);
 		}
+		List<String> aiNames = new ArrayList<>();
+		Scanner s;
+		try {
+			s = new Scanner(new File("names.txt"));
+			while (s.hasNext()) aiNames.add(s.next());
+		} catch (IOException e) {
+			s = null;
+		}
+		Random r = new Random();
 		for (int i = 0; i < numAI; i++) {
-			Tank t = new AITank(players);
-			t.setName(names[i]);
+			Tank t = new AITank(this, players);
+			if (aiNames.size() > 0) t.setName(aiNames.get(r.nextInt(aiNames.size())));
+			else t.setName("AI " + (i + 1));
 			drawable.add(t);
 			players.add(t);
 		}
+		if (s != null) s.close();
 		setFocusTraversalKeysEnabled(false);
 		addKeyListener(this);
 
@@ -578,8 +597,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		playerName.setText(currentTank().getName());
 
 		if (players.get(currentPlayer - 1) instanceof AITank) {
-			((AITank) players.get(currentPlayer - 1)).takeTurn();
-			nextPlayerTurn();
+			new Thread(((AITank) players.get(currentPlayer - 1))::takeTurn).start();
 		}
 	}
 
@@ -647,7 +665,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		projectiles.add(projectile);
 
 		Ticker.addMethod(projectile::fire);
-		Main.sound.run("shot1");
+//		Main.sound.run("shot1");
 		nextPlayerTurn();
 	}
 
@@ -747,7 +765,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		quit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Main.sound.runLoop("song");
+//				Main.sound.runLoop("song");
 				Main.loadMenu();
 				Main.setTickerPause(true);
 			}
