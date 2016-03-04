@@ -478,6 +478,11 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			}
 		}
 	}//end of the remove method
+	
+	
+	public void collisionDetection(Projectile shot) {
+		
+	}
 
 	/**
 	 * Calls the super paintComponent to paint on the JPanel
@@ -512,9 +517,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				g2d.rotate(((Tank)drawable.get(i)).getBarrelAngle(), drawable.get(i).getX() + 20, findY(drawable.get(i).getX()) - 15 );
 				g2d.fillRect(drawable.get(i).getX(), findY(drawable.get(i).getX()) - 17, 20, 4);
 				g2d.setTransform(old);// resets the rotation back to how it was before the painting began
-			} else if (drawable.get(i) instanceof standardShell) {// draws the missile
-				g2d.fillOval(drawable.get(i).getX(), drawable.get(i).getY(), 5, 5);
-			} else if (drawable.get(i) instanceof Clouds) {// draws clouds
+			} //else if (drawable.get(i) instanceof standardShell) {// draws the missile
+				//g2d.fillOval(drawable.get(i).getX(), drawable.get(i).getY(), 5, 5);
+			 else if (drawable.get(i) instanceof Clouds) {// draws clouds
 				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY(), null);
 			} else {
 				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY() - drawable.get(i).queryImage().getHeight(), null);
@@ -544,6 +549,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		}
 		g2d.drawImage(currentTerrainImage, 0, 0, null);
 
+		//Draw the projectile in the list
 		projectiles.forEach(p -> {
 			g2d.drawImage(p.queryImage(), p.getX(), p.getY(), null);
 		});
