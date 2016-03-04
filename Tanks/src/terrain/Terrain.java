@@ -111,10 +111,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		createTopMenu();
 		paintLock = false;
 		Ticker.addMethod(this::render);
-
-		//int[] foo = findPlacement(2);
-		//drawable.add(new Pyramid(true, new Point(foo[0],findY(foo[1]))));
-
 		drawable.add(new DayCycle(xLength,yLength));
 		projectiles = new ArrayList<>();
 
@@ -681,6 +677,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		add(powerDown, "cell 6 0, alignx center");
 		add(power, "cell 5 0, alignx center");
 		add(fire, "cell 7 0, alignx center");
+		revalidate();
+		weapons.addItem("Standard Shot");
+		//add(power, "cell 5 0, alignx center");
 		
 	}
 
