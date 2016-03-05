@@ -1,8 +1,11 @@
 package testing;
 
+import drawable.Tank;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import terrain.Sand;
+import terrain.Terrain;
 
 import static org.junit.Assert.*;
 
@@ -28,7 +31,10 @@ public class TerrainTest {
 
 	@Test
 	public void testCurrentTank() throws Exception {
-
+		Terrain terrain = new Sand(500, 500, 2, 0, new String[] {"name1", "name2"});
+		Tank a = terrain.currentTank();
+		terrain.nextPlayerTurn();
+		assertNotEquals(a, terrain.currentTank());
 	}
 
 	@Test
@@ -48,12 +54,14 @@ public class TerrainTest {
 
 	@Test
 	public void testGetXTerrain() throws Exception {
-
+		Terrain terrain = new Sand(500, 700, 2, 0, new String[] {"name1", "name2"});
+		assertEquals(terrain.getXTerrain(), 500);
 	}
 
 	@Test
 	public void testGetYTerrain() throws Exception {
-
+		Terrain terrain = new Sand(500, 700, 2, 0, new String[] {"name1", "name2"});
+		assertEquals(terrain.getYTerrain(), 700);
 	}
 
 	@Test

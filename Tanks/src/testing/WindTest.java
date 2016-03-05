@@ -3,6 +3,7 @@ package testing;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import physics.Wind;
 
 import static org.junit.Assert.*;
 
@@ -23,11 +24,15 @@ public class WindTest {
 
 	@Test
 	public void testGetWindSpeed() throws Exception {
-
+		Wind wind = new Wind(30);
+		assertEquals(wind.getWindSpeed(), 30, 0.01);
 	}
 
 	@Test
 	public void testSetWindSpeed() throws Exception {
-
+		Wind wind = new Wind(30);
+		assertEquals(wind.getWindSpeed(), 30, 0.01);
+		wind.setWindSpeed(50);
+		assertEquals(wind.getWindSpeed(), 50, 0.01);
 	}
 }
