@@ -22,13 +22,14 @@ public  class Projectile implements Drawable2 {
 	public  double vX;
 	public  double vY;
 	public double height;
-	public double[] points;
+	public double[] points = new double[2];
 	double time;
 	double mass;
 	Tank tank;
 	private BufferedImage image;
 	public static boolean outOfScreen;
 	private int tickerID;
+	public int damage = 90;
 
 	public Projectile(Tank tank,Terrain terrain){
 		this.tank = tank;
@@ -64,7 +65,6 @@ public  class Projectile implements Drawable2 {
 		//windSpeed= wind.getWindSpeed();
 		System.out.println("WindSpeed:" + windSpeed);
 
-		double[] points = new double[2];
 		points[0] = intX;
 		points[1] = intY;
 		System.out.println("Points:" + points);
@@ -118,7 +118,7 @@ public  class Projectile implements Drawable2 {
 		points[0] = (x0 + vX * this.time);
 		points[1] = y0 + vY * this.time + 0.5  * Math.pow(this.time, 2);
 
-		System.out.println("Velocity: <" + vX + ", " + vY + ">\tLocation: (" + points[0] +", " + points[1] + ")");
+		//System.out.println("Velocity: <" + vX + ", " + vY + ">\tLocation: (" + points[0] +", " + points[1] + ")");
 
 		if(points[1] < 20){
 			outOfScreen = true;
@@ -126,7 +126,7 @@ public  class Projectile implements Drawable2 {
 		else{
 			outOfScreen = false;
 		}
-		System.out.println("Out Of Screen:"+outOfScreen);
+		//System.out.println("Out Of Screen:"+outOfScreen);
 		
 		terrain.collisionDetection(this);
 		
