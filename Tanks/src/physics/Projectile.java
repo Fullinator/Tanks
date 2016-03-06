@@ -28,6 +28,7 @@ public  class Projectile implements Drawable2 {
 	Tank tank;
 	private BufferedImage image;
 	public static boolean outOfScreen;
+	private int tickerID;
 
 	public Projectile(Tank tank,Terrain terrain){
 		this.tank = tank;
@@ -157,5 +158,12 @@ public  class Projectile implements Drawable2 {
 		return image;
 	}
 	
+	public void setTickerID(int ticker) {
+		tickerID = ticker;
+	}
+	
+	public int getTickerID() {
+		return tickerID;
+	}
 	
 }
