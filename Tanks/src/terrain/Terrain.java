@@ -36,8 +36,6 @@ import buttons.RightButton;
 import buttons.UpButton;
 import drawable.AITank;
 import drawable.Clouds;
-import drawable.manualTank;
-import drawable.standardShell;
 import net.miginfocom.swing.MigLayout;
 import drawable.Drawable2;
 import drawable.Cactus;

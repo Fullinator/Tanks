@@ -10,7 +10,8 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 
-import drawable.manualTank;
+import drawable.Tank;
+import drawable.UserTank;
 
 import com.jgoodies.forms.factories.FormFactory;
 import javax.swing.JLabel;
@@ -36,7 +37,7 @@ public class StartMenu extends JPanel implements ActionListener {
 	private JLabel[] nameLabels = new JLabel[maxPlayer];
 	private double y = 0,a = 613.0530044043094,b = 0.5723935937530484,c = -0.0017677556908674563,d = .0000010360170037339734, x = 0;
 
-	private manualTank tank; 
+	private Tank tank; 
 
 	private int xLength = -1;
 	private int yLength = -1;
@@ -60,7 +61,7 @@ public class StartMenu extends JPanel implements ActionListener {
 		xLength = xDim;
 		yLength = yDim;
 		this.setSize(xDim, yDim);
-		tank = new manualTank(null, xDim);
+		tank = new UserTank();//null, xDim);
 
 		createBackground();
 
@@ -255,7 +256,7 @@ public class StartMenu extends JPanel implements ActionListener {
 
 		//draws the barrel on the tank
 		g2d.setColor(Color.BLACK);
-		g2d.rotate(tank.barrelAngle(), tankXPos, findY(tankXPos) - 15 );
+		g2d.rotate(tank.getBarrelAngle(), tankXPos, findY(tankXPos) - 15 );
 		g2d.fillRect(tankXPos, findY(tankXPos) - 17, 20, 4);
 
 		g2d.setTransform(old);// resets the rotation back to how it was before the painting began
