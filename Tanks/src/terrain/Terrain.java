@@ -106,9 +106,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		this.numHuman = numHuman;
 		this.numAI = numAI;
 		maxPlayers = this.numHuman + this.numAI;
-		pauseTitle = new JLabel("Game Paused");
-		pauseTitle.setFont(new Font("Arial", Font.BOLD, 35));
-		pauseTitle.setForeground(Color.white);
 		generate();
 		fill();// calls a method that fills in the points underneath the cubic
 		createTanks(this.numHuman, this.numAI, names);
@@ -120,7 +117,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		projectiles = new ArrayList<>();
 
 		staleTerrainImage = true;
-//		screenMove();
+		//		screenMove();
 	}
 
 
@@ -130,7 +127,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 * @param amount number of objects to create
 	 */
 	protected abstract void createTerrainSpecificItems(int amount);
-	
+
 	private void render(long elapsedNanos) {
 		if (!paintLock) {
 			paintLock = true;
@@ -173,7 +170,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 * @return returns the y coordinate of the terrain or -1 if one cannot be found
 	 */
 	public int findY(int x){
-			if(x > 0 && x < xLength){//find Y position from damage
+		if(x > 0 && x < xLength){//find Y position from damage
 			for(int i = 0; i < terrain[0].length; i += 1){
 				if(terrain[x][i] > 0){
 					return i;
@@ -478,30 +475,33 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			}
 		}
 	}//end of the remove method
-	
-	
+
+
 	public void collisionDetection(Projectile shot) {
 		int radius = 13;//radius around tank in pixels to check collision
+		boolean tankHit = false;
 		//check against all tanks
 		for (Tank t : players) {
 			//We need to skip the outbound shot on the current tank
-			
+
 			//find center of tank
 			Point center = new Point(t.getX() + 20, findY(t.getX() + 10) - (t.queryImage().getHeight()) );
 			//g2d.rotate(((Tank)drawable.get(i)).angle(drawable.get(i).getX() + 20, terrain), drawable.get(i).getX(), findY(drawable.get(i).getX()));// this takes a radian. It has to be a very small radian
-			
-			//check if our shot is within a direct hit of tank
+
+			//check if our shot is within a hit of tank
 			if (shot.getX() >= center.getX() - radius && shot.getX() <= center.getX() + radius) {//check X
 				if (shot.getY() >= center.getY() - radius && shot.getY() <= center.getY() + radius) {//check Y
 					//then we have a hit
-					
+
 					//call for damage
 					projectiles.remove(shot);
 					Ticker.removeMethod(shot.getTickerID());
+					tankHit = true;
 					//pause();
 				}
 			}
 		}
+		damage(shot, tankHit, radius);
 		
 		//check against terrain
 		if (shot.getX() > xLength || shot.getX() < 0 || shot.getY() > yLength) {
@@ -513,10 +513,44 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			//call for damage
 		}
 
-		
-		
+
+
 	}
 
+	public void damage(Projectile shot, boolean tank, int tankCollisionRadius) {
+		//check which shot it is so we can tell what kind of damage
+		//For now we only have one kind
+
+		if (tank) {//damage tank first
+			for (Tank t : players) {
+				//check if our shot is within a hit of tank
+				Point center = new Point(t.getX() + 20, findY(t.getX() + 10) - (t.queryImage().getHeight()) );
+				if (shot.getX() >= center.getX() - tankCollisionRadius && shot.getX() <= center.getX() + tankCollisionRadius) {//check X
+					if (shot.getY() >= center.getY() - tankCollisionRadius && shot.getY() <= center.getY() + tankCollisionRadius) {//check Y
+						t.setHealth(t.getHealth() - shot.damage);
+						//System.out.println("damage!");
+						if (t.getHealth() <= 0) {
+							players.remove(t);
+							drawable.remove(t);
+							maxPlayers = maxPlayers - 1;
+							checkEndOfGame();
+							damage(shot,true,tankCollisionRadius);
+							return;
+						}
+					}
+				}
+			}
+		} else {//damage terrain
+
+		}
+	}
+
+	protected void checkEndOfGame() {
+		if (maxPlayers == 1) {
+			playerWin();
+		}
+	}
+	
 	/**
 	 * Calls the super paintComponent to paint on the JPanel
 	 * This also handles all standard terrain drawing and drawables drawing.
@@ -537,7 +571,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				nightShift = ((DayCycle) drawable.get(i)).shiftNight();
 			}
 		}
-		
+
 		for (int i = 0; i < drawable.size(); i++) {// draws the clouds and tanks and eventually trees and whatever else needs to be drawn
 			if (drawable.get(i) instanceof DayCycle) {
 				//We already drew this
@@ -550,24 +584,24 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				g2d.rotate(((Tank)drawable.get(i)).getBarrelAngle(), drawable.get(i).getX() + 20, findY(drawable.get(i).getX()) - 15 );
 				g2d.fillRect(drawable.get(i).getX(), findY(drawable.get(i).getX()) - 17, 20, 4);
 				g2d.setTransform(old);// resets the rotation back to how it was before the painting began
-				
-				
-				
+
+
+
 				//REMOVE THIS:
 				//Draws the hit box around the tank
 				//Point center = new Point(drawable.get(i).getX() + 3, findY(drawable.get(i).getX() + 3) - (drawable.get(i).queryImage().getHeight()) );
 				//g2d.setColor(Color.PINK);
 				//g2d.drawOval((int)center.getX(), (int)center.getY(), 35, 35);
-				
-				
+
+
 			} //else if (drawable.get(i) instanceof standardShell) {// draws the missile
-				//g2d.fillOval(drawable.get(i).getX(), drawable.get(i).getY(), 5, 5);
-			 else if (drawable.get(i) instanceof Clouds) {// draws clouds
+			//g2d.fillOval(drawable.get(i).getX(), drawable.get(i).getY(), 5, 5);
+			else if (drawable.get(i) instanceof Clouds) {// draws clouds
 				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY(), null);
 			} else {
 				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY() - drawable.get(i).queryImage().getHeight(), null);
 			}
-			
+
 		}// End of loop to draw objects
 
 		if (staleTerrainImage) {
@@ -692,16 +726,16 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		weapons.addItem("test");
 
 		add(weapons, "cell 7 0, alignx center");
-		
+
 		//Fire Button
 		fire = new FireButton("", this);
 		add(fire, "cell 8 0, alignx center");
 		//Health Label
 
 		//Buy weapons
-		
+
 	}
-	
+
 	/**
 	 * Stops tank movement and creates the requested shot from current parameters and then changes the turn
 	 */
@@ -714,7 +748,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		projectiles.add(projectile);
 
 		projectile.setTickerID(Ticker.addMethod(projectile::fire));
-//		Main.sound.run("shot1");
+		//		Main.sound.run("shot1");
 		nextPlayerTurn();
 	}
 
@@ -747,7 +781,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		revalidate();
 		weapons.addItem("Standard Shot");
 		//add(power, "cell 5 0, alignx center");
-		
+
 	}
 
 	/**
@@ -800,6 +834,32 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		}
 	}
 
+	
+	protected void playerWin() {
+		hidePlayerStats();
+		Main.setTickerPause(true);
+		paused = true;
+		hideTopMenu();
+		tabbed = false;
+		pauseLayout = new MigLayout("", "["+ ((getXTerrain() - 500)/2) +"][29][29][26][26][26]["+ ((getXTerrain() - 500)/2) +"]", "[150][35][40][][][][][][]");
+		setLayout(pauseLayout);
+		quit = new JButton("Quit to Menu");
+		quit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//				Main.sound.runLoop("song");
+				Main.loadMenu();
+				Main.setTickerPause(true);
+			}
+		});
+		pauseTitle = new JLabel(players.get(0).getName() + " Wins!");
+		pauseTitle.setFont(new Font("Arial", Font.BOLD, 35));
+		pauseTitle.setForeground(Color.white);
+		add(pauseTitle,"cell 5 2, alignx center");
+		add(quit, "cell 5 4, alignx center");
+		revalidate();
+	}
+	
 	/**
 	 * Creates all needed  objects to pause the game and temporarily stops the ticker
 	 */
@@ -810,11 +870,14 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		pauseLayout = new MigLayout("", "["+ ((getXTerrain() - 500)/2) +"][29][29][26][26][26]["+ ((getXTerrain() - 500)/2) +"]", "[150][35][40][][][][][][]");
 		setLayout(pauseLayout);
 		hideTopMenu();
+		pauseTitle = new JLabel("Game Paused");
+		pauseTitle.setFont(new Font("Arial", Font.BOLD, 35));
+		pauseTitle.setForeground(Color.white);
 		quit = new JButton("Quit to Menu");
 		quit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-//				Main.sound.runLoop("song");
+				//				Main.sound.runLoop("song");
 				Main.loadMenu();
 				Main.setTickerPause(true);
 			}
@@ -865,8 +928,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			if (e.getKeyCode() == KeyEvent.VK_TAB) {
 				showPlayerStats();
 			}
-
-			//draws all of the drawables in the drawable array
+			
 			Tank t = players.get(currentPlayer - 1);
 
 			// move left
@@ -892,7 +954,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			// fire projectile
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				fire();
-				
+
 			}
 		}
 	}//end of keyPressed method
