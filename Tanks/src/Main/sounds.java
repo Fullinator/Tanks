@@ -1,5 +1,7 @@
 package Main;
 import java.io.File;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.HashMap;
 
 import javax.sound.sampled.*;
@@ -19,7 +21,8 @@ public class sounds {
 	public sounds(){
 		//Add menu song
 		try {
-			audioInputStream = AudioSystem.getAudioInputStream(new File("src/sound/titleSong2.wav"));
+			URL url = ClassLoader.getSystemResource("sound/titleSong2.wav");
+			audioInputStream = AudioSystem.getAudioInputStream(url);
 			af = audioInputStream.getFormat();
 			size = (int) (af.getFrameSize() * audioInputStream.getFrameLength());
 			audio = new byte[size];
@@ -43,7 +46,8 @@ public class sounds {
 		
 		//Add movement sound
 		try {
-			audioInputStream = AudioSystem.getAudioInputStream(new File("src/sound/vehicle.wav"));
+			URL url = ClassLoader.getSystemResource("sound/vehicle.wav");
+			audioInputStream = AudioSystem.getAudioInputStream(url);
 			af = audioInputStream.getFormat();
 			size = (int) (af.getFrameSize() * audioInputStream.getFrameLength());
 			audio = new byte[size];
@@ -67,7 +71,8 @@ public class sounds {
 		
 		//Add turret sound
 		try {
-			audioInputStream = AudioSystem.getAudioInputStream(new File("src/sound/turret.wav"));
+			URL url = ClassLoader.getSystemResource("sound/turret.wav");
+			audioInputStream = AudioSystem.getAudioInputStream(url);
 			af = audioInputStream.getFormat();
 			size = (int) (af.getFrameSize() * audioInputStream.getFrameLength());
 			audio = new byte[size];
@@ -91,7 +96,8 @@ public class sounds {
 		
 		//Add shot sound
 		try {
-			audioInputStream = AudioSystem.getAudioInputStream(new File("src/sound/TNT.wav"));
+			URL url = ClassLoader.getSystemResource("sound/TNT.wav");
+			audioInputStream = AudioSystem.getAudioInputStream(url);
 			af = audioInputStream.getFormat();
 			size = (int) (af.getFrameSize() * audioInputStream.getFrameLength());
 			audio = new byte[size];
@@ -115,7 +121,8 @@ public class sounds {
 		
 		//Add explosion sound
 		try {
-			audioInputStream = AudioSystem.getAudioInputStream(new File("src/sound/TNT.wav"));
+			URL url = ClassLoader.getSystemResource("sound/TNT.wav");
+			audioInputStream = AudioSystem.getAudioInputStream(url);
 			af = audioInputStream.getFormat();
 			size = (int) (af.getFrameSize() * audioInputStream.getFrameLength());
 			audio = new byte[size];
