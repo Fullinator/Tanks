@@ -46,7 +46,7 @@ public  class Projectile implements Drawable2 {
 		g = 1;
 		double tankAngle = tank.angle((int)intX, terrain.getTerrain());
 		angle = tank.getBarrelAngle() + tankAngle;
-		System.out.println("Angle:" + angle);
+		//System.out.println("Angle:" + angle);
 		intX = .5*tank.queryImage().getWidth() + tank.getX()- 20*Math.cos(angle);
 		intY = terrain.findY(tank.getX())- 20*Math.sin(angle)- tank.queryImage().getHeight();
 		if(tankAngle < Math.PI/2){
@@ -57,17 +57,17 @@ public  class Projectile implements Drawable2 {
 			intY -= 20*Math.sin(tankAngle);
 			intX -= 20*Math.cos( tankAngle);
 		}
-		System.out.println("X:" + intX);
+		//System.out.println("X:" + intX);
 
-		System.out.println("Y:" + intY);
+		//System.out.println("Y:" + intY);
 		x0 = intX;
 		y0 = intY;
 		//windSpeed= wind.getWindSpeed();
-		System.out.println("WindSpeed:" + windSpeed);
+		//System.out.println("WindSpeed:" + windSpeed);
 
 		points[0] = intX;
 		points[1] = intY;
-		System.out.println("Points:" + points);
+		//System.out.println("Points:" + points);
 
 		height = intY;
 		time = 0;
