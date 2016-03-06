@@ -501,7 +501,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				}
 			}
 		}
-		damage(shot, tankHit, radius);
+		if (tankHit) {
+			damage(shot, tankHit, radius);
+		}
 		
 		//check against terrain
 		if (shot.getX() > xLength || shot.getX() < 0 || shot.getY() > yLength) {
@@ -511,6 +513,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			projectiles.remove(shot);
 			Ticker.removeMethod(shot.getTickerID());
 			//call for damage
+			damage(shot, false, radius);
 		}
 
 
@@ -541,7 +544,37 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				}
 			}
 		} else {//damage terrain
-
+			int mag = shot.damage;
+			int x = shot.getX();
+			int y = findY(x);
+			for(int i = y + mag; i > y - mag; i -= 1){
+				int low = (int)(-Math.sqrt(Math.pow(mag, 2) - Math.pow(i - y, 2)) + x);// Finds the lower x coordinate for the given y coordinate
+				int high = (int)(Math.sqrt(Math.pow(mag, 2) - Math.pow(i - y, 2)) + x);// Finds the upper x coordiante for the given y corrdinate
+				for(int j = low; j < high; j += 1){// loops from the lower x to the upper x
+					if(j >= 0 && j < xLength && i >= 0 && i < yLength){
+						terrain[j][i] = 0;//sets points equal to false
+					}
+				}
+			}
+			staleTerrainImage = true;
+			
+			
+			//implement gravity
+			for(int k = 0; k < yLength; k += 1){
+				for(int i = x - mag; i < x + mag; i += 1){
+					for(int j = y + mag; j > 0; j -= 1){
+						if(j + 1 < yLength && j > 0 && i > 0 && i < xLength){
+							if (terrain[i][j] > 0 && !(terrain[i][j + 1] > 0)){
+								terrain[i][j+1] = terrain[i][j];
+								terrain[i][j] = 0;
+								staleTerrainImage = true;
+								repaint();
+							}
+						}
+					}
+				}
+			}
+			
 		}
 	}
 
@@ -837,7 +870,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	
 	protected void playerWin() {
 		hidePlayerStats();
-		Main.setTickerPause(true);
 		paused = true;
 		hideTopMenu();
 		tabbed = false;
@@ -858,6 +890,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		add(pauseTitle,"cell 5 2, alignx center");
 		add(quit, "cell 5 4, alignx center");
 		revalidate();
+		Main.setTickerPause(true);
 	}
 	
 	/**
