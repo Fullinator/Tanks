@@ -481,6 +481,39 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	
 	
 	public void collisionDetection(Projectile shot) {
+		int radius = 13;//radius around tank in pixels to check collision
+		//check against all tanks
+		for (Tank t : players) {
+			//We need to skip the outbound shot on the current tank
+			
+			//find center of tank
+			Point center = new Point(t.getX() + 20, findY(t.getX() + 10) - (t.queryImage().getHeight()) );
+			//g2d.rotate(((Tank)drawable.get(i)).angle(drawable.get(i).getX() + 20, terrain), drawable.get(i).getX(), findY(drawable.get(i).getX()));// this takes a radian. It has to be a very small radian
+			
+			//check if our shot is within a direct hit of tank
+			if (shot.getX() >= center.getX() - radius && shot.getX() <= center.getX() + radius) {//check X
+				if (shot.getY() >= center.getY() - radius && shot.getY() <= center.getY() + radius) {//check Y
+					//then we have a hit
+					
+					//call for damage
+					projectiles.remove(shot);
+					Ticker.removeMethod(shot.getTickerID());
+					//pause();
+				}
+			}
+		}
+		
+		//check against terrain
+		if (shot.getX() > xLength || shot.getX() < 0 || shot.getY() > yLength) {
+			projectiles.remove(shot);
+			Ticker.removeMethod(shot.getTickerID());
+		}else if (terrain[shot.getX()][shot.getY()] > 0) {
+			projectiles.remove(shot);
+			Ticker.removeMethod(shot.getTickerID());
+			//call for damage
+		}
+
+		
 		
 	}
 
@@ -517,6 +550,16 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				g2d.rotate(((Tank)drawable.get(i)).getBarrelAngle(), drawable.get(i).getX() + 20, findY(drawable.get(i).getX()) - 15 );
 				g2d.fillRect(drawable.get(i).getX(), findY(drawable.get(i).getX()) - 17, 20, 4);
 				g2d.setTransform(old);// resets the rotation back to how it was before the painting began
+				
+				
+				
+				//REMOVE THIS:
+				//Draws the hit box around the tank
+				//Point center = new Point(drawable.get(i).getX() + 3, findY(drawable.get(i).getX() + 3) - (drawable.get(i).queryImage().getHeight()) );
+				//g2d.setColor(Color.PINK);
+				//g2d.drawOval((int)center.getX(), (int)center.getY(), 35, 35);
+				
+				
 			} //else if (drawable.get(i) instanceof standardShell) {// draws the missile
 				//g2d.fillOval(drawable.get(i).getX(), drawable.get(i).getY(), 5, 5);
 			 else if (drawable.get(i) instanceof Clouds) {// draws clouds
@@ -670,7 +713,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		Projectile projectile = new Projectile(currentTank(), this);
 		projectiles.add(projectile);
 
-		Ticker.addMethod(projectile::fire);
+		projectile.setTickerID(Ticker.addMethod(projectile::fire));
 //		Main.sound.run("shot1");
 		nextPlayerTurn();
 	}
