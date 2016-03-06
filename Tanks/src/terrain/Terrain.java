@@ -427,6 +427,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 * @param mag magnitude of the hole 
 	 *
 	 */
+	/*
 	public void damage(int x, int y, int mag){
 
 		//create the hole
@@ -475,7 +476,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			}
 		}
 	}//end of the remove method
-
+*/
 
 	public void collisionDetection(Projectile shot) {
 		int radius = 13;//radius around tank in pixels to check collision
