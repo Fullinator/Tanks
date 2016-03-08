@@ -477,16 +477,20 @@ public abstract class Terrain extends JPanel implements KeyListener{
 */
 
 	public void collisionDetection(Projectile shot) {
-		int radius = 13;//radius around tank in pixels to check collision
+		int radius = 15;//radius around tank in pixels to check collision
 		boolean tankHit = false;
 		//check against all tanks
 		for (Tank t : players) {
 			//We need to skip the outbound shot on the current tank
 
 			//find center of tank
-			Point center = new Point(t.getX() + 20, findY(t.getX() + 10) - (t.queryImage().getHeight()) );
+			//Point center = new Point(t.getX() + 20, findY(t.getX() + 10) - (t.queryImage().getHeight()) );
 			//g2d.rotate(((Tank)drawable.get(i)).angle(drawable.get(i).getX() + 20, terrain), drawable.get(i).getX(), findY(drawable.get(i).getX()));// this takes a radian. It has to be a very small radian
 
+			double angle = t.angle(t.getX() + 20 , terrain);
+			int length = (int) (t.queryImage().getWidth() * Math.cos(angle));
+			Point center = new Point(t.getX() + (length/2), findY(t.getX() + (length/2)) - (t.queryImage().getHeight() /2) );
+			
 			//check if our shot is within a hit of tank
 			if (shot.getX() >= center.getX() - radius && shot.getX() <= center.getX() + radius) {//check X
 				if (shot.getY() >= center.getY() - radius && shot.getY() <= center.getY() + radius) {//check Y
@@ -526,7 +530,10 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		if (tank) {//damage tank first
 			for (Tank t : players) {
 				//check if our shot is within a hit of tank
-				Point center = new Point(t.getX() + 20, findY(t.getX() + 10) - (t.queryImage().getHeight()) );
+				//Point center = new Point(t.getX() + 20, findY(t.getX() + 10) - (t.queryImage().getHeight()) );
+				double angle = t.angle(t.getX() + 20 , terrain);
+				int length = (int) (t.queryImage().getWidth() * Math.cos(angle));
+				Point center = new Point(t.getX() + (length/2), findY(t.getX() + (length/2)) - (t.queryImage().getHeight() /2) );
 				if (shot.getX() >= center.getX() - tankCollisionRadius && shot.getX() <= center.getX() + tankCollisionRadius) {//check X
 					if (shot.getY() >= center.getY() - tankCollisionRadius && shot.getY() <= center.getY() + tankCollisionRadius) {//check Y
 						t.setHealth(t.getHealth() - shot.damage);
@@ -543,7 +550,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				}
 			}
 		} else {//damage terrain
-			int mag = shot.damage;
+			int mag = 10;
 			int x = shot.getX();
 			int y = findY(x);
 			for(int i = y + mag; i > y - mag; i -= 1){
@@ -621,8 +628,11 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 				//REMOVE THIS:
 				//Draws the hit box around the tank
-				//Point center = new Point(drawable.get(i).getX() + 3, findY(drawable.get(i).getX() + 3) - (drawable.get(i).queryImage().getHeight()) );
-				//g2d.setColor(Color.PINK);
+				double angle = ((Tank) drawable.get(i)).angle(drawable.get(i).getX() + 20 , terrain);
+				int length = (int) (drawable.get(i).queryImage().getWidth() * Math.cos(angle));
+				Point center = new Point(drawable.get(i).getX() + (length/2), findY(drawable.get(i).getX() + (length/2)) - (drawable.get(i).queryImage().getHeight() /2) );
+				g2d.setColor(Color.PINK);
+				g2d.drawRect((int)center.getX(), (int)center.getY(), 10, 10);
 				//g2d.drawOval((int)center.getX(), (int)center.getY(), 35, 35);
 
 
@@ -957,6 +967,15 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		}
 		if (!paused) {
 
+			
+			if (e.getKeyCode() == KeyEvent.VK_PLUS) {
+				
+			}
+			
+			if (e.getKeyCode() == KeyEvent.VK_MINUS) {
+				
+			}
+			
 			if (e.getKeyCode() == KeyEvent.VK_TAB) {
 				showPlayerStats();
 			}
@@ -1012,6 +1031,12 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			break;
 		case KeyEvent.VK_TAB:
 			hidePlayerStats();
+			break;
+		case KeyEvent.VK_PLUS:
+			
+			break;
+		case KeyEvent.VK_MINUS:
+			
 			break;
 		}
 	}
