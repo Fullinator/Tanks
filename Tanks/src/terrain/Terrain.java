@@ -68,6 +68,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	protected java.util.List<Long> downKeys = new ArrayList<>();
 	private boolean paintLock;
 	protected boolean paused = false;
+	private boolean allowHumanInput = true;
 	protected JLabel pauseTitle;
 	protected MigLayout normalLayout;
 	protected MigLayout pauseLayout;
@@ -722,7 +723,10 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		playerName.setText(currentTank().getName());
 
 		if (players.get(currentPlayer - 1) instanceof AITank) {
+			allowHumanInput = false;
 			new Thread(((AITank) players.get(currentPlayer - 1))::takeTurn).start();
+		} else {
+			allowHumanInput = true;
 		}
 	}
 
@@ -965,7 +969,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				pause();
 			}
 		}
-		if (!paused) {
+		if (!paused && allowHumanInput) {
 
 			
 			if (e.getKeyCode() == KeyEvent.VK_PLUS) {
@@ -1021,13 +1025,13 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		// Stop moving tank when motion key released
 		case KeyEvent.VK_LEFT:
 		case KeyEvent.VK_RIGHT:
-			t.stopMotion();
+			if (allowHumanInput) t.stopMotion();
 			break;
 
 			// Stop adjusting cannon angle when aim key released
 		case KeyEvent.VK_UP:
 		case KeyEvent.VK_DOWN:
-			t.stopAimCannon();
+			if (allowHumanInput) t.stopAimCannon();
 			break;
 		case KeyEvent.VK_TAB:
 			hidePlayerStats();

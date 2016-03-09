@@ -109,6 +109,10 @@ public  class Projectile implements Drawable2 {
 	}
 
 	public double[] fire(long time){
+		return fire(time, true);
+	}
+
+	public double[] fire(long time, boolean collide) {
 		double Ttime = (time * Math.pow(10,-7.75));
 		this.time = Ttime + this.time;
 		//get time in seconds
@@ -127,9 +131,9 @@ public  class Projectile implements Drawable2 {
 			outOfScreen = false;
 		}
 		//System.out.println("Out Of Screen:"+outOfScreen);
-		
-		terrain.collisionDetection(this);
-		
+
+		if (collide) terrain.collisionDetection(this);
+
 		return points;
 	}
 
