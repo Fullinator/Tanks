@@ -55,16 +55,13 @@ public class AITank extends Tank {
 		motionComplete = cannonComplete = false;
 
 		int newX = Math.abs(getX() - target.getX()) < 100 ? getX() : (getX() < target.getX() ? target.getX() - 100 : target.getX() + 100);
-		System.out.println(newX);
 		startMotion(newX, this::motionComplete);
 
 		// figure out workable angle
 		double idealAngle = Math.PI;
 		int power = getLaunchPower() / 5;
-		System.out.println(getHealth());
 		powerLoop:
 		for (; power <= getHealth(); power++) {
-			System.out.println("checking power " + power);
 			if (newX < target.getX()) {
 				for (double a = 1; a > 0.5; a -= 0.05) {
 					if (fuzzyTankIntersection(newX, a * Math.PI, power, target, 5)) {
@@ -83,8 +80,6 @@ public class AITank extends Tank {
 		}
 
 		setLaunchPower(power);
-
-		System.out.println("Launching: " + idealAngle + "@" + getLaunchPower());
 		aimCannon(idealAngle, this::cannonComplete);
 
 	}
@@ -110,11 +105,8 @@ public class AITank extends Tank {
 		physics.Projectile p = new physics.Projectile(t, owner);
 
 		double[] p1 = p.fire(0, false);
-		System.out.println(Arrays.toString(p1));
 		double[] p2 = p.fire(1000000000, false);
-		System.out.println(Arrays.toString(p2));
 		double[] p3 = p.fire(2000000000, false);
-		System.out.println(Arrays.toString(p3));
 
 		double a, b, c;
 
@@ -156,22 +148,9 @@ public class AITank extends Tank {
 		// Check for rough intersection
 		Point targetLoc = target.getCenterPoint(owner);
 		DoubleFunction<Double> quad = value -> a * value * value + b * value + c;
-//		System.out.println("Projectile path: " + a + "x^2 + " + b + "x + " + c);
-//
-//		System.out.println("\tquad(" + (targetLoc.x - maxOffset) + ") == " + quad.apply(targetLoc.x - maxOffset));
-//		System.out.println("\tquad(" + (targetLoc.x) + ") == " + quad.apply(targetLoc.x));
-//		System.out.println("\tquad(" + (targetLoc.x + maxOffset) + ") == " + quad.apply(targetLoc.x + maxOffset));
 
-		if (quad.apply(targetLoc.x - maxOffset) >= targetLoc.y - maxOffset && quad.apply(targetLoc.x - maxOffset) <= targetLoc.y - maxOffset
+		return quad.apply(targetLoc.x - maxOffset) >= targetLoc.y - maxOffset && quad.apply(targetLoc.x - maxOffset) <= targetLoc.y - maxOffset
 				|| quad.apply(targetLoc.x) >= targetLoc.y - maxOffset && quad.apply(targetLoc.x) <= targetLoc.y + maxOffset
-				|| quad.apply(targetLoc.x + maxOffset) >= targetLoc.y - maxOffset && quad.apply(targetLoc.x + maxOffset) <= targetLoc.y + maxOffset) {
-			System.out.println(targetLoc);
-			System.out.println("\tquad(" + (targetLoc.x - maxOffset) + ") == " + quad.apply(targetLoc.x - maxOffset));
-			System.out.println("\tquad(" + (targetLoc.x) + ") == " + quad.apply(targetLoc.x));
-			System.out.println("\tquad(" + (targetLoc.x + maxOffset) + ") == " + quad.apply(targetLoc.x + maxOffset));
-			return true;
-		}
-
-		return false;
+				|| quad.apply(targetLoc.x + maxOffset) >= targetLoc.y - maxOffset && quad.apply(targetLoc.x + maxOffset) <= targetLoc.y + maxOffset;
 	}
 }//end of AITank class
