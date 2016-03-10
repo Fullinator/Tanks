@@ -628,11 +628,11 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 				//REMOVE THIS:
 				//Draws the hit box around the tank
-				double angle = ((Tank) drawable.get(i)).angle(drawable.get(i).getX() + 20 , terrain);
-				int length = (int) (drawable.get(i).queryImage().getWidth() * Math.cos(angle));
-				Point center = new Point(drawable.get(i).getX() + (length/2), findY(drawable.get(i).getX() + (length/2)) - (drawable.get(i).queryImage().getHeight() /2) );
-				g2d.setColor(Color.PINK);
-				g2d.drawRect((int)center.getX(), (int)center.getY(), 10, 10);
+				//double angle = ((Tank) drawable.get(i)).angle(drawable.get(i).getX() + 20 , terrain);
+				//int length = (int) (drawable.get(i).queryImage().getWidth() * Math.cos(angle));
+				//Point center = new Point(drawable.get(i).getX() + (length/2), findY(drawable.get(i).getX() + (length/2)) - (drawable.get(i).queryImage().getHeight() /2) );
+				//g2d.setColor(Color.PINK);
+				//g2d.drawRect((int)center.getX(), (int)center.getY(), 10, 10);
 				//g2d.drawOval((int)center.getX(), (int)center.getY(), 35, 35);
 
 
