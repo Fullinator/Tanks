@@ -2,6 +2,7 @@ package drawable;
 
 import Main.Main;
 import Main.Ticker;
+import terrain.Terrain;
 
 import javax.imageio.ImageIO;
 import java.awt.Point;
@@ -225,4 +226,10 @@ public abstract class Tank implements Drawable2 {
 		tankAngle = angle;
 		return angle;
 	}//end of angle method
+
+	public Point getCenterPoint(Terrain terrain) {
+		double angle = angle(getX() + 20 , terrain.getTerrain());
+		int length = (int) (queryImage().getWidth() * Math.cos(angle));
+		return new Point(getX() + (length/2), terrain.findY(getX() + (length/2)) - (queryImage().getHeight() /2) );
+	}
 }
