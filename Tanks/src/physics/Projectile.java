@@ -1,10 +1,11 @@
 package physics;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.function.IntFunction;
-import drawable.Drawable2;
 
+import drawable.Drawable2;
 import drawable.Tank;
 import terrain.Terrain;
 
@@ -41,11 +42,38 @@ public  class Projectile implements Drawable2 {
 		intX = tank.queryImage().getWidth()+tank.getX();
 		// drawable.get(i).getX(), findY(drawable.get(i).getX()) - 17, 20, 4
 		Point tankLoc = tank.getLocation();
-		double tankX = tankLoc.getX();
-		double tankY = tankLoc.getY();
+		double tankX = tank.getX();
+		double tankY = terrain.findY((int)tankX);
 		g = 1;
 		double tankAngle = tank.angle((int)intX, terrain.getTerrain());
+		double tankHeight = tank.queryImage().getHeight();
+		double tankWidth = tank.queryImage().getWidth();
+		double innerTankAngle = Math.atan((terrain.findY(tank.getX())-15)/(tank.getX()+20));
+		double tankH = Math.pow(Math.pow(tankHeight,2) + Math.pow(tankWidth,2), .5);
 		angle = tank.getBarrelAngle() + tankAngle;
+
+		System.out.println("Angle:" + angle);
+		
+//		g2d.rotate(((Tank)drawable.get(i)).getBarrelAngle(), drawable.get(i).getX() + 20, findY(drawable.get(i).getX()) - 15 );
+//		g2d.fillRect(drawable.get(i).getX(), findY(drawable.get(i).getX()) - 17, 20, 4);
+//		g2d.setTransform(old);// resets the rotation back to how it was before the painting began
+
+		intX = tank.getX() -20 + (terrain.findY(tank.getX()))*Math.tan(innerTankAngle)/Math.tan(innerTankAngle);
+		intY = terrain.findY(tank.getX()) + 15 + (tank.getX() + 20)*Math.tan(innerTankAngle);
+//		if(tankAngle < Math.PI/2){
+////			intY += 20*Math.sin( tankAngle);
+////			intX += 20*Math.cos( tankAngle);
+//			intX += .5*tank.queryImage().getWidth()*Math.cos(innerTankAngle + Math.PI/2);
+//			intY -= tank.queryImage().getHeight()*Math.sin( innerTankAngle - Math.PI/2);
+//	}
+//		if(tankAngle > -Math.PI/2){
+////			intY -= 20*Math.sin(tankAngle);
+////			intX -= 20*Math.cos( tankAngle);
+//			intX += .5*tank.queryImage().getWidth()*Math.cos(innerTankAngle - Math.PI/2);
+//			intY -= tank.queryImage().getHeight()*Math.sin(innerTankAngle + Math.PI/2);
+//		}
+		System.out.println("X:" + intX);
+
 		//System.out.println("Angle:" + angle);
 		intX = .5*tank.queryImage().getWidth() + tank.getX()- 20*Math.cos(angle);
 		intY = terrain.findY(tank.getX())- 20*Math.sin(angle)- tank.queryImage().getHeight();
@@ -59,11 +87,15 @@ public  class Projectile implements Drawable2 {
 		}
 		//System.out.println("X:" + intX);
 
+
 		//System.out.println("Y:" + intY);
 		x0 = intX;
 		y0 = intY;
 		//windSpeed= wind.getWindSpeed();
 		//System.out.println("WindSpeed:" + windSpeed);
+
+
+		points = new double[2];
 
 		points[0] = intX;
 		points[1] = intY;
@@ -74,13 +106,17 @@ public  class Projectile implements Drawable2 {
 		mass = 1;
 		this.power = tank.getLaunchPower()/mass;
 		setPower(this.power);
-
+		
 		image = new BufferedImage(5, 5, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = image.createGraphics();
 		g2d.setColor(new Color(0, 0, 0, 0));
 		g2d.drawRect(0, 0, 5, 5);
 		g2d.setColor(Color.MAGENTA);
 		g2d.fillOval(0, 0, 5, 5);
+		AffineTransform old = g2d.getTransform();
+		g2d.rotate((tank).getBarrelAngle(), tank.getX() + 20, terrain.findY(tank.getX()) - 15 );
+		
+
 	}
 
 
