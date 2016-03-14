@@ -79,7 +79,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	protected FireButton fire;
 	protected boolean tabbed = false;
 	Wind wind;
-<<<<<<< HEAD
 
 
 
@@ -89,24 +88,14 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 	private List<Projectile> projectiles;
 
-
-
-
-=======
-	private List<Projectile> projectiles;
->>>>>>> 72eed7b92f2f0faef92e23b4701df25e54347e5e
 	protected int nightShiftAmount;
 	protected Color nightShiftColor;
 	protected boolean nightShift;
 	private BufferedImage currentTerrainImage;
 	private boolean staleTerrainImage;
-<<<<<<< HEAD
 
 	protected JComboBox<String> weapons;
 
-=======
-	protected JComboBox<String> weapons;
->>>>>>> 72eed7b92f2f0faef92e23b4701df25e54347e5e
 
 
 	/**
@@ -501,7 +490,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		for (int i = 0; i < drawable.size(); i++) {// draws the clouds and tanks and eventually trees and whatever else needs to be drawn
 			if (drawable.get(i) instanceof DayCycle) {
 				//We already drew this
-			} else if (drawable.get(i) instanceof Tank) {// draws player controlled tanks
+			} 
+			else if (drawable.get(i) instanceof Tank) {// draws player controlled tanks
 				g2d.rotate(((Tank)drawable.get(i)).angle(drawable.get(i).getX() + 20, terrain), drawable.get(i).getX(), findY(drawable.get(i).getX()));// this takes a radian. It has to be a very small radian
 				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), findY(drawable.get(i).getX()) - 18, null);
 
