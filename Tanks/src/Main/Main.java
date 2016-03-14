@@ -111,7 +111,7 @@ public class Main extends JFrame {
 	public static void startSand(String[] names) {
 		sound.stop("song");
 		frame.getContentPane().removeAll();
-		map = new Sand(xLength, yLength, manualTanks, names);
+		map = new Sand(xLength, yLength, manualTanks, AITanks, names);
 		frame.add(map);
 		map.setFocusable(true);
 		map.requestFocusInWindow();
@@ -123,7 +123,7 @@ public class Main extends JFrame {
 	public static void startSnow(String[] names) {
 		sound.stop("song");
 		frame.getContentPane().removeAll();
-		map = new Snow(xLength, yLength, manualTanks, names);
+		map = new Snow(xLength, yLength, manualTanks, AITanks, names);
 		frame.add(map);
 		map.setFocusable(true);
 		map.requestFocusInWindow();
@@ -135,7 +135,7 @@ public class Main extends JFrame {
 	public static void startForrest(String[] names) {
 		sound.stop("song");
 		frame.getContentPane().removeAll();
-		map = new Forest(xLength, yLength, manualTanks, names);
+		map = new Forest(xLength, yLength, manualTanks, AITanks, names);
 		frame.add(map);
 		map.setFocusable(true);
 		map.requestFocusInWindow();

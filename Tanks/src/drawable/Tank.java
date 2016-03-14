@@ -2,12 +2,14 @@ package drawable;
 
 import Main.Main;
 import Main.Ticker;
+import terrain.Terrain;
 
 import javax.imageio.ImageIO;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.LongConsumer;
 
@@ -25,6 +27,10 @@ public abstract class Tank implements Drawable2 {
 	private int cannonTickerID = -1;
 	private boolean goLeft;
 	private boolean counterClockwise;
+	private int motionTarget;
+	private double cannonTarget;
+	private Consumer<Boolean> motionCompleteCallback;
+	private Consumer<Boolean> cannonCompleteCallback;
 
 	public Tank() {
 		launchPower = 10;
@@ -112,6 +118,17 @@ public abstract class Tank implements Drawable2 {
 		Main.sound.runLoop("movement");
 	}
 
+	public void startMotion(int target, Consumer<Boolean> callback) {
+		motionTarget = Math.max(0, Math.min(target, Main.xLength - queryImage().getWidth()));
+		if (motionTickerID == -1) {
+			motionTickerID = Ticker.addMethod(this::moveTankTarget);
+			motionCompleteCallback = callback;
+			Main.sound.runLoop("movement");
+		} else {
+			callback.accept(false);
+		}
+	}
+
 	public void stopMotion() {
 		Ticker.removeMethod(motionTickerID);
 		motionTickerID = -1;
@@ -122,6 +139,17 @@ public abstract class Tank implements Drawable2 {
 		this.counterClockwise = counterClockWise;
 		if (cannonTickerID == -1) cannonTickerID = Ticker.addMethod(this::rotateCannon);
 		Main.sound.runLoop("turret");
+	}
+
+	public void aimCannon(double target, Consumer<Boolean> callback) {
+		cannonTarget = Math.max(0, Math.min(target, Math.PI));
+		if (cannonTickerID == -1) {
+			cannonTickerID = Ticker.addMethod(this::rotateCannonTarget);
+			cannonCompleteCallback = callback;
+			Main.sound.runLoop("turret");
+		} else {
+			callback.accept(false);
+		}
 	}
 
 	public void stopAimCannon() {
@@ -136,12 +164,38 @@ public abstract class Tank implements Drawable2 {
 		if (newX > 0 && newX < Main.xLength - queryImage().getWidth()) location.setLocation(newX, 1000);
 	}
 
+	private void moveTankTarget(long elapsedNanos) {
+		double speed = 100.0 * ((double) elapsedNanos / 1000000000);
+		boolean left = getX() > motionTarget;
+		double newX = location.getX() + (left ? -speed : speed);
+		if ((left && newX <= motionTarget) || (!left && newX >= motionTarget)) {
+			newX = motionTarget;
+			Ticker.removeMethod(motionTickerID);
+			motionTickerID = -1;
+			motionCompleteCallback.accept(true);
+			Main.sound.stop("movement");
+		}
+		location.setLocation(newX, 1000);
+	}
+
 	private void rotateCannon(long elapsedNanos) {
 		double rate = 3.0 * ((double) elapsedNanos / 1000000000);
-		barrelAngle += (counterClockwise ? rate : -rate);
-		if(barrelAngle > Math.PI || barrelAngle < 0){
-			barrelAngle -= (counterClockwise ? rate : -rate);
+		double newAng = barrelAngle + (counterClockwise ? rate : -rate);
+		if (newAng >= 0 && newAng <= Math.PI) barrelAngle = newAng;
+	}
+
+	private void rotateCannonTarget(long elapsedNanos) {
+		double rate = 1.0 * ((double) elapsedNanos / 1000000000);
+		boolean ccw = barrelAngle < cannonTarget;
+		double newAng = barrelAngle + (ccw ? rate : -rate);
+		if ((ccw && newAng >= cannonTarget) || (!ccw && newAng <= cannonTarget)) {
+			newAng = cannonTarget;
+			Ticker.removeMethod(cannonTickerID);
+			cannonTickerID = -1;
+			cannonCompleteCallback.accept(true);
+			Main.sound.stop("turret");
 		}
+		barrelAngle = newAng;
 	}
 
 	/**
@@ -172,4 +226,10 @@ public abstract class Tank implements Drawable2 {
 		tankAngle = angle;
 		return angle;
 	}//end of angle method
+
+	public Point getCenterPoint(Terrain terrain) {
+		double angle = angle(getX() + 20 , terrain.getTerrain());
+		int length = (int) (queryImage().getWidth() * Math.cos(angle));
+		return new Point(getX() + (length/2), terrain.findY(getX() + (length/2)) - (queryImage().getHeight() /2) );
+	}
 }
