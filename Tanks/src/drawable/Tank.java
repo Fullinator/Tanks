@@ -222,6 +222,13 @@ public abstract class Tank implements Drawable2 {
 				break;
 			}
 		}
+		
+		System.out.println(y1 + "     " + y2);
+		if (y2 == 0 || y1 == 0){//y2 == 0 && y1 > (points[0].length - 20) || y1 == 0 && y2 > (points[0].length - 20)) {
+			
+			System.out.println("Should be zero!");
+			return Math.atan(0);
+		}
 		double angle = Math.atan((y2 - y1) / -15.0);
 		tankAngle = angle;
 		return angle;
