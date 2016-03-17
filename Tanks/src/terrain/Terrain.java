@@ -188,7 +188,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			}
 		}
 		//return (int)(a + b * x + c * Math.pow(x, 2) + d * Math.pow(x, 3));	
-		return yLength;
+		return yLength - 20;
 	}
 
 	/**
