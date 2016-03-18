@@ -1,6 +1,6 @@
 package terrain;
 
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
@@ -9,7 +9,8 @@ public class Forest extends Terrain {
 
 	public Forest(int x, int y, int maxH, int maxAI, String[] names) {
 		super(x, y, maxH, maxAI, names);
-		// TODO Auto-generated constructor stub
+		primary = new Color(20, 120, 30);
+		secondary = new Color(30, 100, 10);
 	}
 
 	@Override
