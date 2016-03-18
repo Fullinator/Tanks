@@ -252,7 +252,7 @@ public class StartMenu extends JPanel implements ActionListener {
 		int tankYPos = findY(600);
 		//draw tank
 		g2d.rotate(tank.angle(tankXPos, terrain), tankXPos, findY(tankXPos));// this takes a radian. It has to be a very small radian
-		g2d.drawImage(tank.queryImage(), tankXPos, findY(tankXPos) - 18, null);
+		g2d.drawImage(tank.queryImage(), tankXPos, findY(tankXPos) - 16, null);
 
 		//draws the barrel on the tank
 		g2d.setColor(Color.BLACK);
