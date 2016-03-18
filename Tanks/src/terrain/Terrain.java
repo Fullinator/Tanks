@@ -29,6 +29,7 @@ import physics.Wind;
 import Jama.Matrix;
 import Main.Main;
 import Main.Ticker;
+import Main.sounds;
 import buttons.DownButton;
 import buttons.FireButton;
 import buttons.LeftButton;
@@ -81,6 +82,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	protected FireButton fire;
 	protected boolean tabbed = false;
 	Wind wind;
+
 
 
 
@@ -515,6 +517,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 					projectiles.remove(shot);
 					Ticker.removeMethod(shot.getTickerID());
 					tankHit = true;
+					
+					Main.sound.run("impact");   //Impact sound
+					
 					//pause();
 				}
 			}
@@ -531,6 +536,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			projectiles.remove(shot);
 			Ticker.removeMethod(shot.getTickerID());
 			//call for damage
+			Main.sound.run("impact");   //Impact sound
 			damage(shot, false, radius);
 		}
 
@@ -809,7 +815,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		projectiles.add(projectile);
 
 		projectile.setTickerID(Ticker.addMethod(projectile::fire));
-		//		Main.sound.run("shot1");
+		Main.sound.run("shot1");
 		nextPlayerTurn();
 	}
 
