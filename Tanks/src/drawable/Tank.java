@@ -168,7 +168,7 @@ public abstract class Tank implements Drawable2 {
 	}
 
 	private void moveTank(long elapsedNanos) {
-		double sub = - (100*friction*((double) elapsedNanos / 1000000000)*Math.sin(tankAngle));
+		double sub =(50*friction*((double) elapsedNanos / 1000000000)*Math.sin(tankAngle));
 		double speed = friction * 100.0 * ((double) elapsedNanos / 1000000000);
 		double y2 = 0;
 		double y1 = Main.getTerrain().findY((int) location.getX());
@@ -179,8 +179,16 @@ public abstract class Tank implements Drawable2 {
 			y2 = Main.getTerrain().findY((int) location.getX() + 15);
 		}
 		double diff = y2 - y1;
-		if(diff <= 0){
-			speed = speed - sub;
+	
+		if (goLeft == true){
+			if(diff <= 0){
+				speed = speed - sub;
+			}
+		}
+		else{
+			if(diff <= 0){
+				speed = speed + sub;
+			}
 		}
 //		System.out.println("friction:" + friction);
 //		System.out.println("speed:" + speed);
