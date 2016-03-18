@@ -148,5 +148,13 @@ public class Particle {
 	public Vector2d getVel(){
 		return vel;
 	}
+	
+	boolean isDead(){
+		if(life.x < 0.0){
+			return true;
+		} else{
+			return false;
+		}
+	}
 }
 
