@@ -232,19 +232,48 @@ public abstract class Tank implements Drawable2 {
 	public double angle(int x, int[][] points) {
 		int y1 = 0;
 		int y2 = 0;
-		for(int i = 0; i < points[x].length; i += 1){
-			if(points[x][i] > 0){
+		/*for(int i = 0; i < points[x].length; i += 1){
+			if(points[x][i] > 0 && i++ < points[x].length && points[x][i++] <= 0){
 				y1 = i;
 				break;
 			}
 		}
 
 		for(int i = 0; i < points[x].length; i += 1){
-			if(points[x - 15][i] > 0){
+			if(points[x - 15][i] > 0 && i++ < points[x].length && points[x - 15][i++] <= 0){
 				y2 = i;
 				break;
 			}
 		}
+		*/
+		
+		if(x > 0 && x < points.length){//find Y position from damage
+			for(int i = 0; i < points[0].length; i ++ ){
+				if(points[x][i] > 0){
+					y1 = i;
+					break;
+				}
+			}
+		}
+		
+		if ( x - 15 < 0) {
+			x = 0;
+		} else {
+			x = x - 15;
+		}
+		for(int i = 0; i < points[0].length; i ++ ){
+			if(points[x][i] > 0){
+				y2 = i;
+				break;
+			}
+		}
+		
+		System.out.println(y1 + "     " + y2);
+		if (y1 == 0 || y2 == 0 || y1 > 690 || y2 > 690){//y2 == 0 && y1 > (points[0].length - 20) || y1 == 0 && y2 > (points[0].length - 20)) {
+			System.out.println("zero!");
+			return 0;
+		}
+		
 		double angle = Math.atan((y2 - y1) / -15.0);
 		tankAngle = angle;
 		return angle;

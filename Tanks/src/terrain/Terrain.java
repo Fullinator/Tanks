@@ -29,6 +29,7 @@ import physics.Wind;
 import Jama.Matrix;
 import Main.Main;
 import Main.Ticker;
+import Main.sounds;
 import buttons.DownButton;
 import buttons.FireButton;
 import buttons.LeftButton;
@@ -81,6 +82,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	protected FireButton fire;
 	protected boolean tabbed = false;
 	Wind wind;
+
 
 
 
@@ -187,7 +189,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				}
 			}
 		}
-		return (int)(a + b * x + c * Math.pow(x, 2) + d * Math.pow(x, 3));	
+		//return (int)(a + b * x + c * Math.pow(x, 2) + d * Math.pow(x, 3));	
+		return yLength - 20;
 	}
 	
 
@@ -374,6 +377,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		drawable = new ArrayList<Drawable2>();
 		for (int i = 0; i < numHumans; i++) {
 			Tank t = new UserTank();
+			t.setLocation(new Point((int) (Math.random() * (getXTerrain() - 100) + 50), 0));
 			t.setName(names[i]);
 			drawable.add(t);
 			players.add(t);
@@ -391,6 +395,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			Tank t = new AITank(this, players);
 			if (aiNames.size() > 0) t.setName(aiNames.get(r.nextInt(aiNames.size())));
 			else t.setName("AI " + (i + 1));
+			t.setLocation(new Point((int) (Math.random() * (getXTerrain() - 100) + 50), 0));
 			drawable.add(t);
 			players.add(t);
 		}
@@ -513,6 +518,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 					projectiles.remove(shot);
 					Ticker.removeMethod(shot.getTickerID());
 					tankHit = true;
+					
+					Main.sound.run("impact");   //Impact sound
+					
 					//pause();
 				}
 			}
@@ -529,6 +537,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			projectiles.remove(shot);
 			Ticker.removeMethod(shot.getTickerID());
 			//call for damage
+			Main.sound.run("impact");   //Impact sound
 			damage(shot, false, radius);
 		}
 
@@ -631,7 +640,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			else if (drawable.get(i) instanceof Tank) {// draws player controlled tanks
 				g2d.rotate(((Tank)drawable.get(i)).angle(drawable.get(i).getX() + 20, terrain), drawable.get(i).getX(), findY(drawable.get(i).getX()));// this takes a radian. It has to be a very small radian
 				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), findY(drawable.get(i).getX()) - 18, null);
-
+				
 				//draws the barrel on the tank
 				g2d.setColor(Color.BLACK);
 				g2d.rotate(((Tank)drawable.get(i)).getBarrelAngle(), drawable.get(i).getX() + 20, findY(drawable.get(i).getX()) - 15 );
@@ -641,7 +650,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 
 				//REMOVE THIS:
-				//Draws the hit box around the tank
+				//Draws the center of the hit box on the tank
 				//double angle = ((Tank) drawable.get(i)).angle(drawable.get(i).getX() + 20 , terrain);
 				//int length = (int) (drawable.get(i).queryImage().getWidth() * Math.cos(angle));
 				//Point center = new Point(drawable.get(i).getX() + (length/2), findY(drawable.get(i).getX() + (length/2)) - (drawable.get(i).queryImage().getHeight() /2) );
@@ -807,7 +816,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		projectiles.add(projectile);
 
 		projectile.setTickerID(Ticker.addMethod(projectile::fire));
-		//		Main.sound.run("shot1");
+		Main.sound.run("shot1");
 		nextPlayerTurn();
 	}
 
