@@ -31,7 +31,7 @@ public  class Projectile implements Drawable2 {
 	public static boolean outOfScreen;
 	private int tickerID;
 	public int damage = 90;
-
+	public double MaxHeight;
 	public Projectile(Tank tank,Terrain terrain){
 		this.tank = tank;
 
@@ -129,6 +129,7 @@ public  class Projectile implements Drawable2 {
 		this.power = power/mass;
 		vX = (double) this.power * Math.cos(angle+ Math.PI);
 		vY = (double) this.power* Math.sin(angle+ Math.PI);
+		MaxHeight = (vY*vY)/2;
 	}
 
 	public void setAngle(double ang){
@@ -157,7 +158,7 @@ public  class Projectile implements Drawable2 {
 		points = new double[2];
 		points[0] = (x0 + vX * this.time);
 		points[1] = y0 + vY * this.time + 0.5  * Math.pow(this.time, 2);
-
+		
 		//System.out.println("Velocity: <" + vX + ", " + vY + ">\tLocation: (" + points[0] +", " + points[1] + ")");
 
 		if(points[1] < 20){

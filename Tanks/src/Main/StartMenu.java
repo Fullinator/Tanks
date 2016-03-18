@@ -12,7 +12,7 @@ import com.jgoodies.forms.layout.RowSpec;
 
 import drawable.Tank;
 import drawable.UserTank;
-
+import physics.Friction;
 import com.jgoodies.forms.factories.FormFactory;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
@@ -292,15 +292,23 @@ public class StartMenu extends JPanel implements ActionListener {
 			}
 
 			if (comboBox.getSelectedItem().equals("Sand")) {
+				physics.Friction.Sand();
 				Main.manualTanks = Integer.parseInt((String) humanSelect.getSelectedItem());;
 				Main.AITanks = Integer.parseInt((String) AISelect.getSelectedItem());
 				Main.startSand(names);
+				
 			}else if (comboBox.getSelectedItem().equals("Snow")) {
+				physics.Friction.Snow();
 				Main.manualTanks = Integer.parseInt((String) humanSelect.getSelectedItem());;
+				Main.AITanks = Integer.parseInt((String) AISelect.getSelectedItem());
 				Main.startSnow(names);
+				
 			} else if (comboBox.getSelectedItem().equals("Forest")) {
+				physics.Friction.Forest();
 				Main.manualTanks = Integer.parseInt((String) humanSelect.getSelectedItem());;
+				Main.AITanks = Integer.parseInt((String) AISelect.getSelectedItem());
 				Main.startForrest(names);
+				
 			}
 
 			Main.setTickerPause(false);

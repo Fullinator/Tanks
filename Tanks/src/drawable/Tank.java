@@ -9,6 +9,7 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.List;
+import physics.Friction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.LongConsumer;
@@ -22,7 +23,7 @@ public abstract class Tank implements Drawable2 {
 	private int healthPercent;
 	private String name;
 	private int launchPower;
-
+	double friction;
 	private int motionTickerID = -1;
 	private int cannonTickerID = -1;
 	private boolean goLeft;
@@ -42,6 +43,7 @@ public abstract class Tank implements Drawable2 {
 			System.out.println("The tank file requested does not exist! Please fix this before continuing!");
 		}
 		location = new Point(100, 100000);
+		getFriction();
 	}
 
 	public void setLocation(Point location) {
@@ -51,7 +53,9 @@ public abstract class Tank implements Drawable2 {
 	public BufferedImage getImage() {
 		return image;
 	}
-
+	public void getFriction(){
+	friction = physics.Friction.getFriction();
+	}
 	public void setImage(BufferedImage image) {
 		this.image = image;
 	}
@@ -159,7 +163,26 @@ public abstract class Tank implements Drawable2 {
 	}
 
 	private void moveTank(long elapsedNanos) {
-		double speed = 100.0 * ((double) elapsedNanos / 1000000000);
+		double sub = - (100*friction*((double) elapsedNanos / 1000000000)*Math.sin(tankAngle));
+		double speed = friction * 100.0 * ((double) elapsedNanos / 1000000000);
+		double y2 = 0;
+		double y1 = Main.getTerrain().findY((int) location.getX());
+		if (goLeft == true){
+			 y2 = Main.getTerrain().findY((int) location.getX() - 15);
+		}
+		else{
+			y2 = Main.getTerrain().findY((int) location.getX() + 15);
+		}
+		double diff = y2 - y1;
+		if(diff <= 0){
+			speed = speed - sub;
+		}
+//		System.out.println("friction:" + friction);
+//		System.out.println("speed:" + speed);
+//		System.out.println("angleRat:" + Math.sin(tankAngle));
+//		System.out.println("forrest" + physics.Friction.forest);
+//		System.out.println("snow" + physics.Friction.snow);
+//		System.out.println("sand" + physics.Friction.sand);
 		double newX = location.getX() + (goLeft ? -speed : speed);
 		if (newX > 0 && newX < Main.xLength - queryImage().getWidth()) location.setLocation(newX, 1000);
 	}
