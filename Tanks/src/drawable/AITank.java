@@ -25,6 +25,7 @@ public class AITank extends Tank {
 	public AITank(Terrain owner, List<Tank> tanks) {
 		this.owner = owner;
 		this.tanks = tanks;
+		barrelColor = Color.BLACK;
 	}
 
 	public void takeTurn() {

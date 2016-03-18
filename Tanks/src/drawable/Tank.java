@@ -5,7 +5,7 @@ import Main.Ticker;
 import terrain.Terrain;
 
 import javax.imageio.ImageIO;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.List;
@@ -33,6 +33,8 @@ public abstract class Tank implements Drawable2 {
 	private Consumer<Boolean> motionCompleteCallback;
 	private Consumer<Boolean> cannonCompleteCallback;
 
+	protected Color barrelColor;
+
 	public Tank() {
 		launchPower = 10;
 		healthPercent = 100;
@@ -43,7 +45,10 @@ public abstract class Tank implements Drawable2 {
 			System.out.println("The tank file requested does not exist! Please fix this before continuing!");
 		}
 		location = new Point(100, 100000);
+
 		getFriction();
+
+		barrelColor = new Color(Color.HSBtoRGB((float) Math.random(), 1.0f, 1.0f));
 	}
 
 	public void setLocation(Point location) {
@@ -283,5 +288,9 @@ public abstract class Tank implements Drawable2 {
 		double angle = angle(getX() + 20 , terrain.getTerrain());
 		int length = (int) (queryImage().getWidth() * Math.cos(angle));
 		return new Point(getX() + (length/2), terrain.findY(getX() + (length/2)) - (queryImage().getHeight() /2) );
+	}
+
+	public Color getBarrelColor() {
+		return barrelColor;
 	}
 }
