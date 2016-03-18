@@ -30,8 +30,14 @@ public  class Projectile implements Drawable2 {
 	private BufferedImage image;
 	public static boolean outOfScreen;
 	private int tickerID;
+
 	public int damage = 90;
 	public double MaxHeight;
+
+//	public int damage = 1;
+	public int terrainMag = 10;
+
+
 	public Projectile(Tank tank,Terrain terrain){
 		this.tank = tank;
 
@@ -109,9 +115,9 @@ public  class Projectile implements Drawable2 {
 		
 		image = new BufferedImage(5, 5, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = image.createGraphics();
-		g2d.setColor(new Color(0, 0, 0, 0));
-		g2d.drawRect(0, 0, 5, 5);
-		g2d.setColor(Color.MAGENTA);
+//		g2d.setColor(new Color(0, 0, 0, 0));
+//		g2d.drawRect(0, 0, 5, 5);
+		g2d.setColor(tank.getBarrelColor());
 		g2d.fillOval(0, 0, 5, 5);
 		AffineTransform old = g2d.getTransform();
 		g2d.rotate((tank).getBarrelAngle(), tank.getX() + 20, terrain.findY(tank.getX()) - 15 );

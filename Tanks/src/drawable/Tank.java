@@ -273,9 +273,9 @@ public abstract class Tank implements Drawable2 {
 			}
 		}
 		
-		System.out.println(y1 + "     " + y2);
-		if (y1 == 0 || y2 == 0 || y1 > 690 || y2 > 690){//y2 == 0 && y1 > (points[0].length - 20) || y1 == 0 && y2 > (points[0].length - 20)) {
-			System.out.println("zero!");
+		//System.out.println(y1 + "     " + y2);
+		if (y1 == 0 || y2 == 0 || (y1 > 690 && y2 > 690)){//y2 == 0 && y1 > (points[0].length - 20) || y1 == 0 && y2 > (points[0].length - 20)) {
+			//System.out.println("zero!");
 			return 0;
 		}
 		
