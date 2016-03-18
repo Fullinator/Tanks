@@ -121,7 +121,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		projectiles = new ArrayList<>();
 
 		staleTerrainImage = true;
-//		screenMove();
+		//		screenMove();
 	}
 
 
@@ -131,7 +131,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 * @param amount number of objects to create
 	 */
 	protected abstract void createTerrainSpecificItems(int amount);
-	
+
 	private void render(long elapsedNanos) {
 		if (!paintLock) {
 			paintLock = true;
@@ -174,7 +174,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 * @return returns the y coordinate of the terrain or -1 if one cannot be found
 	 */
 	public int findY(int x){
-			if(x > 0 && x < xLength){//find Y position from damage
+		if(x > 0 && x < xLength){//find Y position from damage
 			for(int i = 0; i < terrain[0].length; i += 1){
 				if(terrain[x][i] > 0){
 					return i;
@@ -472,6 +472,10 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 * Calls the super paintComponent to paint on the JPanel
 	 * This also handles all standard terrain drawing and drawables drawing.
 	 */
+	public int shift = 0;
+	int temp = 0;
+	int yy = 0;
+
 	public void paintComponent(Graphics g) {
 		Graphics2D g2d=(Graphics2D)g;
 		super.paintComponent(g);// prevents older objects from staying on the screen
@@ -480,93 +484,281 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		g2d.fillRect(0, 0, getXTerrain(), getYTerrain());// fills the entire background with the sky       
 
 		AffineTransform old = g2d.getTransform();// Saves a copy of the old transform so the rotation can be reset later
-
-		for (int i = 0; i < drawable.size(); i++) {
-			if (drawable.get(i) instanceof DayCycle) {//Make sure to draw the sun/moon first.
-				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY() - drawable.get(i).queryImage().getHeight(), null);
-				nightShiftAmount = ((DayCycle) drawable.get(i)).shiftNightAmount();
-				nightShift = ((DayCycle) drawable.get(i)).shiftNight();
-			}
-		}
+		temp = yy;
+		yy = (int) physics.Projectile.points[1];
 		
-		for (int i = 0; i < drawable.size(); i++) {// draws the clouds and tanks and eventually trees and whatever else needs to be drawn
-			if (drawable.get(i) instanceof DayCycle) {
-				//We already drew this
-			} else if (drawable.get(i) instanceof Tank) {// draws player controlled tanks
-				g2d.rotate(((Tank)drawable.get(i)).angle(drawable.get(i).getX() + 20, terrain), drawable.get(i).getX(), findY(drawable.get(i).getX()));// this takes a radian. It has to be a very small radian
-				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), findY(drawable.get(i).getX()) - 18, null);
+		if(physics.Projectile.outOfScreen){
+			System.out.println("yy = " + yy + " temp = "+ temp);
+			if(yy <= temp){
+				for (int i = 0; i < drawable.size(); i++) {
+					if (drawable.get(i) instanceof DayCycle) {//Make sure to draw the sun/moon first.
+						g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY() - drawable.get(i).queryImage().getHeight()+shift, null);
+						nightShiftAmount = ((DayCycle) drawable.get(i)).shiftNightAmount();
+						nightShift = ((DayCycle) drawable.get(i)).shiftNight();
+					}
+				}
 
-				//draws the barrel on the tank
-				g2d.setColor(Color.BLACK);
-				g2d.rotate(((Tank)drawable.get(i)).getBarrelAngle(), drawable.get(i).getX() + 20, findY(drawable.get(i).getX()) - 15 );
-				g2d.fillRect(drawable.get(i).getX(), findY(drawable.get(i).getX()) - 17, 20, 4);
-				g2d.setTransform(old);// resets the rotation back to how it was before the painting began
-			} else if (drawable.get(i) instanceof standardShell) {// draws the missile
-				g2d.fillOval(drawable.get(i).getX(), drawable.get(i).getY(), 5, 5);
-			} else if (drawable.get(i) instanceof Clouds) {// draws clouds
-				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY(), null);
-			} else {
-				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY() - drawable.get(i).queryImage().getHeight(), null);
-			}
-			
-		}// End of loop to draw objects
+				for (int i = 0; i < drawable.size(); i++) {// draws the clouds and tanks and eventually trees and whatever else needs to be drawn
+					if (drawable.get(i) instanceof DayCycle) {
+						//We already drew this
+					} else if (drawable.get(i) instanceof Tank) {// draws player controlled tanks
+						g2d.rotate(((Tank)drawable.get(i)).angle(drawable.get(i).getX() + 20, terrain), drawable.get(i).getX(), findY(drawable.get(i).getX()));// this takes a radian. It has to be a very small radian
+						g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), findY(drawable.get(i).getX()) - 18+shift, null);
 
-		if (staleTerrainImage) {
-			currentTerrainImage = new BufferedImage(xLength, yLength, BufferedImage.TYPE_INT_ARGB);
-			Graphics2D terrainGraphics = currentTerrainImage.createGraphics();
-			terrainGraphics.setColor(new Color(0, 0, 0, 0));
-			terrainGraphics.fillRect(0, 0, xLength, yLength);
-			for (int i = 0; i < getXTerrain(); i++) {// draws the terrain from the boolean terrain array
-				for (int j = 0; j < getYTerrain(); j++) {
-					if (terrain[i][j] == 1) {
-						terrainGraphics.setColor(primary);// The sand color
-						terrainGraphics.drawRect(i, j, 1, 1);
-					} else if (terrain[i][j] == 2) {
-						terrainGraphics.setColor(secondary);// The sand color
-						terrainGraphics.drawRect(i, j, 1, 1);
+						//draws the barrel on the tank
+						g2d.setColor(Color.BLACK);
+						g2d.rotate(((Tank)drawable.get(i)).getBarrelAngle(), drawable.get(i).getX() + 20, findY(drawable.get(i).getX()) - 15 );
+						g2d.fillRect(drawable.get(i).getX(), findY(drawable.get(i).getX()) - 17+shift, 20, 4);
+						g2d.setTransform(old);// resets the rotation back to how it was before the painting began
+					} else if (drawable.get(i) instanceof standardShell) {// draws the missile
+						g2d.fillOval(drawable.get(i).getX(), drawable.get(i).getY()+shift, 5, 5);
+					} else if (drawable.get(i) instanceof Clouds) {// draws clouds
+						g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY()+shift, null);
+					} else {
+						g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY() - drawable.get(i).queryImage().getHeight()+shift, null);
 					}
 
+				}// End of loop to draw objects
 
+				if (staleTerrainImage) {
+					currentTerrainImage = new BufferedImage(xLength, yLength, BufferedImage.TYPE_INT_ARGB);
+					Graphics2D terrainGraphics = currentTerrainImage.createGraphics();
+					terrainGraphics.setColor(new Color(0, 0, 0, 0));
+					terrainGraphics.fillRect(0, 0, xLength, yLength);
+					for (int i = 0; i < getXTerrain(); i++) {// draws the terrain from the boolean terrain array
+						for (int j = 0; j < getYTerrain(); j++) {
+							if (terrain[i][j] == 1) {
+								terrainGraphics.setColor(primary);// The sand color
+								terrainGraphics.drawRect(i, j+shift, 1, 1);
+							} else if (terrain[i][j] == 2) {
+								terrainGraphics.setColor(secondary);// The sand color
+								terrainGraphics.drawRect(i, j+shift, 1, 1);
+							}
+
+						}
+					}
+					staleTerrainImage = false;
+				}
+				g2d.drawImage(currentTerrainImage, 0, 0+shift, null);
+
+				projectiles.forEach(p -> {
+					g2d.drawImage(p.queryImage(), p.getX(), p.getY()+shift, null);
+				});
+
+				//draw night shift
+
+				if (nightShift) {
+					g2d.setColor(new Color(66,98,255,nightShiftAmount));
+					g2d.fillRect(0, 0, xLength, yLength);
+				}
+
+				g2d.setColor(new Color(0xdfdfdf));
+				g2d.fillRect(0, 0, getXTerrain(), 60);// draws the top menu bar
+
+				if (tabbed) {
+					g2d.setColor(new Color(0x21a1cb));// The skies color
+					g2d.fillRect(0, 0, getXTerrain(), 60);
+					if (nightShift) {
+						g2d.setColor(new Color(66,98,255,nightShiftAmount));
+						g2d.fillRect(0, 0, getXTerrain(), 60);
+					}
+					g2d.setColor(new Color(0,0,0,180));
+					g2d.fillRect(0, 0, xLength, yLength);
+				}
+
+				if (paused) {
+					g2d.setColor(new Color(0x21a1cb));// The skies color
+					g2d.fillRect(0, 0, getXTerrain(), 60);
+					if (nightShift) {
+						g2d.setColor(new Color(66,98,255,nightShiftAmount));
+						g2d.fillRect(0, 0, getXTerrain(), 60);
+					}
+					g2d.setColor(new Color(0,0,0,180));
+					g2d.fillRect(0, 0, xLength, yLength);
+				}
+				shift= shift+ (int)(Math.abs(physics.Projectile.vX)+5);
+				//shift = shift+10;
+			
+			} //going up
+			else{
+			for (int i = 0; i < drawable.size(); i++) {
+				if (drawable.get(i) instanceof DayCycle) {//Make sure to draw the sun/moon first.
+					g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY() - drawable.get(i).queryImage().getHeight()+shift, null);
+					nightShiftAmount = ((DayCycle) drawable.get(i)).shiftNightAmount();
+					nightShift = ((DayCycle) drawable.get(i)).shiftNight();
 				}
 			}
-			staleTerrainImage = false;
-		}
-		g2d.drawImage(currentTerrainImage, 0, 0, null);
 
-		projectiles.forEach(p -> {
-			g2d.drawImage(p.queryImage(), p.getX(), p.getY(), null);
-		});
+			for (int i = 0; i < drawable.size(); i++) {// draws the clouds and tanks and eventually trees and whatever else needs to be drawn
+				if (drawable.get(i) instanceof DayCycle) {
+					//We already drew this
+				} else if (drawable.get(i) instanceof Tank) {// draws player controlled tanks
+					g2d.rotate(((Tank)drawable.get(i)).angle(drawable.get(i).getX() + 20, terrain), drawable.get(i).getX(), findY(drawable.get(i).getX()));// this takes a radian. It has to be a very small radian
+					g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), findY(drawable.get(i).getX()) - 18+shift, null);
 
-		//draw night shift
+					//draws the barrel on the tank
+					g2d.setColor(Color.BLACK);
+					g2d.rotate(((Tank)drawable.get(i)).getBarrelAngle(), drawable.get(i).getX() + 20, findY(drawable.get(i).getX()) - 15 );
+					g2d.fillRect(drawable.get(i).getX(), findY(drawable.get(i).getX()) - 17+shift, 20, 4);
+					g2d.setTransform(old);// resets the rotation back to how it was before the painting began
+				} else if (drawable.get(i) instanceof standardShell) {// draws the missile
+					g2d.fillOval(drawable.get(i).getX(), drawable.get(i).getY()+shift, 5, 5);
+				} else if (drawable.get(i) instanceof Clouds) {// draws clouds
+					g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY()+shift, null);
+				} else {
+					g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY() - drawable.get(i).queryImage().getHeight()+shift, null);
+				}
 
-		if (nightShift) {
-			g2d.setColor(new Color(66,98,255,nightShiftAmount));
-			g2d.fillRect(0, 0, xLength, yLength);
-		}
+			}// End of loop to draw objects
 
-		g2d.setColor(new Color(0xdfdfdf));
-		g2d.fillRect(0, 0, getXTerrain(), 60);// draws the top menu bar
+			if (staleTerrainImage) {
+				currentTerrainImage = new BufferedImage(xLength, yLength, BufferedImage.TYPE_INT_ARGB);
+				Graphics2D terrainGraphics = currentTerrainImage.createGraphics();
+				terrainGraphics.setColor(new Color(0, 0, 0, 0));
+				terrainGraphics.fillRect(0, 0, xLength, yLength);
+				for (int i = 0; i < getXTerrain(); i++) {// draws the terrain from the boolean terrain array
+					for (int j = 0; j < getYTerrain(); j++) {
+						if (terrain[i][j] == 1) {
+							terrainGraphics.setColor(primary);// The sand color
+							terrainGraphics.drawRect(i, j+shift, 1, 1);
+						} else if (terrain[i][j] == 2) {
+							terrainGraphics.setColor(secondary);// The sand color
+							terrainGraphics.drawRect(i, j+shift, 1, 1);
+						}
+			}
+				}
+				staleTerrainImage = false;
+			}
+			g2d.drawImage(currentTerrainImage, 0, 0+shift, null);
 
-		if (tabbed) {
-			g2d.setColor(new Color(0x21a1cb));// The skies color
-			g2d.fillRect(0, 0, getXTerrain(), 60);
+			projectiles.forEach(p -> {
+				g2d.drawImage(p.queryImage(), p.getX(), p.getY()+shift, null);
+			});
+
+			//draw night shift
+
 			if (nightShift) {
 				g2d.setColor(new Color(66,98,255,nightShiftAmount));
-				g2d.fillRect(0, 0, getXTerrain(), 60);
+				g2d.fillRect(0, 0, xLength, yLength);
 			}
-			g2d.setColor(new Color(0,0,0,180));
-			g2d.fillRect(0, 0, xLength, yLength);
-		}
 
-		if (paused) {
-			g2d.setColor(new Color(0x21a1cb));// The skies color
-			g2d.fillRect(0, 0, getXTerrain(), 60);
+			g2d.setColor(new Color(0xdfdfdf));
+			g2d.fillRect(0, 0, getXTerrain(), 60);// draws the top menu bar
+
+			if (tabbed) {
+				g2d.setColor(new Color(0x21a1cb));// The skies color
+				g2d.fillRect(0, 0, getXTerrain(), 60);
+				if (nightShift) {
+					g2d.setColor(new Color(66,98,255,nightShiftAmount));
+					g2d.fillRect(0, 0, getXTerrain(), 60);
+				}
+				g2d.setColor(new Color(0,0,0,180));
+				g2d.fillRect(0, 0, xLength, yLength);
+			}
+
+			if (paused) {
+				g2d.setColor(new Color(0x21a1cb));// The skies color
+				g2d.fillRect(0, 0, getXTerrain(), 60);
+				if (nightShift) {
+					g2d.setColor(new Color(66,98,255,nightShiftAmount));
+					g2d.fillRect(0, 0, getXTerrain(), 60);
+				}
+				g2d.setColor(new Color(0,0,0,180));
+				g2d.fillRect(0, 0, xLength, yLength);
+			}
+			shift= shift-(int) Math.abs(physics.Projectile.vX);				//------------------------------------------------------------------------
+			//shift = shift-10;
+			}//going down
+		}//END OF OUT OF SCREEN
+		else{
+			shift = 0;
+			for (int i = 0; i < drawable.size(); i++) {
+				if (drawable.get(i) instanceof DayCycle) {//Make sure to draw the sun/moon first.
+					g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY() - drawable.get(i).queryImage().getHeight(), null);
+					nightShiftAmount = ((DayCycle) drawable.get(i)).shiftNightAmount();
+					nightShift = ((DayCycle) drawable.get(i)).shiftNight();
+				}
+			}
+
+			for (int i = 0; i < drawable.size(); i++) {// draws the clouds and tanks and eventually trees and whatever else needs to be drawn
+				if (drawable.get(i) instanceof DayCycle) {
+					//We already drew this
+				} else if (drawable.get(i) instanceof Tank) {// draws player controlled tanks
+					g2d.rotate(((Tank)drawable.get(i)).angle(drawable.get(i).getX() + 20, terrain), drawable.get(i).getX(), findY(drawable.get(i).getX()));// this takes a radian. It has to be a very small radian
+					g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), findY(drawable.get(i).getX()) - 18, null);
+
+					//draws the barrel on the tank
+					g2d.setColor(Color.BLACK);
+					g2d.rotate(((Tank)drawable.get(i)).getBarrelAngle(), drawable.get(i).getX() + 20, findY(drawable.get(i).getX()) - 15 );
+					g2d.fillRect(drawable.get(i).getX(), findY(drawable.get(i).getX()) - 17, 20, 4);
+					g2d.setTransform(old);// resets the rotation back to how it was before the painting began
+				} else if (drawable.get(i) instanceof standardShell) {// draws the missile
+					g2d.fillOval(drawable.get(i).getX(), drawable.get(i).getY(), 5, 5);
+				} else if (drawable.get(i) instanceof Clouds) {// draws clouds
+					g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY(), null);
+				} else {
+					g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY() - drawable.get(i).queryImage().getHeight(), null);
+				}
+
+			}// End of loop to draw objects
+
+			if (staleTerrainImage) {
+				currentTerrainImage = new BufferedImage(xLength, yLength, BufferedImage.TYPE_INT_ARGB);
+				Graphics2D terrainGraphics = currentTerrainImage.createGraphics();
+				terrainGraphics.setColor(new Color(0, 0, 0, 0));
+				terrainGraphics.fillRect(0, 0, xLength, yLength);
+				for (int i = 0; i < getXTerrain(); i++) {// draws the terrain from the boolean terrain array
+					for (int j = 0; j < getYTerrain(); j++) {
+						if (terrain[i][j] == 1) {
+							terrainGraphics.setColor(primary);// The sand color
+							terrainGraphics.drawRect(i, j, 1, 1);
+						} else if (terrain[i][j] == 2) {
+							terrainGraphics.setColor(secondary);// The sand color
+							terrainGraphics.drawRect(i, j, 1, 1);
+						}
+
+
+					}
+				}
+				staleTerrainImage = false;
+			}
+			g2d.drawImage(currentTerrainImage, 0, 0, null);
+
+			projectiles.forEach(p -> {
+				g2d.drawImage(p.queryImage(), p.getX(), p.getY(), null);
+			});
+
+			//draw night shift
+
 			if (nightShift) {
 				g2d.setColor(new Color(66,98,255,nightShiftAmount));
-				g2d.fillRect(0, 0, getXTerrain(), 60);
+				g2d.fillRect(0, 0, xLength, yLength);
 			}
-			g2d.setColor(new Color(0,0,0,180));
-			g2d.fillRect(0, 0, xLength, yLength);
+
+			g2d.setColor(new Color(0xdfdfdf));
+			g2d.fillRect(0, 0, getXTerrain(), 60);// draws the top menu bar
+
+			if (tabbed) {
+				g2d.setColor(new Color(0x21a1cb));// The skies color
+				g2d.fillRect(0, 0, getXTerrain(), 60);
+				if (nightShift) {
+					g2d.setColor(new Color(66,98,255,nightShiftAmount));
+					g2d.fillRect(0, 0, getXTerrain(), 60);
+				}
+				g2d.setColor(new Color(0,0,0,180));
+				g2d.fillRect(0, 0, xLength, yLength);
+			}
+
+			if (paused) {
+				g2d.setColor(new Color(0x21a1cb));// The skies color
+				g2d.fillRect(0, 0, getXTerrain(), 60);
+				if (nightShift) {
+					g2d.setColor(new Color(66,98,255,nightShiftAmount));
+					g2d.fillRect(0, 0, getXTerrain(), 60);
+				}
+				g2d.setColor(new Color(0,0,0,180));
+				g2d.fillRect(0, 0, xLength, yLength);
+			}
 		}
 	}//end of paintComponent method
 
@@ -633,16 +825,16 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		weapons.addItem("test");
 
 		add(weapons, "cell 7 0, alignx center");
-		
+
 		//Fire Button
 		fire = new FireButton("", this);
 		add(fire, "cell 8 0, alignx center");
 		//Health Label
 
 		//Buy weapons
-		
+
 	}
-	
+
 	/**
 	 * Stops tank movement and creates the requested shot from current parameters and then changes the turn
 	 */
@@ -655,7 +847,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		projectiles.add(projectile);
 
 		Ticker.addMethod(projectile::fire);
-//		Main.sound.run("shot1");
+		//		Main.sound.run("shot1");
 		nextPlayerTurn();
 	}
 
@@ -685,7 +877,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		add(powerDown, "cell 6 0, alignx center");
 		add(power, "cell 5 0, alignx center");
 		add(fire, "cell 7 0, alignx center");
-		
+
 	}
 
 	/**
@@ -752,7 +944,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		quit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-//				Main.sound.runLoop("song");
+				//				Main.sound.runLoop("song");
 				Main.loadMenu();
 				Main.setTickerPause(true);
 			}
@@ -830,7 +1022,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			// fire projectile
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				fire();
-				
+
 			}
 		}
 	}//end of keyPressed method

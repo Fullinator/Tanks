@@ -19,15 +19,17 @@ public  class Projectile implements Drawable2 {
 	Terrain terrain;
 	Wind wind;
 	private static double windSpeed;
-	public  double vX;
-	public  double vY;
+	public static  double vX;
+	public static  double vY;
 	public double height;
-	public double[] points;
+	public static double[] points = new double[2];
 	double time;
 	double mass;
 	Tank tank;
 	private BufferedImage image;
 	public static boolean outOfScreen;
+	private int tickerID;
+	public int damage = 90;
 
 	public Projectile(Tank tank,Terrain terrain){
 		this.tank = tank;
@@ -44,7 +46,7 @@ public  class Projectile implements Drawable2 {
 		g = 1;
 		double tankAngle = tank.angle((int)intX, terrain.getTerrain());
 		angle = tank.getBarrelAngle() + tankAngle;
-		System.out.println("Angle:" + angle);
+		//System.out.println("Angle:" + angle);
 		intX = .5*tank.queryImage().getWidth() + tank.getX()- 20*Math.cos(angle);
 		intY = terrain.findY(tank.getX())- 20*Math.sin(angle)- tank.queryImage().getHeight();
 		if(tankAngle < Math.PI/2){
@@ -55,18 +57,17 @@ public  class Projectile implements Drawable2 {
 			intY -= 20*Math.sin(tankAngle);
 			intX -= 20*Math.cos( tankAngle);
 		}
-		System.out.println("X:" + intX);
+		//System.out.println("X:" + intX);
 
-		System.out.println("Y:" + intY);
+		//System.out.println("Y:" + intY);
 		x0 = intX;
 		y0 = intY;
 		//windSpeed= wind.getWindSpeed();
-		System.out.println("WindSpeed:" + windSpeed);
+		//System.out.println("WindSpeed:" + windSpeed);
 
-		double[] points = new double[2];
 		points[0] = intX;
 		points[1] = intY;
-		System.out.println("Points:" + points);
+		//System.out.println("Points:" + points);
 
 		height = intY;
 		time = 0;
@@ -78,7 +79,7 @@ public  class Projectile implements Drawable2 {
 		Graphics2D g2d = image.createGraphics();
 		g2d.setColor(new Color(0, 0, 0, 0));
 		g2d.drawRect(0, 0, 5, 5);
-		g2d.setColor(Color.MAGENTA);
+		g2d.setColor(Color.BLACK);
 		g2d.fillOval(0, 0, 5, 5);
 	}
 
@@ -108,6 +109,10 @@ public  class Projectile implements Drawable2 {
 	}
 
 	public double[] fire(long time){
+		return fire(time, true);
+	}
+
+	public double[] fire(long time, boolean collide) {
 		double Ttime = (time * Math.pow(10,-7.75));
 		this.time = Ttime + this.time;
 		//get time in seconds
@@ -117,15 +122,18 @@ public  class Projectile implements Drawable2 {
 		points[0] = (x0 + vX * this.time);
 		points[1] = y0 + vY * this.time + 0.5  * Math.pow(this.time, 2);
 
-		System.out.println("Velocity: <" + vX + ", " + vY + ">\tLocation: (" + points[0] +", " + points[1] + ")");
-			
-		if(points[1] < 20){ 
-			outOfScreen = true; 
+		//System.out.println("Velocity: <" + vX + ", " + vY + ">\tLocation: (" + points[0] +", " + points[1] + ")");
+
+		if(points[1] < 20){
+			outOfScreen = true;
 		}
 		else{
 			outOfScreen = false;
 		}
-		System.out.println("Out Of Screen:"+outOfScreen);
+		//System.out.println("Out Of Screen:"+outOfScreen);
+
+		//if (collide) terrain.collisionDetection(this);
+		//if(!outOfScreen){terrain.shift = 0;}
 		return points;
 	}
 
@@ -154,5 +162,12 @@ public  class Projectile implements Drawable2 {
 		return image;
 	}
 	
+	public void setTickerID(int ticker) {
+		tickerID = ticker;
+	}
+	
+	public int getTickerID() {
+		return tickerID;
+	}
 	
 }
