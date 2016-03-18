@@ -374,8 +374,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	protected void createTanks(int numHumans, int numAI, String[] names) {
 		players  = new ArrayList<Tank>();
 		drawable = new ArrayList<Drawable2>();
+		Color[] c = new Color[] {Color.RED, Color.BLUE, Color.GREEN, Color.MAGENTA, Color.ORANGE};
 		for (int i = 0; i < numHumans; i++) {
-			Tank t = new UserTank();
+			Tank t = new UserTank(c[i]);
 			t.setLocation(new Point((int) (Math.random() * (getXTerrain() - 100) + 50), 0));
 			t.setName(names[i]);
 			drawable.add(t);
@@ -664,7 +665,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				//System.out.println(findY(drawable.get(i).getX()) - 18);
 				
 				//draws the barrel on the tank
-				g2d.setColor(Color.BLACK);
+				g2d.setColor(((Tank) drawable.get(i)).getBarrelColor());
 				g2d.rotate(((Tank)drawable.get(i)).getBarrelAngle(), drawable.get(i).getX() + 20, findY(drawable.get(i).getX()) - 15 );
 				g2d.fillRect(drawable.get(i).getX(), findY(drawable.get(i).getX()) - 17, 20, 4);
 				g2d.setTransform(old);// resets the rotation back to how it was before the painting began
@@ -765,6 +766,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		//of the current player
 		power.setText("" + currentTank().getLaunchPower());
 		playerName.setText(currentTank().getName());
+		playerName.setForeground(currentTank().getBarrelColor());
 
 		if (players.get(currentPlayer - 1) instanceof AITank) {
 			allowHumanInput = false;
@@ -785,6 +787,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		playerName = new JLabel();
 		playerName.setText(currentTank().getName());
 		playerName.setFont(new Font("Arial", Font.PLAIN, 35));
+		playerName.setForeground(currentTank().getBarrelColor());
 		add(playerName, "cell 0 0");
 
 		//Barrel Angle Up

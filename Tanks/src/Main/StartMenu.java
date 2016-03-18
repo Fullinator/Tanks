@@ -61,7 +61,7 @@ public class StartMenu extends JPanel implements ActionListener {
 		xLength = xDim;
 		yLength = yDim;
 		this.setSize(xDim, yDim);
-		tank = new UserTank();//null, xDim);
+		tank = new UserTank(Color.WHITE);//null, xDim);
 
 		createBackground();
 
