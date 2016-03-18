@@ -565,7 +565,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				}
 			}
 		} else {//damage terrain
-			int mag = 10;
+			int mag = shot.terrainMag;
 			int x = shot.getX();
 			int y = findY(x);
 			for(int i = y + mag; i > y - mag; i -= 1){
@@ -579,7 +579,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			}
 			staleTerrainImage = true;
 			
-			
+			/*
 			//implement gravity
 			for(int k = 0; k < yLength; k += 1){
 				for(int i = x - mag; i < x + mag; i += 1){
@@ -589,12 +589,33 @@ public abstract class Terrain extends JPanel implements KeyListener{
 								terrain[i][j+1] = terrain[i][j];
 								terrain[i][j] = 0;
 								staleTerrainImage = true;
-								repaint();
+								//repaint();
 							}
 						}
 					}
 				}
 			}
+			*/
+			
+			//implement gravity
+			System.out.println("left: " + (x - (mag + 10 )) + "    Right: " + (x + mag + 10));
+			for (int i = x - (mag + 50 ); i <= x + mag + 50; i++) {
+				if (i < 0 || i >= xLength) {
+					continue;
+				}
+				for (int j = 0; j < (yLength - 1); j++) {
+					
+					if (terrain[i][j] > 0 && !(terrain[i][j + 1] > 0)){
+						terrain[i][j+1] = terrain[i][j];
+						terrain[i][j] = 0;
+						staleTerrainImage = true;
+						j = 0;
+					}
+				}
+			}
+			
+			
+			
 			
 		}
 	}
@@ -633,6 +654,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			else if (drawable.get(i) instanceof Tank) {// draws player controlled tanks
 				g2d.rotate(((Tank)drawable.get(i)).angle(drawable.get(i).getX() + 20, terrain), drawable.get(i).getX(), findY(drawable.get(i).getX()));// this takes a radian. It has to be a very small radian
 				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), findY(drawable.get(i).getX()) - 18, null);
+				
+				//System.out.println(findY(drawable.get(i).getX()) - 18);
 				
 				//draws the barrel on the tank
 				g2d.setColor(Color.BLACK);

@@ -30,7 +30,8 @@ public  class Projectile implements Drawable2 {
 	private BufferedImage image;
 	public static boolean outOfScreen;
 	private int tickerID;
-	public int damage = 90;
+	public int damage = 1;
+	public int terrainMag = 10;
 
 	public Projectile(Tank tank,Terrain terrain){
 		this.tank = tank;
