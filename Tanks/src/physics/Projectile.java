@@ -31,11 +31,11 @@ public  class Projectile implements Drawable2 {
 	public static boolean outOfScreen;
 	private int tickerID;
 
-	public int damage = 90;
+	public int damage = 1;
 	public double MaxHeight;
 
 //	public int damage = 1;
-	public int terrainMag = 10;
+	public int terrainMag = 100;
 
 
 	public Projectile(Tank tank,Terrain terrain){
