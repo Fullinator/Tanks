@@ -36,6 +36,7 @@ import buttons.LeftButton;
 import buttons.RightButton;
 import buttons.UpButton;
 import drawable.AITank;
+import drawable.Animation;
 import drawable.Clouds;
 import net.miginfocom.swing.MigLayout;
 import drawable.Drawable2;
@@ -844,6 +845,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		projectile.setTickerID(Ticker.addMethod(projectile::fire));
 		Main.sound.run("shot1");
 		nextPlayerTurn();
+		Animation ani = new Animation("smoke");
+		ani.setLocation(tank.getLocation());
+		drawable.add(ani);
 	}
 
 	/**
