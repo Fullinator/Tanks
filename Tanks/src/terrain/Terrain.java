@@ -37,6 +37,7 @@ import buttons.RightButton;
 import buttons.UpButton;
 import drawable.AITank;
 import drawable.Animation;
+import drawable.Cactus;
 import drawable.Clouds;
 import net.miginfocom.swing.MigLayout;
 import drawable.Drawable2;
@@ -83,25 +84,13 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	protected FireButton fire;
 	protected boolean tabbed = false;
 	Wind wind;
-
-
-
-
-
-
-
 	Projectile projectile;
-
-
-
 	private List<Projectile> projectiles;
-
 	protected int nightShiftAmount;
 	protected Color nightShiftColor;
 	protected boolean nightShift;
 	private BufferedImage currentTerrainImage;
 	private boolean staleTerrainImage;
-
 	protected JComboBox<String> weapons;
 
 
@@ -586,6 +575,16 @@ public abstract class Terrain extends JPanel implements KeyListener{
 					}
 				}
 			}
+			for (Drawable2 object: drawable) {
+				if (object instanceof Cactus /* || object instanceof Snowman*/  && (object.getX() >= shot.getX() - shot.terrainMag && object.getX() <= shot.getX() + shot.terrainMag)) {
+					System.out.println("Removing the cactus!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+					System.out.println(drawable.contains(object));
+					System.out.println("Length before: " + drawable.size());
+					drawable.remove(object);
+					System.out.println("Length after: " + drawable.size());
+					break;
+				}
+			}
 			staleTerrainImage = true;
 			
 			/*
@@ -608,7 +607,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			
 			//implement gravity
 			System.out.println("left: " + (x - (mag + shot.terrainMag )) + "    Right: " + (x + mag + shot.terrainMag));
-			for (int i = x - (mag + 50 ); i <= x + mag + 50; i++) {
+			for (int i = x - (mag + shot.terrainMag ); i <= x + mag + shot.terrainMag; i++) {
 				if (i < 0 || i >= xLength) {
 					continue;
 				}
@@ -668,7 +667,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				
 				//draws the barrel on the tank
 				g2d.setColor(((Tank) drawable.get(i)).getBarrelColor());
-				g2d.rotate(((Tank)drawable.get(i)).getBarrelAngle(), drawable.get(i).getX() + 20, findY(drawable.get(i).getX()) - 15 );
+				g2d.rotate(((Tank)drawable.get(i)).getBarrelAngle(), drawable.get(i).getX() + 20, findY(drawable.get(i).getX()) - 17 );
 				g2d.fillRect(drawable.get(i).getX(), findY(drawable.get(i).getX()) - 17, 20, 4);
 				g2d.setTransform(old);// resets the rotation back to how it was before the painting began
 
