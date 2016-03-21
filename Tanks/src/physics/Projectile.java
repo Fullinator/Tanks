@@ -30,7 +30,13 @@ public  class Projectile implements Drawable2 {
 	private BufferedImage image;
 	public static boolean outOfScreen;
 	private int tickerID;
-	public int damage = 90;
+
+	public int damage = 1;
+	public double MaxHeight;
+
+//	public int damage = 1;
+	public int terrainMag = 100;
+
 
 	public Projectile(Tank tank,Terrain terrain){
 		this.tank = tank;
@@ -108,9 +114,9 @@ public  class Projectile implements Drawable2 {
 		
 		image = new BufferedImage(5, 5, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = image.createGraphics();
-		g2d.setColor(new Color(0, 0, 0, 0));
-		g2d.drawRect(0, 0, 5, 5);
-		g2d.setColor(Color.BLACK);
+//		g2d.setColor(new Color(0, 0, 0, 0));
+//		g2d.drawRect(0, 0, 5, 5);
+		g2d.setColor(tank.getBarrelColor());
 		g2d.fillOval(0, 0, 5, 5);
 		AffineTransform old = g2d.getTransform();
 		g2d.rotate((tank).getBarrelAngle(), tank.getX() + 20, terrain.findY(tank.getX()) - 15 );
@@ -128,6 +134,7 @@ public  class Projectile implements Drawable2 {
 		this.power = power/mass;
 		vX = (double) this.power * Math.cos(angle+ Math.PI);
 		vY = (double) this.power* Math.sin(angle+ Math.PI);
+		MaxHeight = (vY*vY)/2;
 	}
 
 	public void setAngle(double ang){
@@ -156,7 +163,7 @@ public  class Projectile implements Drawable2 {
 		points = new double[2];
 		points[0] = (x0 + vX * this.time);
 		points[1] = y0 + vY * this.time + 0.5  * Math.pow(this.time, 2);
-
+		
 		//System.out.println("Velocity: <" + vX + ", " + vY + ">\tLocation: (" + points[0] +", " + points[1] + ")");
 
 		if(points[1] < 20){

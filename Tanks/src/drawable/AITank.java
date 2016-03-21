@@ -3,6 +3,7 @@ package drawable;
 import terrain.Terrain;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -11,9 +12,8 @@ import java.util.function.DoubleFunction;
 
 /**
  * Artificially intelligent player.
- * 
- * @author Nicholas Muggio
  *
+ * @author Nicholas Muggio
  */
 public class AITank extends Tank {
 	private List<Tank> tanks;
@@ -25,6 +25,7 @@ public class AITank extends Tank {
 	public AITank(Terrain owner, List<Tank> tanks) {
 		this.owner = owner;
 		this.tanks = tanks;
+		barrelColor = Color.BLACK;
 	}
 
 	public void takeTurn() {
@@ -35,17 +36,14 @@ public class AITank extends Tank {
 
 		for (Tank t : tanks) {
 			if (t == this) continue;
-			double cost = Math.sqrt(Math.pow(getX() - t.getX(), 2) + Math.pow(getY() - t.getY(), 2)) * 3 + (100 - t.getHealth()) + (t instanceof AITank ? 1000 : 0);
+			double cost = Math.sqrt(Math.pow(getX() - t.getX(), 2) + Math.pow(getY() - t.getY(), 2)) * 3 + (100 - t.getHealth());// + (t instanceof AITank ? 500000 : 0) + (Math.random() * 100000 - 50000);
+			System.out.println(getName() + " -> " + t.getName() + ": " + cost);
 			if (cost < minCost) {
 				minCost = cost;
 				minTank = t;
 			}
 		}
 
-		// Select target
-//		Tank target = tanks.parallelStream()
-//				.filter(tank -> tank != this)
-//				.min((o1, o2) -> o1.getHealth() - o2.getHealth()).get();
 		Tank target = minTank;
 		if (target == null) {
 			owner.nextPlayerTurn();
@@ -59,7 +57,7 @@ public class AITank extends Tank {
 
 		// figure out workable angle
 		double idealAngle = Math.PI;
-		int power = getLaunchPower() / 5;
+		int power = 1;
 		powerLoop:
 		for (; power <= getHealth(); power++) {
 			if (newX < target.getX()) {
@@ -78,6 +76,10 @@ public class AITank extends Tank {
 				}
 			}
 		}
+
+		Random r = new Random();
+		power += r.nextGaussian() * 2;
+		idealAngle += r.nextGaussian() * 0.1;
 
 		setLaunchPower(power);
 		aimCannon(idealAngle, this::cannonComplete);
@@ -105,8 +107,8 @@ public class AITank extends Tank {
 		physics.Projectile p = new physics.Projectile(t, owner);
 
 		double[] p1 = p.fire(0, false);
-		double[] p2 = p.fire(1000000000, false);
-		double[] p3 = p.fire(2000000000, false);
+		double[] p2 = p.fire(10000000000L, false);
+		double[] p3 = p.fire(20000000000L, false);
 
 		double a, b, c;
 
@@ -121,21 +123,21 @@ public class AITank extends Tank {
 		double coeff;
 
 		// First-second
-		coeff = -mat[0][0] / mat[1][0];
+		coeff = -mat[1][0] / mat[0][0];
 		mat[1][0] += mat[0][0] * coeff;
 		mat[1][1] += mat[0][1] * coeff;
 		mat[1][2] += mat[0][2] * coeff;
 		mat[1][3] += mat[0][3] * coeff;
 
 		// First-third
-		coeff = -mat[0][0] / mat[2][0];
+		coeff = -mat[2][0] / mat[0][0];
 		mat[2][0] += mat[0][0] * coeff;
 		mat[2][1] += mat[0][1] * coeff;
 		mat[2][2] += mat[0][2] * coeff;
 		mat[2][3] += mat[0][3] * coeff;
 
 		// Second-third
-		coeff = -mat[1][1] / mat[2][1];
+		coeff = -mat[2][1] / mat[1][1];
 		mat[2][1] += mat[1][1] * coeff;
 		mat[2][2] += mat[1][2] * coeff;
 		mat[2][3] += mat[1][3] * coeff;
@@ -148,6 +150,8 @@ public class AITank extends Tank {
 		// Check for rough intersection
 		Point targetLoc = target.getCenterPoint(owner);
 		DoubleFunction<Double> quad = value -> a * value * value + b * value + c;
+//		System.out.println("Points: " + Arrays.toString(p1) + " " + Arrays.toString(p2) + " " + Arrays.toString(p3));
+//		System.out.println("a: " + a + "\tb: " + b + "\tc: " + c);
 
 		return quad.apply(targetLoc.x - maxOffset) >= targetLoc.y - maxOffset && quad.apply(targetLoc.x - maxOffset) <= targetLoc.y - maxOffset
 				|| quad.apply(targetLoc.x) >= targetLoc.y - maxOffset && quad.apply(targetLoc.x) <= targetLoc.y + maxOffset

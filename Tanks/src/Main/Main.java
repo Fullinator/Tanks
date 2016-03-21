@@ -153,6 +153,9 @@ public class Main extends JFrame {
 	public static void setTickerPause(boolean pause) {
 		ticker.setPaused(pause);
 	}
+	public static Terrain getTerrain(){
+		return map;
+	}
 	
 }
 // TO DO:

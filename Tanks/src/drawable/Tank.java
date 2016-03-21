@@ -5,10 +5,11 @@ import Main.Ticker;
 import terrain.Terrain;
 
 import javax.imageio.ImageIO;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.List;
+import physics.Friction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.LongConsumer;
@@ -22,7 +23,7 @@ public abstract class Tank implements Drawable2 {
 	private int healthPercent;
 	private String name;
 	private int launchPower;
-
+	double friction;
 	private int motionTickerID = -1;
 	private int cannonTickerID = -1;
 	private boolean goLeft;
@@ -31,6 +32,8 @@ public abstract class Tank implements Drawable2 {
 	private double cannonTarget;
 	private Consumer<Boolean> motionCompleteCallback;
 	private Consumer<Boolean> cannonCompleteCallback;
+
+	protected Color barrelColor;
 
 	public Tank() {
 		launchPower = 10;
@@ -42,6 +45,10 @@ public abstract class Tank implements Drawable2 {
 			System.out.println("The tank file requested does not exist! Please fix this before continuing!");
 		}
 		location = new Point(100, 100000);
+
+		getFriction();
+
+		barrelColor = new Color(Color.HSBtoRGB((float) Math.random(), 1.0f, 1.0f));
 	}
 
 	public void setLocation(Point location) {
@@ -51,7 +58,9 @@ public abstract class Tank implements Drawable2 {
 	public BufferedImage getImage() {
 		return image;
 	}
-
+	public void getFriction(){
+	friction = physics.Friction.getFriction();
+	}
 	public void setImage(BufferedImage image) {
 		this.image = image;
 	}
@@ -159,7 +168,34 @@ public abstract class Tank implements Drawable2 {
 	}
 
 	private void moveTank(long elapsedNanos) {
-		double speed = 100.0 * ((double) elapsedNanos / 1000000000);
+		double sub =(50*friction*((double) elapsedNanos / 1000000000)*Math.sin(tankAngle));
+		double speed = friction * 100.0 * ((double) elapsedNanos / 1000000000);
+		double y2 = 0;
+		double y1 = Main.getTerrain().findY((int) location.getX());
+		if (goLeft == true){
+			 y2 = Main.getTerrain().findY((int) location.getX() - 15);
+		}
+		else{
+			y2 = Main.getTerrain().findY((int) location.getX() + 15);
+		}
+		double diff = y2 - y1;
+	
+		if (goLeft == true){
+			if(diff <= 0){
+				speed = speed - sub;
+			}
+		}
+		else{
+			if(diff <= 0){
+				speed = speed + sub;
+			}
+		}
+//		System.out.println("friction:" + friction);
+//		System.out.println("speed:" + speed);
+//		System.out.println("angleRat:" + Math.sin(tankAngle));
+//		System.out.println("forrest" + physics.Friction.forest);
+//		System.out.println("snow" + physics.Friction.snow);
+//		System.out.println("sand" + physics.Friction.sand);
 		double newX = location.getX() + (goLeft ? -speed : speed);
 		if (newX > 0 && newX < Main.xLength - queryImage().getWidth()) location.setLocation(newX, 1000);
 	}
@@ -245,9 +281,9 @@ public abstract class Tank implements Drawable2 {
 			}
 		}
 		
-		System.out.println(y1 + "     " + y2);
-		if (y1 == 0 || y2 == 0 || y1 > 690 || y2 > 690){//y2 == 0 && y1 > (points[0].length - 20) || y1 == 0 && y2 > (points[0].length - 20)) {
-			System.out.println("zero!");
+		//System.out.println(y1 + "     " + y2);
+		if (y1 == 0 || y2 == 0 || (y1 > 690 && y2 > 690)){//y2 == 0 && y1 > (points[0].length - 20) || y1 == 0 && y2 > (points[0].length - 20)) {
+			//System.out.println("zero!");
 			return 0;
 		}
 		
@@ -260,5 +296,9 @@ public abstract class Tank implements Drawable2 {
 		double angle = angle(getX() + 20 , terrain.getTerrain());
 		int length = (int) (queryImage().getWidth() * Math.cos(angle));
 		return new Point(getX() + (length/2), terrain.findY(getX() + (length/2)) - (queryImage().getHeight() /2) );
+	}
+
+	public Color getBarrelColor() {
+		return barrelColor;
 	}
 }

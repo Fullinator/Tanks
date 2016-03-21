@@ -12,7 +12,7 @@ import com.jgoodies.forms.layout.RowSpec;
 
 import drawable.Tank;
 import drawable.UserTank;
-
+import physics.Friction;
 import com.jgoodies.forms.factories.FormFactory;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
@@ -61,7 +61,7 @@ public class StartMenu extends JPanel implements ActionListener {
 		xLength = xDim;
 		yLength = yDim;
 		this.setSize(xDim, yDim);
-		tank = new UserTank();//null, xDim);
+		tank = new UserTank(Color.WHITE);//null, xDim);
 
 		createBackground();
 
@@ -252,7 +252,7 @@ public class StartMenu extends JPanel implements ActionListener {
 		int tankYPos = findY(600);
 		//draw tank
 		g2d.rotate(tank.angle(tankXPos, terrain), tankXPos, findY(tankXPos));// this takes a radian. It has to be a very small radian
-		g2d.drawImage(tank.queryImage(), tankXPos, findY(tankXPos) - 18, null);
+		g2d.drawImage(tank.queryImage(), tankXPos, findY(tankXPos) - 16, null);
 
 		//draws the barrel on the tank
 		g2d.setColor(Color.BLACK);
@@ -292,15 +292,23 @@ public class StartMenu extends JPanel implements ActionListener {
 			}
 
 			if (comboBox.getSelectedItem().equals("Sand")) {
+				physics.Friction.Sand();
 				Main.manualTanks = Integer.parseInt((String) humanSelect.getSelectedItem());;
 				Main.AITanks = Integer.parseInt((String) AISelect.getSelectedItem());
 				Main.startSand(names);
+				
 			}else if (comboBox.getSelectedItem().equals("Snow")) {
+				physics.Friction.Snow();
 				Main.manualTanks = Integer.parseInt((String) humanSelect.getSelectedItem());;
+				Main.AITanks = Integer.parseInt((String) AISelect.getSelectedItem());
 				Main.startSnow(names);
+				
 			} else if (comboBox.getSelectedItem().equals("Forest")) {
+				physics.Friction.Forest();
 				Main.manualTanks = Integer.parseInt((String) humanSelect.getSelectedItem());;
+				Main.AITanks = Integer.parseInt((String) AISelect.getSelectedItem());
 				Main.startForrest(names);
+				
 			}
 
 			Main.setTickerPause(false);
