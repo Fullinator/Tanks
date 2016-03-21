@@ -41,6 +41,7 @@ import drawable.Cactus;
 import drawable.Clouds;
 import net.miginfocom.swing.MigLayout;
 import drawable.Drawable2;
+import drawable.Snowman;
 //import drawable.Cactus;
 import drawable.DayCycle;
 import drawable.Tank;
@@ -576,7 +577,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				}
 			}
 			for (Drawable2 object: drawable) {
-				if (object instanceof Cactus /* || object instanceof Snowman*/  && (object.getX() >= shot.getX() - shot.terrainMag && object.getX() <= shot.getX() + shot.terrainMag)) {
+				if (object instanceof Cactus  || object instanceof Snowman  && (object.getX() >= shot.getX() - shot.terrainMag && object.getX() <= shot.getX() + shot.terrainMag)) {
 					drawable.remove(object);
 					break;
 				}
