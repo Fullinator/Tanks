@@ -736,12 +736,12 @@ public abstract class Terrain extends JPanel implements KeyListener{
 					g2d.setColor(new Color(0,0,0,180));
 					g2d.fillRect(0, 0, xLength, yLength);
 				}
-				//shift = shift - (int)(Math.abs(physics.Projectile.vX)+5);
-				shift = shift-1;
+				shift = shift - (int)(Math.abs(physics.Projectile.vX)+5);
+				//shift = shift-1;
 			} //end going up -----------------------------------------------
 			
 			else if(yy>temp){
-				shift = shift+1;
+				//shift = shift+1;
 //				shift = 0;
 				for (int i = 0; i < drawable.size(); i++) {
 					if (drawable.get(i) instanceof DayCycle) {//Make sure to draw the sun/moon first.
@@ -833,8 +833,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 					g2d.setColor(new Color(0,0,0,180));
 					g2d.fillRect(0, 0, xLength, yLength);
 				}
-				//shift = shift-(int)(Math.abs(physics.Projectile.vX)+5);
-				//shift = shift-1;
+				shift = shift+(int)(Math.abs(physics.Projectile.vX)+5);
+				//shift = shift+1;
 			} //end going down ---------------------------------------------
 		} //end Out Of Screen
 		else {
