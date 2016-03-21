@@ -20,10 +20,10 @@ public  class Projectile implements Drawable2 {
 	Terrain terrain;
 	Wind wind;
 	private static double windSpeed;
-	public  double vX;
-	public  double vY;
+	public static  double vX;
+	public static  double vY;
 	public double height;
-	public double[] points = new double[2];
+	public static double[] points = new double[2];
 	double time;
 	double mass;
 	Tank tank;
@@ -100,7 +100,6 @@ public  class Projectile implements Drawable2 {
 		//windSpeed= wind.getWindSpeed();
 		//System.out.println("WindSpeed:" + windSpeed);
 
-
 		points = new double[2];
 
 		points[0] = intX;
@@ -175,8 +174,8 @@ public  class Projectile implements Drawable2 {
 		}
 		//System.out.println("Out Of Screen:"+outOfScreen);
 
-		if (collide) terrain.collisionDetection(this);
-
+		//if (collide) terrain.collisionDetection(this);
+		if(!outOfScreen){terrain.shift = 0;}
 		return points;
 	}
 
