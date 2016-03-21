@@ -84,7 +84,7 @@ public class StartMenu extends JPanel implements ActionListener {
 		comboBox = new JComboBox();
 		add(comboBox, "cell 2 2, alignx center");
 		comboBox.addItem("Sand");
-		comboBox.addItem("Forest");
+		//comboBox.addItem("Forest");
 		comboBox.addItem("Snow");
 
 		//add physics options
