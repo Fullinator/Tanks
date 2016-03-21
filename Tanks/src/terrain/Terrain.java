@@ -37,9 +37,11 @@ import buttons.RightButton;
 import buttons.UpButton;
 import drawable.AITank;
 import drawable.Animation;
+import drawable.Cactus;
 import drawable.Clouds;
 import net.miginfocom.swing.MigLayout;
 import drawable.Drawable2;
+import drawable.Snowman;
 //import drawable.Cactus;
 import drawable.DayCycle;
 import drawable.Tank;
@@ -83,25 +85,13 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	protected FireButton fire;
 	protected boolean tabbed = false;
 	Wind wind;
-
-
-
-
-
-
-
 	Projectile projectile;
-
-
-
 	private List<Projectile> projectiles;
-
 	protected int nightShiftAmount;
 	protected Color nightShiftColor;
 	protected boolean nightShift;
 	private BufferedImage currentTerrainImage;
 	private boolean staleTerrainImage;
-
 	protected JComboBox<String> weapons;
 
 
@@ -586,11 +576,17 @@ public abstract class Terrain extends JPanel implements KeyListener{
 					}
 				}
 			}
+			for (Drawable2 object: drawable) {
+				if (object instanceof Cactus  || object instanceof Snowman  && (object.getX() >= shot.getX() - shot.terrainMag && object.getX() <= shot.getX() + shot.terrainMag)) {
+					drawable.remove(object);
+					break;
+				}
+			}
 			staleTerrainImage = true;
 		
 			//implement gravity
 			System.out.println("left: " + (x - (mag + shot.terrainMag )) + "    Right: " + (x + mag + shot.terrainMag));
-			for (int i = x - (mag + 50 ); i <= x + mag + 50; i++) {
+			for (int i = x - (mag + shot.terrainMag ); i <= x + mag + shot.terrainMag; i++) {
 				if (i < 0 || i >= xLength) {
 					continue;
 				}
@@ -763,10 +759,12 @@ public abstract class Terrain extends JPanel implements KeyListener{
 						g2d.rotate(((Tank)drawable.get(i)).angle(drawable.get(i).getX() + 20, terrain), drawable.get(i).getX(), findY(drawable.get(i).getX()));// this takes a radian. It has to be a very small radian
 						g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), findY(drawable.get(i).getX()) - 18-shift, null);
 
+						//System.out.println(findY(drawable.get(i).getX()) - 18);
+						
 						//draws the barrel on the tank
-						g2d.setColor(Color.BLACK);
-						g2d.rotate(((Tank)drawable.get(i)).getBarrelAngle(), drawable.get(i).getX() + 20, findY(drawable.get(i).getX()) - 15 );
-						g2d.fillRect(drawable.get(i).getX(), findY(drawable.get(i).getX()) - 17-shift, 20, 4);
+						g2d.setColor(((Tank) drawable.get(i)).getBarrelColor());
+						g2d.rotate(((Tank)drawable.get(i)).getBarrelAngle(), drawable.get(i).getX() + 20, findY(drawable.get(i).getX()) - 17 );
+						g2d.fillRect(drawable.get(i).getX(), findY(drawable.get(i).getX()) - 17, 20, 4);
 						g2d.setTransform(old);// resets the rotation back to how it was before the painting began
 
 					} //else if (drawable.get(i) instanceof standardShell) {// draws the missile
@@ -793,8 +791,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 								terrainGraphics.setColor(secondary);// The sand color
 								terrainGraphics.drawRect(i, j-shift, 1, 1);
 							}
-
-
 						}
 					}
 					staleTerrainImage = false;
@@ -859,9 +855,12 @@ public abstract class Terrain extends JPanel implements KeyListener{
 					g2d.rotate(((Tank)drawable.get(i)).angle(drawable.get(i).getX() + 20, terrain), drawable.get(i).getX(), findY(drawable.get(i).getX()));// this takes a radian. It has to be a very small radian
 					g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), findY(drawable.get(i).getX()) - 18, null);
 
+					
+					//System.out.println(findY(drawable.get(i).getX()) - 18);
+					
 					//draws the barrel on the tank
-					g2d.setColor(Color.BLACK);
-					g2d.rotate(((Tank)drawable.get(i)).getBarrelAngle(), drawable.get(i).getX() + 20, findY(drawable.get(i).getX()) - 15 );
+					g2d.setColor(((Tank) drawable.get(i)).getBarrelColor());
+					g2d.rotate(((Tank)drawable.get(i)).getBarrelAngle(), drawable.get(i).getX() + 20, findY(drawable.get(i).getX()) - 17 );
 					g2d.fillRect(drawable.get(i).getX(), findY(drawable.get(i).getX()) - 17, 20, 4);
 					g2d.setTransform(old);// resets the rotation back to how it was before the painting began
 
@@ -875,7 +874,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 					//g2d.setColor(Color.PINK);
 					//g2d.drawRect((int)center.getX(), (int)center.getY(), 10, 10);
 					//g2d.drawOval((int)center.getX(), (int)center.getY(), 35, 35);
-
 
 				} //else if (drawable.get(i) instanceof standardShell) {// draws the missile
 				//g2d.fillOval(drawable.get(i).getX(), drawable.get(i).getY(), 5, 5);
