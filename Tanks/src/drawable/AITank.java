@@ -77,6 +77,10 @@ public class AITank extends Tank {
 			}
 		}
 
+		Random r = new Random();
+		power += r.nextGaussian() * 2;
+		idealAngle += r.nextGaussian() * 0.1;
+
 		setLaunchPower(power);
 		aimCannon(idealAngle, this::cannonComplete);
 
