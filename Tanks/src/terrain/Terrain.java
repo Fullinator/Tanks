@@ -604,7 +604,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			
 			//implement gravity
 			System.out.println("left: " + (x - (mag + shot.terrainMag )) + "    Right: " + (x + mag + shot.terrainMag));
-			for (int i = x - (mag + shot.terrainMag ); i <= x + mag + shot.terrainMag; i++) {
+			for (int i = x - (mag + shot.terrainMag + 50); i <= x + (mag + shot.terrainMag + 50); i++) {
 				if (i < 0 || i >= xLength) {
 					continue;
 				}
@@ -618,7 +618,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 					}
 				}
 			}
-			
+			staleTerrainImage = true;
 			
 			
 			
