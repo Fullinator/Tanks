@@ -577,11 +577,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			}
 			for (Drawable2 object: drawable) {
 				if (object instanceof Cactus /* || object instanceof Snowman*/  && (object.getX() >= shot.getX() - shot.terrainMag && object.getX() <= shot.getX() + shot.terrainMag)) {
-					System.out.println("Removing the cactus!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-					System.out.println(drawable.contains(object));
-					System.out.println("Length before: " + drawable.size());
 					drawable.remove(object);
-					System.out.println("Length after: " + drawable.size());
 					break;
 				}
 			}
