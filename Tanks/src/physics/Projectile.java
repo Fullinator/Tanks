@@ -174,7 +174,7 @@ public  class Projectile implements Drawable2 {
 		}
 		//System.out.println("Out Of Screen:"+outOfScreen);
 
-		//if (collide) terrain.collisionDetection(this);
+		if (collide) terrain.collisionDetection(this);
 		if(!outOfScreen){terrain.shift = 0;}
 		return points;
 	}
