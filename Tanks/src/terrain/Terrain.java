@@ -523,6 +523,10 @@ public abstract class Terrain extends JPanel implements KeyListener{
 					
 					Main.sound.run("impact");   //Impact sound
 					
+					//Explode animation
+					Animation ani = new Animation("explode");
+					ani.setLocation(center);
+					drawable.add(ani);
 					//pause();
 				}
 			}
@@ -540,6 +544,10 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			Ticker.removeMethod(shot.getTickerID());
 			//call for damage
 			Main.sound.run("impact");   //Impact sound
+			Animation ani = new Animation("explode"); 
+			Point p = new Point(shot.getX(), shot.getY());
+			ani.setLocation(p);
+			drawable.add(ani);
 			damage(shot, false, radius);
 		}
 
@@ -846,7 +854,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		Main.sound.run("shot1");
 		nextPlayerTurn();
 		Animation ani = new Animation("smoke");
-		ani.setLocation(tank.getLocation());
+		Point t = new Point(tank.getX(), findY(tank.getX()));
+		ani.setLocation(t);
 		drawable.add(ani);
 	}
 
@@ -1102,5 +1111,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 	}
 
+	public ArrayList<Drawable2> getDrawable(){
+		return drawable;
+	}
 
 }// End of abstract Terrain Class
