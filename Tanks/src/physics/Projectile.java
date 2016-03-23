@@ -35,7 +35,7 @@ public  class Projectile implements Drawable2 {
 	public double MaxHeight;
 
 //	public int damage = 1;
-	public int terrainMag = 100;
+	public int terrainMag = 25;
 
 
 	public Projectile(Tank tank,Terrain terrain){
