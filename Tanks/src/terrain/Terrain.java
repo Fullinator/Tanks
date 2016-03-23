@@ -37,9 +37,11 @@ import buttons.RightButton;
 import buttons.UpButton;
 import drawable.AITank;
 import drawable.Animation;
+import drawable.Cactus;
 import drawable.Clouds;
 import net.miginfocom.swing.MigLayout;
 import drawable.Drawable2;
+import drawable.Snowman;
 //import drawable.Cactus;
 import drawable.DayCycle;
 import drawable.Tank;
@@ -83,25 +85,13 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	protected FireButton fire;
 	protected boolean tabbed = false;
 	Wind wind;
-
-
-
-
-
-
-
 	Projectile projectile;
-
-
-
 	private List<Projectile> projectiles;
-
 	protected int nightShiftAmount;
 	protected Color nightShiftColor;
 	protected boolean nightShift;
 	private BufferedImage currentTerrainImage;
 	private boolean staleTerrainImage;
-
 	protected JComboBox<String> weapons;
 
 
@@ -494,7 +484,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			}
 		}
 	}//end of the remove method
-*/
+	 */
 
 	public void collisionDetection(Projectile shot) {
 		int radius = 15;//radius around tank in pixels to check collision
@@ -510,7 +500,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			double angle = t.angle(t.getX() + 20 , terrain);
 			int length = (int) (t.queryImage().getWidth() * Math.cos(angle));
 			Point center = new Point(t.getX() + (length/2), findY(t.getX() + (length/2)) - (t.queryImage().getHeight() /2) );
-			
+
 			//check if our shot is within a hit of tank
 			if (shot.getX() >= center.getX() - radius && shot.getX() <= center.getX() + radius) {//check X
 				if (shot.getY() >= center.getY() - radius && shot.getY() <= center.getY() + radius) {//check Y
@@ -520,6 +510,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 					projectiles.remove(shot);
 					Ticker.removeMethod(shot.getTickerID());
 					tankHit = true;
+<<<<<<< HEAD
 					
 					Main.sound.run("impact");   //Impact sound
 					
@@ -527,6 +518,11 @@ public abstract class Terrain extends JPanel implements KeyListener{
 					Animation ani = new Animation("explode");
 					ani.setLocation(center);
 					drawable.add(ani);
+=======
+
+										Main.sound.run("impact");   //Impact sound
+
+>>>>>>> origin/master
 					//pause();
 				}
 			}
@@ -534,7 +530,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		if (tankHit) {
 			damage(shot, tankHit, radius);
 		}
-		
+
 		//check against terrain
 		if (shot.getX() > xLength || shot.getX() < 0 || shot.getY() > yLength) {
 			projectiles.remove(shot);
@@ -543,11 +539,15 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			projectiles.remove(shot);
 			Ticker.removeMethod(shot.getTickerID());
 			//call for damage
+<<<<<<< HEAD
 			Main.sound.run("impact");   //Impact sound
 			Animation ani = new Animation("explode"); 
 			Point p = new Point(shot.getX(), shot.getY());
 			ani.setLocation(p);
 			drawable.add(ani);
+=======
+						Main.sound.run("impact");   //Impact sound
+>>>>>>> origin/master
 			damage(shot, false, radius);
 		}
 
@@ -594,29 +594,17 @@ public abstract class Terrain extends JPanel implements KeyListener{
 					}
 				}
 			}
-			staleTerrainImage = true;
-			
-			/*
-			//implement gravity
-			for(int k = 0; k < yLength; k += 1){
-				for(int i = x - mag; i < x + mag; i += 1){
-					for(int j = y + mag; j > 0; j -= 1){
-						if(j + 1 < yLength && j > 0 && i > 0 && i < xLength){
-							if (terrain[i][j] > 0 && !(terrain[i][j + 1] > 0)){
-								terrain[i][j+1] = terrain[i][j];
-								terrain[i][j] = 0;
-								staleTerrainImage = true;
-								//repaint();
-							}
-						}
-					}
+			for (Drawable2 object: drawable) {
+				if (object instanceof Cactus  || object instanceof Snowman  && (object.getX() >= shot.getX() - shot.terrainMag && object.getX() <= shot.getX() + shot.terrainMag)) {
+					drawable.remove(object);
+					break;
 				}
 			}
-			*/
-			
+			staleTerrainImage = true;
+		
 			//implement gravity
 			System.out.println("left: " + (x - (mag + shot.terrainMag )) + "    Right: " + (x + mag + shot.terrainMag));
-			for (int i = x - (mag + 50 ); i <= x + mag + 50; i++) {
+			for (int i = x - (mag + shot.terrainMag + 50); i <= x + (mag + shot.terrainMag + 50); i++) {
 				if (i < 0 || i >= xLength) {
 					continue;
 				}
@@ -630,10 +618,10 @@ public abstract class Terrain extends JPanel implements KeyListener{
 					}
 				}
 			}
+			staleTerrainImage = true;
 			
 			
-			
-			
+
 		}
 	}
 
@@ -642,7 +630,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			playerWin();
 		}
 	}
-	
+
 	/**
 	 * Calls the super paintComponent to paint on the JPanel
 	 * This also handles all standard terrain drawing and drawables drawing.
@@ -669,17 +657,17 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				//We already drew this
 			} 
 			else if (drawable.get(i) instanceof Tank) {// draws player controlled tanks
-				g2d.rotate(((Tank)drawable.get(i)).angle(drawable.get(i).getX() + 20, terrain), drawable.get(i).getX(), findY(drawable.get(i).getX()));// this takes a radian. It has to be a very small radian
-				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), findY(drawable.get(i).getX()) - 16, null);
+				g2d.rotate(((Tank)drawable.get(i)).angle((int) ((int)drawable.get(i).getX() + (int) drawable.get(i).queryImage().getWidth()*.5), terrain), drawable.get(i).getX(), findY(drawable.get(i).getX()) - drawable.get(i).queryImage().getHeight());// this takes a radian. It has to be a very small radian
+				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), findY(drawable.get(i).getX()) - (int) drawable.get(i).queryImage().getHeight(), null);
 				
 				//System.out.println(findY(drawable.get(i).getX()) - 18);
 				
 				//draws the barrel on the tank
 				g2d.setColor(((Tank) drawable.get(i)).getBarrelColor());
-				g2d.rotate(((Tank)drawable.get(i)).getBarrelAngle(), drawable.get(i).getX() + 20, findY(drawable.get(i).getX()) - 15 );
-				g2d.fillRect(drawable.get(i).getX(), findY(drawable.get(i).getX()) - 17, 20, 4);
+				g2d.rotate(((Tank)drawable.get(i)).getBarrelAngle(), drawable.get(i).getX() + (int) drawable.get(i).queryImage().getWidth()*.5, findY(drawable.get(i).getX()) - (int) drawable.get(i).queryImage().getHeight() );
+				g2d.fillRect(drawable.get(i).getX(), findY(drawable.get(i).getX()) - drawable.get(i).queryImage().getHeight() , (int) (drawable.get(i).queryImage().getWidth()*.5) , 4);
 				g2d.setTransform(old);// resets the rotation back to how it was before the painting began
-
+				//g2d.translate(i,i);
 
 
 				//REMOVE THIS:
@@ -762,6 +750,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		}
 	}//end of paintComponent method
 
+	
 	/**
 	 * Sets the turn to the next player
 	 */
@@ -851,7 +840,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		projectiles.add(projectile);
 
 		projectile.setTickerID(Ticker.addMethod(projectile::fire));
-		Main.sound.run("shot1");
+				Main.sound.run("shot1");
 		nextPlayerTurn();
 		Animation ani = new Animation("smoke");
 		Point t = new Point(tank.getX(), findY(tank.getX()));
@@ -888,7 +877,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		revalidate();
 		weapons.addItem("Standard Shot");
 		//add(power, "cell 5 0, alignx center");
-
 	}
 
 	/**
@@ -941,7 +929,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		}
 	}
 
-	
+
 	protected void playerWin() {
 		hidePlayerStats();
 		paused = true;
@@ -953,7 +941,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		quit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//				Main.sound.runLoop("song");
+								Main.sound.runLoop("song");
 				Main.loadMenu();
 				Main.setTickerPause(true);
 			}
@@ -966,7 +954,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		revalidate();
 		Main.setTickerPause(true);
 	}
-	
+
 	/**
 	 * Creates all needed  objects to pause the game and temporarily stops the ticker
 	 */
@@ -984,7 +972,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		quit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//				Main.sound.runLoop("song");
+								Main.sound.runLoop("song");
 				Main.loadMenu();
 				Main.setTickerPause(true);
 			}
@@ -1032,19 +1020,19 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		}
 		if (!paused && allowHumanInput) {
 
-			
+
 			if (e.getKeyCode() == KeyEvent.VK_PLUS) {
-				
+
 			}
-			
+
 			if (e.getKeyCode() == KeyEvent.VK_MINUS) {
-				
+
 			}
-			
+
 			if (e.getKeyCode() == KeyEvent.VK_TAB) {
 				showPlayerStats();
 			}
-			
+
 			Tank t = players.get(currentPlayer - 1);
 
 			// move left
@@ -1098,10 +1086,10 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			hidePlayerStats();
 			break;
 		case KeyEvent.VK_PLUS:
-			
+
 			break;
 		case KeyEvent.VK_MINUS:
-			
+
 			break;
 		}
 	}
