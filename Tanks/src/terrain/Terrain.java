@@ -530,7 +530,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		if (shot.getX() > xLength || shot.getX() < 0 || shot.getY() > yLength) {
 			projectiles.remove(shot);
 			Ticker.removeMethod(shot.getTickerID());
-		}else if (terrain[shot.getX()][shot.getY()] > 0) {
+		} else if (shot.getY() >= 0 && terrain[shot.getX()][shot.getY()] > 0) {
 			projectiles.remove(shot);
 			Ticker.removeMethod(shot.getTickerID());
 			//call for damage
