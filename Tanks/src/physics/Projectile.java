@@ -58,7 +58,7 @@ public  class Projectile implements Drawable2 {
 		double tankH = Math.pow(Math.pow(tankHeight,2) + Math.pow(tankWidth,2), .5);
 		angle = tank.getBarrelAngle() + tankAngle;
 
-		System.out.println("Angle:" + angle);
+//		System.out.println("Angle:" + angle);
 		
 //		g2d.rotate(((Tank)drawable.get(i)).getBarrelAngle(), drawable.get(i).getX() + 20, findY(drawable.get(i).getX()) - 15 );
 //		g2d.fillRect(drawable.get(i).getX(), findY(drawable.get(i).getX()) - 17, 20, 4);
@@ -78,7 +78,7 @@ public  class Projectile implements Drawable2 {
 //			intX += .5*tank.queryImage().getWidth()*Math.cos(innerTankAngle - Math.PI/2);
 //			intY -= tank.queryImage().getHeight()*Math.sin(innerTankAngle + Math.PI/2);
 //		}
-		System.out.println("X:" + intX);
+//		System.out.println("X:" + intX);
 
 		//System.out.println("Angle:" + angle);
 		intX = .5*tank.queryImage().getWidth() + tank.getX()- 20*Math.cos(angle);

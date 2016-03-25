@@ -8,11 +8,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.List;
-import physics.Friction;
 import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.LongConsumer;
 
 public abstract class Tank implements Drawable2 {
 	private double barrelAngle = 0.0;
@@ -127,11 +123,13 @@ public abstract class Tank implements Drawable2 {
 		Main.sound.runLoop("movement");
 	}
 
-	public void startMotion(int target, Consumer<Boolean> callback) {
+	public void startMotion(int target, Consumer<Boolean> callback, double dxGiveUp) {
 		motionTarget = Math.max(0, Math.min(target, Main.xLength - queryImage().getWidth()));
+		this.minSpeed = dxGiveUp;
 		if (motionTickerID == -1) {
 			motionTickerID = Ticker.addMethod(this::moveTankTarget);
 			motionCompleteCallback = callback;
+			goLeft = target < location.getX();
 			Main.sound.runLoop("movement");
 		} else {
 			callback.accept(false);
@@ -170,6 +168,7 @@ public abstract class Tank implements Drawable2 {
 	private void moveTank(long elapsedNanos) {
 		double sub =(50*friction*((double) elapsedNanos / 1000000000)*Math.sin(tankAngle));
 		double speed = friction * 100.0 * ((double) elapsedNanos / 1000000000);
+		System.out.print("\t\t\t\t\t\t\t\tspeed: " + speed);
 		double y2 = 0;
 		double y1 = Main.getTerrain().findY((int) location.getX());
 		if (goLeft == true){
@@ -190,6 +189,7 @@ public abstract class Tank implements Drawable2 {
 				speed = speed + sub;
 			}
 		}
+		System.out.println(" --> " + speed);
 //		System.out.println("friction:" + friction);
 //		System.out.println("speed:" + speed);
 //		System.out.println("angleRat:" + Math.sin(tankAngle));
@@ -197,10 +197,26 @@ public abstract class Tank implements Drawable2 {
 //		System.out.println("snow" + physics.Friction.snow);
 //		System.out.println("sand" + physics.Friction.sand);
 		double newX = location.getX() + (goLeft ? -speed : speed);
+		lastSpeed = speed;
 		if (newX > 0 && newX < Main.xLength - queryImage().getWidth()) location.setLocation(newX, 1000);
 	}
 
+	private double minSpeed;
+	private double lastSpeed;
+
 	private void moveTankTarget(long elapsedNanos) {
+		moveTank(elapsedNanos);
+		if ((goLeft && location.getX() <= motionTarget) || (!goLeft && location.getX() >= motionTarget)) {
+			location.setLocation(motionTarget, location.getY());
+			stopMotion();
+			motionCompleteCallback.accept(true);
+		} else if (lastSpeed < minSpeed) {
+			System.out.println("\t\t\t\t" + lastSpeed + " < " + minSpeed);
+			stopMotion();
+			motionCompleteCallback.accept(false);
+		}
+		if (true) return;
+
 		double speed = 100.0 * ((double) elapsedNanos / 1000000000);
 		boolean left = getX() > motionTarget;
 		double newX = location.getX() + (left ? -speed : speed);
@@ -221,8 +237,19 @@ public abstract class Tank implements Drawable2 {
 	}
 
 	private void rotateCannonTarget(long elapsedNanos) {
-		double rate = 1.0 * ((double) elapsedNanos / 1000000000);
 		boolean ccw = barrelAngle < cannonTarget;
+		counterClockwise = ccw;
+		rotateCannon(elapsedNanos);
+
+		if ((ccw && barrelAngle >= cannonTarget) || (!ccw && barrelAngle <= cannonTarget)) {
+			barrelAngle = cannonTarget;
+			Ticker.removeMethod(cannonTickerID);
+			cannonCompleteCallback.accept(true);
+			Main.sound.stop("turret");
+		}
+		if (true) return;
+
+		double rate = 1.0 * ((double) elapsedNanos / 1000000000);
 		double newAng = barrelAngle + (ccw ? rate : -rate);
 		if ((ccw && newAng >= cannonTarget) || (!ccw && newAng <= cannonTarget)) {
 			newAng = cannonTarget;

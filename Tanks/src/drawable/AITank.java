@@ -1,5 +1,6 @@
 package drawable;
 
+import Main.Ticker;
 import terrain.Terrain;
 
 import java.awt.*;
@@ -21,6 +22,9 @@ public class AITank extends Tank {
 
 	private boolean motionComplete;
 	private boolean cannonComplete;
+	private Tank target;
+
+	private int fireWhenReadyID;
 
 	public AITank(Terrain owner, List<Tank> tanks) {
 		this.owner = owner;
@@ -44,16 +48,18 @@ public class AITank extends Tank {
 			}
 		}
 
-		Tank target = minTank;
+		target = minTank;
 		if (target == null) {
-			owner.nextPlayerTurn();
+			System.out.println("========== NO TARGET FOUND ==========");
+//			owner.nextPlayerTurn();
+			owner.fire();
 			return;
 		}
 
 		motionComplete = cannonComplete = false;
 
 		int newX = Math.abs(getX() - target.getX()) < 100 ? getX() : (getX() < target.getX() ? target.getX() - 100 : target.getX() + 100);
-		startMotion(newX, this::motionComplete);
+		startMotion(newX, this::motionComplete, 0.5);
 
 		// figure out workable angle
 		double idealAngle = Math.PI;
@@ -78,22 +84,62 @@ public class AITank extends Tank {
 		}
 
 		Random r = new Random();
-		power += r.nextGaussian() * 2;
-		idealAngle += r.nextGaussian() * 0.1;
+//		power += r.nextGaussian() * 2;
+//		idealAngle += r.nextGaussian() * 0.1;
 
 		setLaunchPower(power);
 		aimCannon(idealAngle, this::cannonComplete);
 
+		fireWhenReadyID = Ticker.addMethod(this::fireWhenReady);
 	}
 
 	private void motionComplete(boolean success) {
+		System.out.println("\t\t\t\tMotion complete = " + success);
+		if (!success) {
+			// figure out workable angle
+			double idealAngle = Math.PI;
+			int power = 1;
+			powerLoop:
+			for (; power <= getHealth(); power++) {
+				if (getX() < target.getX()) {
+					for (double a = 1; a > 0.5; a -= 0.05) {
+						if (fuzzyTankIntersection(getX(), a * Math.PI, power, target, 5)) {
+							idealAngle = a * Math.PI;
+							break powerLoop;
+						}
+					}
+				} else {
+					for (double a = 0; a < 0.5; a += 0.05) {
+						if (fuzzyTankIntersection(getX(), a * Math.PI, power, target, 5)) {
+							idealAngle = a * Math.PI;
+							break powerLoop;
+						}
+					}
+				}
+			}
+
+			Random r = new Random();
+//			power += r.nextGaussian() * 2;
+//			idealAngle += r.nextGaussian() * 0.1;
+
+			setLaunchPower(power);
+			aimCannon(idealAngle, this::cannonComplete);
+		}
 		motionComplete = true;
-		if (cannonComplete) owner.fire();
 	}
 
 	private void cannonComplete(boolean success) {
+//		Thread.dumpStack();
+		System.out.println("\t\t\t\tCannon complete = " + success);
 		cannonComplete = true;
-		if (motionComplete) owner.fire();
+	}
+
+	private void fireWhenReady(long elapsedNanos) {
+		if (cannonComplete && motionComplete) {
+			owner.fire();
+			Ticker.removeMethod(fireWhenReadyID);
+			fireWhenReadyID = -1;
+		}
 	}
 
 	private boolean fuzzyTankIntersection(int sourceX, double barrelAngle, int power, Tank target, double maxOffset) {
