@@ -635,7 +635,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		g2d.fillRect(0, 0, getXTerrain(), getYTerrain());// fills the entire background with the sky       
 
 		AffineTransform old = g2d.getTransform();// Saves a copy of the old transform so the rotation can be reset later
-
+		Shift shift1 = new Shift(physics.Projectile.outOfScreen, (int)physics.Projectile.vX);
+		
 		for (int i = 0; i < drawable.size(); i++) {
 			if (drawable.get(i) instanceof DayCycle) {//Make sure to draw the sun/moon first.
 				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY() - drawable.get(i).queryImage().getHeight(), null);

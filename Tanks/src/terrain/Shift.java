@@ -1,14 +1,18 @@
-package drawable;
+package terrain;
 
 public class Shift {
 /*paint(....)
 * shift = call shift(...);
 * then add shift in pointComponent(......y + shift..)
  */
-//h=sqrt(v)/2
-	
-	protected Shift(boolean out, int y, int maxHeight){
-		shifter(out, y, maxHeight);		
+
+	static int Y;
+	static int prevY;
+	static int shift;
+	public Shift(boolean out, int y){
+		prevY = Y;
+		Y = y;
+		shift = shifter(out, Y);		
 	}
 	
 	/**
@@ -18,14 +22,16 @@ public class Shift {
 	 * @param maxHeight = when the projectile starts moving down
 	 * @return the shift amount needed
 	 */
-	int shifter(boolean out, int y, int maxHeight){
+	int shifter(boolean out, int y){
 		if(out){ 				// if out of screen
-			if(y > maxHeight){
-				return -10;		//shifting up
+			if(y < prevY){
+				return shift-10;		//shifting up
 			}
-			else{ 
-				return 10;		//shift down
+			else if(y > prevY){ 
+				return shift+10;		//shift down
 			}
+			else 
+				return shift;
 		}
 		else{					//if out of the screen
 			return 0;
@@ -33,3 +39,4 @@ public class Shift {
 	}
 	
 }
+
