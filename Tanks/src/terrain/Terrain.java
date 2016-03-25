@@ -424,64 +424,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		}
 	}
 
-	/**
-	 * Removes a circle from the boolean terrain array
-	 *
-	 * @param x X coordinate of the center of the hole
-	 * @param y Y coordinate of the center of the hole
-	 * @param mag magnitude of the hole 
-	 *
-	 */
-	/*
-	public void damage(int x, int y, int mag){
-
-		//create the hole
-		for(int i = y + mag; i > y - mag; i -= 1){
-			int low = (int)(-Math.sqrt(Math.pow(mag, 2) - Math.pow(i - y, 2)) + x);// Finds the lower x coordinate for the given y coordinate
-			int high = (int)(Math.sqrt(Math.pow(mag, 2) - Math.pow(i - y, 2)) + x);// Finds the upper x coordiante for the given y corrdinate
-			for(int j = low; j < high; j += 1){// loops from the lower x to the upper x
-				if(j >= 0 && j < xLength && i >= 0 && i < yLength){
-					terrain[j][i] = 0;//sets points equal to false
-				}
-			}
-		}
-
-		//implement gravity
-		for(int k = 0; k < yLength; k += 1){
-			for(int i = x - mag; i < x + mag; i += 1){
-				for(int j = y + mag; j > 0; j -= 1){
-					if(j + 1 < yLength && j > 0 && i > 0 && i < xLength){
-						if (terrain[i][j] > 0 && !(terrain[i][j + 1] > 0)){
-							terrain[i][j+1] = terrain[i][j];
-							terrain[i][j] = 0;
-							//repaint();
-						}
-					}
-				}
-			}
-		}
-
-		//damage any tanks if necessary
-		for(int k = 0; k < drawable.size(); k++){
-			if(drawable.get(k) instanceof manualTank || drawable.get(k) instanceof AITank){
-				if(Math.abs((drawable.get(k).getX() + 19) - getX()) <= 19){
-					players.get(k).setHealth(players.get(k).getHealth() - 3);
-					if(players.get(k).getHealth() <= 0){
-						drawable.remove(k);
-						k -= 1;
-					}
-				}
-				else if(Math.abs((drawable.get(k).getX() + 19) - getX()) <= 39){
-					players.get(k).setHealth(players.get(k).getHealth() - 1);
-					if(players.get(k).getHealth() <= 0){
-						drawable.remove(k);
-						k -= 1;
-					}
-				}
-			}
-		}
-	}//end of the remove method
-	 */
 
 	public void collisionDetection(Projectile shot) {
 		int radius = 15;//radius around tank in pixels to check collision
