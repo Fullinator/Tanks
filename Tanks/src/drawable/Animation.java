@@ -107,22 +107,22 @@ public class Animation implements Drawable2{
 		}
 		
 		if(type.equals("explode")){
-			if(tick >= 99){
-				BufferedImage temp = explode[tick/10];
+			if(tick >= 29){
+				BufferedImage temp = explode[tick/3];
 				tick = 0;
 				ArrayList<Drawable2> d = Main.getTerrain().getDrawable();
 				d.remove(this);
 				Main.getTerrain().setDrawable(d);
 				return temp;
 			}
-			else if(tick >= 90){
-				BufferedImage temp = explode[tick/10];
+			else if(tick >= 25){
+				BufferedImage temp = explode[tick/3];
 				tick++;
 				return temp;
 				
 			}
 			else{
-				BufferedImage temp = explode[tick/10];
+				BufferedImage temp = explode[tick/3];
 				tick++;
 				return temp;
 
