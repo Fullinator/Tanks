@@ -171,7 +171,7 @@ public abstract class Tank implements Drawable2 {
 		System.out.print("\t\t\t\t\t\t\t\tspeed: " + speed);
 		double y2 = 0;
 		double y1 = Main.getTerrain().findY((int) location.getX());
-		if (goLeft == true){
+		if (goLeft){
 			 y2 = Main.getTerrain().findY((int) location.getX() - 15);
 		}
 		else{
@@ -179,7 +179,7 @@ public abstract class Tank implements Drawable2 {
 		}
 		double diff = y2 - y1;
 	
-		if (goLeft == true){
+		if (goLeft){
 			if(diff <= 0){
 				speed = speed - sub;
 			}
@@ -215,19 +215,6 @@ public abstract class Tank implements Drawable2 {
 			stopMotion();
 			motionCompleteCallback.accept(false);
 		}
-		if (true) return;
-
-		double speed = 100.0 * ((double) elapsedNanos / 1000000000);
-		boolean left = getX() > motionTarget;
-		double newX = location.getX() + (left ? -speed : speed);
-		if ((left && newX <= motionTarget) || (!left && newX >= motionTarget)) {
-			newX = motionTarget;
-			Ticker.removeMethod(motionTickerID);
-			motionTickerID = -1;
-			motionCompleteCallback.accept(true);
-			Main.sound.stop("movement");
-		}
-		location.setLocation(newX, 1000);
 	}
 
 	private void rotateCannon(long elapsedNanos) {
@@ -247,18 +234,6 @@ public abstract class Tank implements Drawable2 {
 			cannonCompleteCallback.accept(true);
 			Main.sound.stop("turret");
 		}
-		if (true) return;
-
-		double rate = 1.0 * ((double) elapsedNanos / 1000000000);
-		double newAng = barrelAngle + (ccw ? rate : -rate);
-		if ((ccw && newAng >= cannonTarget) || (!ccw && newAng <= cannonTarget)) {
-			newAng = cannonTarget;
-			Ticker.removeMethod(cannonTickerID);
-			cannonTickerID = -1;
-			cannonCompleteCallback.accept(true);
-			Main.sound.stop("turret");
-		}
-		barrelAngle = newAng;
 	}
 
 	/**

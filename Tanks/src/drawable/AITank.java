@@ -4,9 +4,6 @@ import Main.Ticker;
 import terrain.Terrain;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.function.DoubleFunction;
