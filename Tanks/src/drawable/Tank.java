@@ -150,6 +150,7 @@ public abstract class Tank implements Drawable2 {
 
 	public void aimCannon(double target, Consumer<Boolean> callback) {
 		cannonTarget = Math.max(0, Math.min(target, Math.PI));
+		clippedAngle = false;
 		if (cannonTickerID == -1) {
 			cannonTickerID = Ticker.addMethod(this::rotateCannonTarget);
 			cannonCompleteCallback = callback;
@@ -217,10 +218,15 @@ public abstract class Tank implements Drawable2 {
 		}
 	}
 
+	private boolean clippedAngle;
+
 	private void rotateCannon(long elapsedNanos) {
 		double rate = 3.0 * ((double) elapsedNanos / 1000000000);
 		double newAng = barrelAngle + (counterClockwise ? rate : -rate);
-		if (newAng >= 0 && newAng <= Math.PI) barrelAngle = newAng;
+		if (newAng >= 0 && newAng <= Math.PI) {
+			clippedAngle = true;
+			barrelAngle = newAng;
+		}
 	}
 
 	private void rotateCannonTarget(long elapsedNanos) {
@@ -232,6 +238,10 @@ public abstract class Tank implements Drawable2 {
 			barrelAngle = cannonTarget;
 			Ticker.removeMethod(cannonTickerID);
 			cannonCompleteCallback.accept(true);
+			Main.sound.stop("turret");
+		} else if (clippedAngle) {
+			Ticker.removeMethod(cannonTickerID);
+			cannonCompleteCallback.accept(false);
 			Main.sound.stop("turret");
 		}
 	}
