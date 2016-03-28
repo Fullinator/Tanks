@@ -822,7 +822,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		remove(powerUp);
 		remove(powerDown);
 		remove(power);
+		remove(fuelLabel);
 		removeAll();
+
 	}
 
 	/**
@@ -837,6 +839,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		add(powerDown, "cell 6 0, alignx center");
 		add(power, "cell 5 0, alignx center");
 		add(fire, "cell 7 0, alignx center");
+		add(fuelLabel, "cell 8 0, alignx center");
 		revalidate();
 		weapons.addItem("Standard Shot");
 		//add(power, "cell 5 0, alignx center");
