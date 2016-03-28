@@ -5,7 +5,9 @@ import java.util.Map;
 import java.util.function.LongConsumer;
 
 /**
- * Created by nick on 2/18/16.
+ * This class is used to fire events regularly and rapidly.
+ *
+ * @author Nicholas Muggio
  */
 public class Ticker implements Runnable {
 
