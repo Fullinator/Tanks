@@ -80,6 +80,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	protected JButton quit;
 	protected JButton unPause;
 	protected FireButton fire;
+	protected JLabel fuelLabel;
 	protected boolean tabbed = false;
 	Wind wind;
 	Projectile projectile;
@@ -721,6 +722,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			g2d.drawImage(p.queryImage(), p.getX(), p.getY(), null);
 		});
 
+		fuelLabel.setText("Fuel: " + (int) currentTank().getGas());
+
 		//draw night shift
 
 		if (nightShift) {
@@ -833,6 +836,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 		//Buy weapons
 
+		// Fuel label
+		fuelLabel = new JLabel("Fuel: " + (int)currentTank().getGas());
+		add(fuelLabel, "cell 9 0, alignx center");
 	}
 
 	/**
