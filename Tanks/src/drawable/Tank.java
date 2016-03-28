@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 public abstract class Tank implements Drawable2 {
 	private double barrelAngle = 0.0;
 	private double tankAngle = 0.0;
-	private double gas = 500;
+	private double gas = 200;
 	private Point location;
 	private BufferedImage image;
 	private int healthPercent;

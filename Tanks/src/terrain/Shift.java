@@ -12,10 +12,8 @@ public class Shift {
 	static int prevY;
 	static int shift;
 	int x = 10;
-	public Shift(boolean out, int y){
-		prevY = Y;
-		Y = y;
-		shift = shifter(out, Y);		
+	public Shift(double[] points){
+		shift = shifter(points);		
 	}
 	
 	/**
@@ -25,25 +23,27 @@ public class Shift {
 	 * @param maxHeight = when the projectile starts moving down
 	 * @return the shift amount needed
 	 */
-	int shifter(boolean out, int y){
-		if(out){ 				// if out of screen
-			if(y < prevY){
-				System.out.println("OUT UP : y = "+ y + "prevY=" + prevY);
-		//		shift = shift-x;
-				return shift-x;		//shifting up
+	int shifter(double[] points){
+		prevY = Y;
+		Y = (int) points[1];
+		if(physics.Projectile.outOfScreen){ 				// if out of screen
+			if(Y < prevY){
+				//System.out.println("OUT UP : y = "+ Y + "prevY=" + prevY);
+				shift = shift+x;
+				return shift;		//shifting up
 			}
-			else if(y > prevY){ 
-				System.out.println("OUT down");
-			//	shift = shift+x;
-				return shift+x;		//shift down
+			else if(Y > prevY){ 
+				//System.out.println("OUT down");
+				shift = shift-x;
+				return shift;		//shift down
 			}
 			else 
-		//		shift = shift;
 				return shift;
 		}
 		else{					//if not out of the screen
-			System.out.println("IN");
-			return 0;
+		//	System.out.println("IN");
+			shift = 0;
+			return shift;
 		}
 	}
 	

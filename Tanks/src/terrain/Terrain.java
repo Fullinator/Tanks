@@ -81,6 +81,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	protected JButton quit;
 	protected JButton unPause;
 	protected FireButton fire;
+	protected JLabel fuelLabel;
 	protected boolean tabbed = false;
 	Wind wind;
 	Projectile projectile;
@@ -581,10 +582,11 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 * This also handles all standard terrain drawing and drawables drawing.
 	 */
 	
-	Shift shift1 = new Shift(Projectile.outOfScreen, (int)Projectile.vY);
+	Shift shift1 = new Shift(Projectile.points);
+	int shift = 0;
 	public void paintComponent(Graphics g) {
-		int shift =0;
-		shift =shift1.shifter(Projectile.outOfScreen, (int)Projectile.vY);
+		//int shift = 0;
+		shift =shift1.shifter(Projectile.points);
 
 		Graphics2D g2d=(Graphics2D)g;
 		super.paintComponent(g);// prevents older objects from staying on the screen
@@ -593,12 +595,11 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		g2d.fillRect(0, 0, getXTerrain(), getYTerrain());// fills the entire background with the sky       
 
 		AffineTransform old = g2d.getTransform();// Saves a copy of the old transform so the rotation can be reset later
-//		Shift shift1 = new Shift(Projectile.outOfScreen, (int)Projectile.vY);
 
 		for (int i = 0; i < drawable.size(); i++) {
 			//System.out.println("Shift = " + shift);
 			if (drawable.get(i) instanceof DayCycle) {//Make sure to draw the sun/moon first.
-				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY() - drawable.get(i).queryImage().getHeight(), null);
+				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY() - drawable.get(i).queryImage().getHeight()+shift, null);
 				nightShiftAmount = ((DayCycle) drawable.get(i)).shiftNightAmount();
 				nightShift = ((DayCycle) drawable.get(i)).shiftNight();
 			}
@@ -610,14 +611,14 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			} 
 			else if (drawable.get(i) instanceof Tank) {// draws player controlled tanks
 				g2d.rotate(((Tank)drawable.get(i)).angle((int) ((int)drawable.get(i).getX() + (int) drawable.get(i).queryImage().getWidth()*.5), terrain), drawable.get(i).getX(), findY(drawable.get(i).getX()) - drawable.get(i).queryImage().getHeight());// this takes a radian. It has to be a very small radian
-				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), findY(drawable.get(i).getX()) - (int) drawable.get(i).queryImage().getHeight(), null);
+				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), findY(drawable.get(i).getX()) - (int) drawable.get(i).queryImage().getHeight()+shift, null);
 				
 				//System.out.println(findY(drawable.get(i).getX()) - 18);
 				
 				//draws the barrel on the tank
 				g2d.setColor(((Tank) drawable.get(i)).getBarrelColor());
 				g2d.rotate(((Tank)drawable.get(i)).getBarrelAngle(), drawable.get(i).getX() + (int) drawable.get(i).queryImage().getWidth()*.5, findY(drawable.get(i).getX()) - (int) drawable.get(i).queryImage().getHeight() );
-				g2d.fillRect(drawable.get(i).getX(), findY(drawable.get(i).getX()) - drawable.get(i).queryImage().getHeight() , (int) (drawable.get(i).queryImage().getWidth()*.5) , 4);
+				g2d.fillRect(drawable.get(i).getX(), findY(drawable.get(i).getX()) - drawable.get(i).queryImage().getHeight()+shift , (int) (drawable.get(i).queryImage().getWidth()*.5) , 4);
 				g2d.setTransform(old);// resets the rotation back to how it was before the painting began
 				//g2d.translate(i,i);
 
@@ -635,9 +636,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			} //else if (drawable.get(i) instanceof standardShell) {// draws the missile
 			//g2d.fillOval(drawable.get(i).getX(), drawable.get(i).getY(), 5, 5);
 			else if (drawable.get(i) instanceof Clouds) {// draws clouds
-				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY(), null);
+				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY()+shift, null);
 			} else {
-				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY() - drawable.get(i).queryImage().getHeight(), null);
+				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY() - drawable.get(i).queryImage().getHeight()+shift, null);
 			}
 
 		}// End of loop to draw objects
@@ -662,12 +663,14 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			}
 			staleTerrainImage = false;
 		}
-		g2d.drawImage(currentTerrainImage, 0, 0, null);
+		g2d.drawImage(currentTerrainImage, 0, 0+shift, null);
 
 		//Draw the projectile in the list
 		projectiles.forEach(p -> {
 			g2d.drawImage(p.queryImage(), p.getX(), p.getY(), null);
 		});
+
+		fuelLabel.setText("Fuel: " + (int) currentTank().getGas());
 
 		//draw night shift
 
@@ -781,6 +784,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 		//Buy weapons
 
+		// Fuel label
+		fuelLabel = new JLabel("Fuel: " + (int)currentTank().getGas());
+		add(fuelLabel, "cell 9 0, alignx center");
 	}
 
 	/**
@@ -832,7 +838,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		remove(powerUp);
 		remove(powerDown);
 		remove(power);
+		remove(fuelLabel);
 		removeAll();
+
 	}
 
 	/**
@@ -847,6 +855,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		add(powerDown, "cell 6 0, alignx center");
 		add(power, "cell 5 0, alignx center");
 		add(fire, "cell 7 0, alignx center");
+		add(fuelLabel, "cell 8 0, alignx center");
 		revalidate();
 		weapons.addItem("Standard Shot");
 		//add(power, "cell 5 0, alignx center");
