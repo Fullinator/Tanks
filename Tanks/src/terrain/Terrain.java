@@ -545,7 +545,10 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		}
 
 
-		if (tankHit || terrainHit) nextPlayerTurn();
+		if (tankHit || terrainHit) {
+			allowHumanInput = true;
+			nextPlayerTurn();
+		}
 
 	}
 
@@ -757,6 +760,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		} else {
 			currentPlayer = currentPlayer + 1;
 		}
+		System.out.println("\t\tAdvancing to player " + currentPlayer);
 
 		//Change the status bar to the information
 		//of the current player
@@ -832,6 +836,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		Tank tank = players.get(currentPlayer - 1);
 		tank.stopAimCannon();
 		tank.stopMotion();
+		allowHumanInput = false;
 
 		Projectile projectile = new Projectile(currentTank(), this);
 		projectiles.add(projectile);
