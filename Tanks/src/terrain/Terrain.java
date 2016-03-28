@@ -530,12 +530,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 					}
 				}
 			}
-			for (Drawable2 object: drawable) {
-				if (object instanceof Cactus  || object instanceof Snowman  && (object.getX() >= shot.getX() - shot.terrainMag && object.getX() <= shot.getX() + shot.terrainMag)) {
-					drawable.remove(object);
-					break;
-				}
-			}
+			terrarinElementRemove(shot);
 			staleTerrainImage = true;
 		
 			//implement gravity
@@ -561,6 +556,16 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		}
 	}
 
+	protected void terrarinElementRemove(Projectile shot) {
+		for (Drawable2 object: drawable) {
+			if ( (object instanceof Cactus  || object instanceof Snowman)  && ((object.getX() + object.queryImage().getWidth()/2) >= (shot.getX() - shot.terrainMag) && (object.getX() + object.queryImage().getWidth()/2) <= (shot.getX() + shot.terrainMag))) {
+				drawable.remove(object);
+				terrarinElementRemove(shot);
+				return;
+			}
+		}
+	}
+	
 	protected void checkEndOfGame() {
 		if (maxPlayers == 1) {
 			playerWin();
