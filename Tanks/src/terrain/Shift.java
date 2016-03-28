@@ -5,10 +5,13 @@ public class Shift {
 * shift = call shift(...);
 * then add shift in pointComponent(......y + shift..)
  */
+	//get this to take just projectile list of shots
+	
 
 	static int Y;
 	static int prevY;
 	static int shift;
+	int x = 10;
 	public Shift(boolean out, int y){
 		prevY = Y;
 		Y = y;
@@ -25,15 +28,21 @@ public class Shift {
 	int shifter(boolean out, int y){
 		if(out){ 				// if out of screen
 			if(y < prevY){
-				return shift-10;		//shifting up
+				System.out.println("OUT UP : y = "+ y + "prevY=" + prevY);
+		//		shift = shift-x;
+				return shift-x;		//shifting up
 			}
 			else if(y > prevY){ 
-				return shift+10;		//shift down
+				System.out.println("OUT down");
+			//	shift = shift+x;
+				return shift+x;		//shift down
 			}
 			else 
+		//		shift = shift;
 				return shift;
 		}
-		else{					//if out of the screen
+		else{					//if not out of the screen
+			System.out.println("IN");
 			return 0;
 		}
 	}

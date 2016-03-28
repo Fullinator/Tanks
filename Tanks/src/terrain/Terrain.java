@@ -508,7 +508,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 					Ticker.removeMethod(shot.getTickerID());
 					tankHit = true;
 					
-					Main.sound.run("impact");   //Impact sound
+								Main.sound.run("impact");   //Impact sound
 					
 					//Explode animation
 					Animation ani = new Animation("explode");
@@ -534,7 +534,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			projectiles.remove(shot);
 			Ticker.removeMethod(shot.getTickerID());
 			//call for damage
-			Main.sound.run("impact");   //Impact sound
+				Main.sound.run("impact");   //Impact sound
 			Animation ani = new Animation("explode"); 
 			Point p = new Point(shot.getX()-64, shot.getY()+64);
 			ani.setLocation(p);
@@ -632,7 +632,12 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 * Calls the super paintComponent to paint on the JPanel
 	 * This also handles all standard terrain drawing and drawables drawing.
 	 */
+	
+	Shift shift1 = new Shift(Projectile.outOfScreen, (int)Projectile.vY);
 	public void paintComponent(Graphics g) {
+		int shift =0;
+		shift =shift1.shifter(Projectile.outOfScreen, (int)Projectile.vY);
+
 		Graphics2D g2d=(Graphics2D)g;
 		super.paintComponent(g);// prevents older objects from staying on the screen
 
@@ -640,9 +645,10 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		g2d.fillRect(0, 0, getXTerrain(), getYTerrain());// fills the entire background with the sky       
 
 		AffineTransform old = g2d.getTransform();// Saves a copy of the old transform so the rotation can be reset later
-		Shift shift1 = new Shift(physics.Projectile.outOfScreen, (int)physics.Projectile.vX);
+//		Shift shift1 = new Shift(Projectile.outOfScreen, (int)Projectile.vY);
 
 		for (int i = 0; i < drawable.size(); i++) {
+			//System.out.println("Shift = " + shift);
 			if (drawable.get(i) instanceof DayCycle) {//Make sure to draw the sun/moon first.
 				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY() - drawable.get(i).queryImage().getHeight(), null);
 				nightShiftAmount = ((DayCycle) drawable.get(i)).shiftNightAmount();
@@ -842,8 +848,10 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		projectiles.add(projectile);
 
 		projectile.setTickerID(Ticker.addMethod(projectile::fire));
+
 				Main.sound.run("shot1");
 //		nextPlayerTurn();
+
 		Animation ani = new Animation("smoke");
 		Point t = new Point(tank.getX(), findY(tank.getX()));
 		ani.setLocation(t);
@@ -943,7 +951,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		quit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-								Main.sound.runLoop("song");
+											Main.sound.runLoop("song");
 				Main.loadMenu();
 				Main.setTickerPause(true);
 			}
@@ -974,7 +982,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		quit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-								Main.sound.runLoop("song");
+											Main.sound.runLoop("song");
 				Main.loadMenu();
 				Main.setTickerPause(true);
 			}
