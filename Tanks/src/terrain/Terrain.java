@@ -1018,12 +1018,20 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		if (!paused && allowHumanInput) {
 
 
-			if (e.getKeyCode() == KeyEvent.VK_PLUS) {
-
+			if (e.getKeyCode() == KeyEvent.VK_PLUS || e.getKeyCode() == KeyEvent.VK_EQUALS) {
+				if (currentTank().getLaunchPower() < currentTank().getHealth()) {
+					currentTank().setLaunchPower(currentTank().getLaunchPower() + 1);
+					power.setText("" + currentTank().getLaunchPower());
+					requestFocusInWindow();
+				}
 			}
 
 			if (e.getKeyCode() == KeyEvent.VK_MINUS) {
-
+				if (currentTank().getLaunchPower() > 0) {
+					currentTank().setLaunchPower(currentTank().getLaunchPower() - 1);
+					power.setText("" + currentTank().getLaunchPower());
+					requestFocusInWindow();
+				}
 			}
 
 			if (e.getKeyCode() == KeyEvent.VK_TAB) {
