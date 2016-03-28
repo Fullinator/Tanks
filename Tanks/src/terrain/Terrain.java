@@ -23,6 +23,7 @@ import javax.swing.UIManager;
 
 import physics.Projectile;
 import physics.Wind;
+import physics.terrainDestroyer;
 import Jama.Matrix;
 import Main.Main;
 import Main.Ticker;
@@ -769,7 +770,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		weapons.addActionListener(e -> {
 			this.requestFocus();
 		});
-		weapons.addItem("test");
+		weapons.addItem("Terrain Destroyer");
 
 		add(weapons, "cell 7 0, alignx center");
 
@@ -791,8 +792,23 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		tank.stopMotion();
 		allowHumanInput = false;
 
-		Projectile projectile = new Projectile(currentTank(), this);
-		projectiles.add(projectile);
+		String weapon = (String) weapons.getSelectedItem();
+		Projectile Projectile;
+		
+		switch (weapon) {
+		case "Standard Shot": 
+			projectile = new Projectile(currentTank(), this);
+			projectiles.add(projectile);
+			break;
+			
+		case "Terrain Destroyer":
+			projectile = new terrainDestroyer(currentTank(), this);
+			projectiles.add(projectile);
+			break;
+		}
+		
+		
+
 
 		projectile.setTickerID(Ticker.addMethod(projectile::fire));
 
