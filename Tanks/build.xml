@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tanks" default="all">
+  
+  
+  <property file="tanks.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="700m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/*.rbc/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/RCS/**"/>
+    <exclude name="**/SCCS/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/rcs/**"/>
+    <exclude name="**/vssver.scc/**"/>
+    <exclude name="**/vssver2.scc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.war"/>
+    <include name="*.swc"/>
+    <include name="*.apk"/>
+    <include name="*.zip"/>
+    <include name="*.egg"/>
+    <include name="*.ane"/>
+    <include name="*.jar"/>
+    <include name="*.ear"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <exclude name="**/?*.java"/>
+    <exclude name="**/?*.form"/>
+    <exclude name="**/?*.class"/>
+    <exclude name="**/?*.groovy"/>
+    <exclude name="**/?*.scala"/>
+    <exclude name="**/?*.flex"/>
+    <exclude name="**/?*.kt"/>
+    <exclude name="**/?*.clj"/>
+    <exclude name="**/?*.aj"/>
+  </patternset>
+  
+  
+  <!-- Project Libraries -->
+  
+  <path id="library.junit-4.12.classpath">
+    <pathelement location="${idea.home}/lib/hamcrest-core-1.3.jar"/>
+    <pathelement location="${idea.home}/lib/junit-4.12.jar"/>
+    <pathelement location="${idea.home}/lib/junit.jar"/>
+  </path>
+  
+  <path id="library.lib.classpath">
+    <pathelement location="${basedir}/lib/Jama-1.0.3.jar"/>
+    <pathelement location="${basedir}/lib/forms-1.3.0.jar"/>
+    <pathelement location="${basedir}/lib/miglayout-4.0-swing.jar"/>
+  </path>
+  
+  
+  <!-- Global Libraries -->
+  
+  <!-- Modules -->
+  
+  
+  <!-- Module Tanks -->
+  
+  <dirname property="module.tanks.basedir" file="${ant.file}"/>
+  
+  
+  
+  <property name="compiler.args.tanks" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="tanks.output.dir" value="${module.tanks.basedir}/out/production/Tanks"/>
+  <property name="tanks.testoutput.dir" value="${module.tanks.basedir}/out/test/Tanks"/>
+  
+  <path id="tanks.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="tanks.module.production.classpath">
+    <path refid="library.lib.classpath"/>
+    <path refid="library.junit-4.12.classpath"/>
+  </path>
+  
+  <path id="tanks.runtime.production.module.classpath">
+    <pathelement location="${tanks.output.dir}"/>
+    <path refid="library.lib.classpath"/>
+    <path refid="library.junit-4.12.classpath"/>
+  </path>
+  
+  <path id="tanks.module.classpath">
+    <pathelement location="${tanks.output.dir}"/>
+    <path refid="library.lib.classpath"/>
+    <path refid="library.junit-4.12.classpath"/>
+  </path>
+  
+  <path id="tanks.runtime.module.classpath">
+    <pathelement location="${tanks.testoutput.dir}"/>
+    <pathelement location="${tanks.output.dir}"/>
+    <path refid="library.lib.classpath"/>
+    <path refid="library.junit-4.12.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.tanks">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.tanks">
+    <patternset refid="excluded.from.module.tanks"/>
+  </patternset>
+  
+  <path id="tanks.module.sourcepath">
+    <dirset dir="${module.tanks.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.tanks" depends="compile.module.tanks.production,compile.module.tanks.tests" description="Compile module Tanks"/>
+  
+  <target name="compile.module.tanks.production" description="Compile module Tanks; production classes">
+    <mkdir dir="${tanks.output.dir}"/>
+    <javac destdir="${tanks.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
+      <compilerarg line="${compiler.args.tanks}"/>
+      <bootclasspath refid="tanks.module.bootclasspath"/>
+      <classpath refid="tanks.module.production.classpath"/>
+      <src refid="tanks.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.tanks"/>
+    </javac>
+    
+    <copy todir="${tanks.output.dir}">
+      <fileset dir="${module.tanks.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.tanks.tests" depends="compile.module.tanks.production" description="compile module Tanks; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.tanks" description="cleanup module">
+    <delete dir="${tanks.output.dir}"/>
+    <delete dir="${tanks.testoutput.dir}"/>
+  </target>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.tanks" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, compile.module.tanks" description="build all modules"/>
+  
+  <target name="init.artifacts">
+    <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
+    <property name="artifact.output.tanks:jar" value="${basedir}/out/artifacts/Tanks_jar"/>
+    <mkdir dir="${artifacts.temp.dir}"/>
+    <property name="temp.jar.path.Tanks.jar" value="${artifacts.temp.dir}/Tanks.jar"/>
+  </target>
+  
+  <target name="artifact.tanks:jar" depends="init.artifacts, compile.module.tanks" description="Build &#39;Tanks:jar&#39; artifact">
+    <property name="artifact.temp.output.tanks:jar" value="${artifacts.temp.dir}/Tanks_jar"/>
+    <mkdir dir="${artifact.temp.output.tanks:jar}"/>
+    <jar destfile="${temp.jar.path.Tanks.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+      <zipfileset dir="${tanks.output.dir}"/>
+      <zipfileset src="${idea.home}/lib/junit-4.12.jar"/>
+      <zipfileset src="${idea.home}/lib/junit.jar"/>
+      <zipfileset src="${basedir}/lib/miglayout-4.0-swing.jar"/>
+      <zipfileset src="${basedir}/lib/Jama-1.0.3.jar"/>
+      <zipfileset src="${basedir}/lib/forms-1.3.0.jar"/>
+    </jar>
+    <copy file="${temp.jar.path.Tanks.jar}" tofile="${artifact.temp.output.tanks:jar}/Tanks.jar"/>
+  </target>
+  
+  <target name="build.all.artifacts" depends="artifact.tanks:jar" description="Build all artifacts">
+    <mkdir dir="${artifact.output.tanks:jar}"/>
+    <copy todir="${artifact.output.tanks:jar}">
+      <fileset dir="${artifact.temp.output.tanks:jar}"/>
+    </copy>
+    
+    <!-- Delete temporary files -->
+    <delete dir="${artifacts.temp.dir}"/>
+  </target>
+  
+  <target name="all" depends="build.modules, build.all.artifacts" description="build all"/>
+</project>
