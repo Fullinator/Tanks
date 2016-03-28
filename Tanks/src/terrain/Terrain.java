@@ -13,10 +13,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -526,10 +523,13 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			damage(shot, tankHit, radius);
 		}
 
+		boolean terrainHit = false;
+
 		//check against terrain
 		if (shot.getX() > xLength || shot.getX() < 0 || shot.getY() > yLength) {
 			projectiles.remove(shot);
 			Ticker.removeMethod(shot.getTickerID());
+			terrainHit = true;
 		} else if (shot.getY() >= 0 && terrain[shot.getX()][shot.getY()] > 0) {
 			projectiles.remove(shot);
 			Ticker.removeMethod(shot.getTickerID());
@@ -541,9 +541,11 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			drawable.add(ani);
 
 			damage(shot, false, radius);
+			terrainHit = true;
 		}
 
 
+		if (tankHit || terrainHit) nextPlayerTurn();
 
 	}
 
@@ -641,6 +643,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 		AffineTransform old = g2d.getTransform();// Saves a copy of the old transform so the rotation can be reset later
 //		Shift shift1 = new Shift(Projectile.outOfScreen, (int)Projectile.vY);
+
 		for (int i = 0; i < drawable.size(); i++) {
 			//System.out.println("Shift = " + shift);
 			if (drawable.get(i) instanceof DayCycle) {//Make sure to draw the sun/moon first.
@@ -753,6 +756,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 * Sets the turn to the next player
 	 */
 	public void nextPlayerTurn() {
+		System.out.println("nextPlayerTurn() --> " + System.currentTimeMillis());
+//		Thread.dumpStack();
 		if (currentPlayer + 1 > maxPlayers) {
 			currentPlayer = 1;
 		} else {
@@ -765,9 +770,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		playerName.setText(currentTank().getName());
 		playerName.setForeground(currentTank().getBarrelColor());
 
-		if (players.get(currentPlayer - 1) instanceof AITank) {
+		if (currentTank() instanceof AITank) {
 			allowHumanInput = false;
-			new Thread(((AITank) players.get(currentPlayer - 1))::takeTurn).start();
+			((AITank) currentTank()).takeTurn();
 		} else {
 			allowHumanInput = true;
 		}
@@ -838,8 +843,10 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		projectiles.add(projectile);
 
 		projectile.setTickerID(Ticker.addMethod(projectile::fire));
-					Main.sound.run("shot1");
-		nextPlayerTurn();
+
+				Main.sound.run("shot1");
+//		nextPlayerTurn();
+
 		Animation ani = new Animation("smoke");
 		Point t = new Point(tank.getX(), findY(tank.getX()));
 		ani.setLocation(t);
@@ -1019,12 +1026,20 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		if (!paused && allowHumanInput) {
 
 
-			if (e.getKeyCode() == KeyEvent.VK_PLUS) {
-
+			if (e.getKeyCode() == KeyEvent.VK_PLUS || e.getKeyCode() == KeyEvent.VK_EQUALS) {
+				if (currentTank().getLaunchPower() < currentTank().getHealth()) {
+					currentTank().setLaunchPower(currentTank().getLaunchPower() + 1);
+					power.setText("" + currentTank().getLaunchPower());
+					requestFocusInWindow();
+				}
 			}
 
 			if (e.getKeyCode() == KeyEvent.VK_MINUS) {
-
+				if (currentTank().getLaunchPower() > 0) {
+					currentTank().setLaunchPower(currentTank().getLaunchPower() - 1);
+					power.setText("" + currentTank().getLaunchPower());
+					requestFocusInWindow();
+				}
 			}
 
 			if (e.getKeyCode() == KeyEvent.VK_TAB) {

@@ -56,7 +56,7 @@ public class UpButton extends JButton implements ActionListener {
 		try {
 			this.setFocusable(false);
 			if (!terrain.getGameStatus()) {
-				if ( terrain.currentTank().getLaunchPower() < 80) {
+				if ( terrain.currentTank().getLaunchPower() < terrain.currentTank().getHealth()) {
 					terrain.currentTank().setLaunchPower(terrain.currentTank().getLaunchPower() + 1);
 					terrain.power.setText("" + terrain.currentTank().getLaunchPower());
 					terrain.requestFocusInWindow();
