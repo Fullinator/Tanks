@@ -23,6 +23,7 @@ import javax.swing.UIManager;
 
 import physics.Projectile;
 import physics.Wind;
+import physics.terrainDestroyer;
 import Jama.Matrix;
 import Main.Main;
 import Main.Ticker;
@@ -80,6 +81,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	protected JButton quit;
 	protected JButton unPause;
 	protected FireButton fire;
+	protected JLabel fuelLabel;
 	protected boolean tabbed = false;
 	Wind wind;
 	Projectile projectile;
@@ -424,64 +426,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		}
 	}
 
-	/**
-	 * Removes a circle from the boolean terrain array
-	 *
-	 * @param x X coordinate of the center of the hole
-	 * @param y Y coordinate of the center of the hole
-	 * @param mag magnitude of the hole 
-	 *
-	 */
-	/*
-	public void damage(int x, int y, int mag){
-
-		//create the hole
-		for(int i = y + mag; i > y - mag; i -= 1){
-			int low = (int)(-Math.sqrt(Math.pow(mag, 2) - Math.pow(i - y, 2)) + x);// Finds the lower x coordinate for the given y coordinate
-			int high = (int)(Math.sqrt(Math.pow(mag, 2) - Math.pow(i - y, 2)) + x);// Finds the upper x coordiante for the given y corrdinate
-			for(int j = low; j < high; j += 1){// loops from the lower x to the upper x
-				if(j >= 0 && j < xLength && i >= 0 && i < yLength){
-					terrain[j][i] = 0;//sets points equal to false
-				}
-			}
-		}
-
-		//implement gravity
-		for(int k = 0; k < yLength; k += 1){
-			for(int i = x - mag; i < x + mag; i += 1){
-				for(int j = y + mag; j > 0; j -= 1){
-					if(j + 1 < yLength && j > 0 && i > 0 && i < xLength){
-						if (terrain[i][j] > 0 && !(terrain[i][j + 1] > 0)){
-							terrain[i][j+1] = terrain[i][j];
-							terrain[i][j] = 0;
-							//repaint();
-						}
-					}
-				}
-			}
-		}
-
-		//damage any tanks if necessary
-		for(int k = 0; k < drawable.size(); k++){
-			if(drawable.get(k) instanceof manualTank || drawable.get(k) instanceof AITank){
-				if(Math.abs((drawable.get(k).getX() + 19) - getX()) <= 19){
-					players.get(k).setHealth(players.get(k).getHealth() - 3);
-					if(players.get(k).getHealth() <= 0){
-						drawable.remove(k);
-						k -= 1;
-					}
-				}
-				else if(Math.abs((drawable.get(k).getX() + 19) - getX()) <= 39){
-					players.get(k).setHealth(players.get(k).getHealth() - 1);
-					if(players.get(k).getHealth() <= 0){
-						drawable.remove(k);
-						k -= 1;
-					}
-				}
-			}
-		}
-	}//end of the remove method
-	 */
 
 	public void collisionDetection(Projectile shot) {
 		int radius = 0;//radius around tank in pixels to check collision
@@ -591,12 +535,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 					}
 				}
 			}
-			for (Drawable2 object: drawable) {
-				if (object instanceof Cactus  || object instanceof Snowman  && (object.getX() >= shot.getX() - shot.terrainMag && object.getX() <= shot.getX() + shot.terrainMag)) {
-					drawable.remove(object);
-					break;
-				}
-			}
+			terrarinElementRemove(shot);
 			staleTerrainImage = true;
 		
 			//implement gravity
@@ -622,6 +561,16 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		}
 	}
 
+	protected void terrarinElementRemove(Projectile shot) {
+		for (Drawable2 object: drawable) {
+			if ( (object instanceof Cactus  || object instanceof Snowman)  && ((object.getX() + object.queryImage().getWidth()/2) >= (shot.getX() - shot.terrainMag) && (object.getX() + object.queryImage().getWidth()/2) <= (shot.getX() + shot.terrainMag))) {
+				drawable.remove(object);
+				terrarinElementRemove(shot);
+				return;
+			}
+		}
+	}
+	
 	protected void checkEndOfGame() {
 		if (maxPlayers == 1) {
 			playerWin();
@@ -633,10 +582,11 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 * This also handles all standard terrain drawing and drawables drawing.
 	 */
 	
-	Shift shift1 = new Shift(Projectile.outOfScreen, (int)Projectile.vY);
+	Shift shift1 = new Shift(Projectile.points);
+	int shift = 0;
 	public void paintComponent(Graphics g) {
-		int shift =0;
-		shift =shift1.shifter(Projectile.outOfScreen, (int)Projectile.vY);
+		//int shift = 0;
+		shift =shift1.shifter(Projectile.points);
 
 		Graphics2D g2d=(Graphics2D)g;
 		super.paintComponent(g);// prevents older objects from staying on the screen
@@ -645,12 +595,11 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		g2d.fillRect(0, 0, getXTerrain(), getYTerrain());// fills the entire background with the sky       
 
 		AffineTransform old = g2d.getTransform();// Saves a copy of the old transform so the rotation can be reset later
-//		Shift shift1 = new Shift(Projectile.outOfScreen, (int)Projectile.vY);
 
 		for (int i = 0; i < drawable.size(); i++) {
 			//System.out.println("Shift = " + shift);
 			if (drawable.get(i) instanceof DayCycle) {//Make sure to draw the sun/moon first.
-				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY() - drawable.get(i).queryImage().getHeight(), null);
+				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY() - drawable.get(i).queryImage().getHeight()+shift, null);
 				nightShiftAmount = ((DayCycle) drawable.get(i)).shiftNightAmount();
 				nightShift = ((DayCycle) drawable.get(i)).shiftNight();
 			}
@@ -662,14 +611,14 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			} 
 			else if (drawable.get(i) instanceof Tank) {// draws player controlled tanks
 				g2d.rotate(((Tank)drawable.get(i)).angle((int) ((int)drawable.get(i).getX() + (int) drawable.get(i).queryImage().getWidth()*.5), terrain), drawable.get(i).getX(), findY(drawable.get(i).getX()) - drawable.get(i).queryImage().getHeight());// this takes a radian. It has to be a very small radian
-				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), findY(drawable.get(i).getX()) - (int) drawable.get(i).queryImage().getHeight(), null);
+				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), findY(drawable.get(i).getX()) - (int) drawable.get(i).queryImage().getHeight()+shift, null);
 				
 				//System.out.println(findY(drawable.get(i).getX()) - 18);
 				
 				//draws the barrel on the tank
 				g2d.setColor(((Tank) drawable.get(i)).getBarrelColor());
 				g2d.rotate(((Tank)drawable.get(i)).getBarrelAngle(), drawable.get(i).getX() + (int) drawable.get(i).queryImage().getWidth()*.5, findY(drawable.get(i).getX()) - (int) drawable.get(i).queryImage().getHeight() );
-				g2d.fillRect(drawable.get(i).getX(), findY(drawable.get(i).getX()) - drawable.get(i).queryImage().getHeight() , (int) (drawable.get(i).queryImage().getWidth()*.5) , 4);
+				g2d.fillRect(drawable.get(i).getX(), findY(drawable.get(i).getX()) - drawable.get(i).queryImage().getHeight()+shift , (int) (drawable.get(i).queryImage().getWidth()*.5) , 4);
 				g2d.setTransform(old);// resets the rotation back to how it was before the painting began
 				//g2d.translate(i,i);
 
@@ -687,9 +636,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			} //else if (drawable.get(i) instanceof standardShell) {// draws the missile
 			//g2d.fillOval(drawable.get(i).getX(), drawable.get(i).getY(), 5, 5);
 			else if (drawable.get(i) instanceof Clouds) {// draws clouds
-				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY(), null);
+				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY()+shift, null);
 			} else {
-				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY() - drawable.get(i).queryImage().getHeight(), null);
+				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY() - drawable.get(i).queryImage().getHeight()+shift, null);
 			}
 
 		}// End of loop to draw objects
@@ -714,12 +663,14 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			}
 			staleTerrainImage = false;
 		}
-		g2d.drawImage(currentTerrainImage, 0, 0, null);
+		g2d.drawImage(currentTerrainImage, 0, 0+shift, null);
 
 		//Draw the projectile in the list
 		projectiles.forEach(p -> {
 			g2d.drawImage(p.queryImage(), p.getX(), p.getY(), null);
 		});
+
+		fuelLabel.setText("Fuel: " + (int) currentTank().getGas());
 
 		//draw night shift
 
@@ -822,7 +773,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		weapons.addActionListener(e -> {
 			this.requestFocus();
 		});
-		weapons.addItem("test");
+		weapons.addItem("Terrain Destroyer");
 
 		add(weapons, "cell 7 0, alignx center");
 
@@ -833,6 +784,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 		//Buy weapons
 
+		// Fuel label
+		fuelLabel = new JLabel("Fuel: " + (int)currentTank().getGas());
+		add(fuelLabel, "cell 9 0, alignx center");
 	}
 
 	/**
@@ -844,8 +798,23 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		tank.stopMotion();
 		allowHumanInput = false;
 
-		Projectile projectile = new Projectile(currentTank(), this);
-		projectiles.add(projectile);
+		String weapon = (String) weapons.getSelectedItem();
+		Projectile Projectile;
+		
+		switch (weapon) {
+		case "Standard Shot": 
+			projectile = new Projectile(currentTank(), this);
+			projectiles.add(projectile);
+			break;
+			
+		case "Terrain Destroyer":
+			projectile = new terrainDestroyer(currentTank(), this);
+			projectiles.add(projectile);
+			break;
+		}
+		
+		
+
 
 		projectile.setTickerID(Ticker.addMethod(projectile::fire));
 
@@ -869,7 +838,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		remove(powerUp);
 		remove(powerDown);
 		remove(power);
+		remove(fuelLabel);
 		removeAll();
+
 	}
 
 	/**
@@ -884,6 +855,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		add(powerDown, "cell 6 0, alignx center");
 		add(power, "cell 5 0, alignx center");
 		add(fire, "cell 7 0, alignx center");
+		add(fuelLabel, "cell 8 0, alignx center");
 		revalidate();
 		weapons.addItem("Standard Shot");
 		//add(power, "cell 5 0, alignx center");
