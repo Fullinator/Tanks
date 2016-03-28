@@ -27,9 +27,11 @@ public  class Projectile implements Drawable2 {
 	double time;
 	double mass;
 	Tank tank;
+	public double barrelAngle;
 	private BufferedImage image;
 	public static boolean outOfScreen;
 	private int tickerID;
+	public double tankAngle;
 
 	public int damage = 1;
 	public double MaxHeight;
@@ -51,12 +53,13 @@ public  class Projectile implements Drawable2 {
 		double tankX = tank.getX();
 		double tankY = terrain.findY((int)tankX);
 		g = 1;
-		double tankAngle = tank.angle((int)intX, terrain.getTerrain());
+		tankAngle = tank.angle((int)intX, terrain.getTerrain());
 		double tankHeight = tank.queryImage().getHeight();
 		double tankWidth = tank.queryImage().getWidth();
 		double innerTankAngle = Math.atan((terrain.findY(tank.getX())-15)/(tank.getX()+20));
 		double tankH = Math.pow(Math.pow(tankHeight,2) + Math.pow(tankWidth,2), .5);
-		angle = tank.getBarrelAngle() + tankAngle;
+		barrelAngle = tank.getBarrelAngle();
+		angle = barrelAngle + tankAngle;
 
 //		System.out.println("Angle:" + angle);
 		
@@ -81,20 +84,21 @@ public  class Projectile implements Drawable2 {
 //		System.out.println("X:" + intX);
 
 		//System.out.println("Angle:" + angle);
-		intX = .5*tank.queryImage().getWidth() + tank.getX()- 20*Math.cos(angle);
-		intY = terrain.findY(tank.getX())- 20*Math.sin(angle)- tank.queryImage().getHeight();
+		intX = .5*tank.queryImage().getWidth() + tank.getX()- 20*Math.cos(barrelAngle);
+		intY = terrain.findY(tank.getX())- tank.queryImage().getHeight()- 20*Math.sin(barrelAngle);
+		
+		//System.out.println("X:" + intX);
+
+
+		//System.out.println("Y:" + intY);
 		if(tankAngle < Math.PI/2){
-			intY += 20*Math.sin( tankAngle);
+			intY -= 20*Math.sin( tankAngle);
 			intX += 20*Math.cos( tankAngle);
 		}
 		if(tankAngle > -Math.PI/2){
 			intY -= 20*Math.sin(tankAngle);
 			intX -= 20*Math.cos( tankAngle);
 		}
-		//System.out.println("X:" + intX);
-
-
-		//System.out.println("Y:" + intY);
 		x0 = intX;
 		y0 = intY;
 		//windSpeed= wind.getWindSpeed();
@@ -134,6 +138,7 @@ public  class Projectile implements Drawable2 {
 		this.power = power/mass;
 		vX = (double) this.power * Math.cos(angle+ Math.PI);
 		vY = (double) this.power* Math.sin(angle+ Math.PI);
+		
 		MaxHeight = (vY*vY)/2;
 	}
 
@@ -155,6 +160,7 @@ public  class Projectile implements Drawable2 {
 	}
 
 	public double[] fire(long time, boolean collide) {
+		
 		double Ttime = (time * Math.pow(10,-7.75));
 		this.time = Ttime + this.time;
 		//get time in seconds

@@ -167,16 +167,16 @@ public abstract class Tank implements Drawable2 {
 	}
 
 	private void moveTank(long elapsedNanos) {
-		double sub =(50*friction*((double) elapsedNanos / 1000000000)*Math.sin(tankAngle));
+		double sub =(70*friction*((double) elapsedNanos / 1000000000)*Math.sin(tankAngle));
 		double speed = friction * 100.0 * ((double) elapsedNanos / 1000000000);
 		System.out.print("\t\t\t\t\t\t\t\tspeed: " + speed);
 		double y2 = 0;
 		double y1 = Main.getTerrain().findY((int) location.getX());
 		if (goLeft){
-			 y2 = Main.getTerrain().findY((int) location.getX() - 15);
+			 y2 = Main.getTerrain().findY((int) location.getX() - 5);
 		}
 		else{
-			y2 = Main.getTerrain().findY((int) location.getX() + 15);
+			y2 = Main.getTerrain().findY((int) location.getX() + 5);
 		}
 		double diff = y2 - y1;
 	
