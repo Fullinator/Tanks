@@ -429,7 +429,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 
 	public void collisionDetection(Projectile shot) {
-		int radius = 0;//radius around tank in pixels to check collision
+		int radius = 15;//radius around tank in pixels to check collision
 		boolean tankHit = false;
 		//check against all tanks
 		for (Tank t : players) {
