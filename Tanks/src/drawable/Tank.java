@@ -29,6 +29,7 @@ public abstract class Tank implements Drawable2 {
 	private double cannonTarget;
 	private Consumer<Boolean> motionCompleteCallback;
 	private Consumer<Boolean> cannonCompleteCallback;
+	private String projectileType = "Standard Shot";
 
 	protected Color barrelColor;
 
@@ -120,14 +121,16 @@ public abstract class Tank implements Drawable2 {
 
 	public void startMotion(boolean goLeft) {
 		this.goLeft = goLeft;
-		if (motionTickerID == -1) motionTickerID = Ticker.addMethod(this::moveTank);
-		Main.sound.runLoop("movement");
+		if (gas > 0) {
+			if (motionTickerID == -1) motionTickerID = Ticker.addMethod(this::moveTank);
+			Main.sound.runLoop("movement");
+		}
 	}
 
 	public void startMotion(int target, Consumer<Boolean> callback, double dxGiveUp) {
 		motionTarget = Math.max(0, Math.min(target, Main.xLength - queryImage().getWidth()));
 		this.minSpeed = dxGiveUp;
-		if (motionTickerID == -1) {
+		if (motionTickerID == -1 && gas > 0) {
 			motionTickerID = Ticker.addMethod(this::moveTankTarget);
 			motionCompleteCallback = callback;
 			goLeft = target < location.getX();
@@ -168,17 +171,24 @@ public abstract class Tank implements Drawable2 {
 	}
 
 	private void moveTank(long elapsedNanos) {
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> origin/master
 		if (gas <= 0) {
 			lastSpeed = 0;
+			stopMotion();
 			return;
 		}
 		double sub =(50*friction*((double) elapsedNanos / 1000000000)*Math.sin(tankAngle));
 
+<<<<<<< HEAD
 		gas -= (double) elapsedNanos / 100000000 + Math.abs(sub);
 		System.out.println(gas);
 
+=======
+>>>>>>> origin/master
 		double speed = friction * 100.0 * ((double) elapsedNanos / 1000000000);
 		System.out.print("\t\t\t\t\t\t\t\tspeed: " + speed);
 		double y2 = 0;
@@ -323,5 +333,13 @@ public abstract class Tank implements Drawable2 {
 
 	public Color getBarrelColor() {
 		return barrelColor;
+	}
+
+	public String getProjectileType() {
+		return projectileType;
+	}
+
+	public void setProjectileType(String projectileType) {
+		this.projectileType = projectileType;
 	}
 }

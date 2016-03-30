@@ -22,8 +22,9 @@ import javax.swing.JProgressBar;
 import javax.swing.UIManager;
 
 import physics.Projectile;
+import physics.RiskTaker;
 import physics.Wind;
-import physics.terrainDestroyer;
+import physics.TerrainDestroyer;
 import Jama.Matrix;
 import Main.Main;
 import Main.Ticker;
@@ -428,16 +429,13 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 
 	public void collisionDetection(Projectile shot) {
-		int radius = 0;//radius around tank in pixels to check collision
+		int radius = 15;//radius around tank in pixels to check collision
 		boolean tankHit = false;
 		//check against all tanks
 		for (Tank t : players) {
 			//We need to skip the outbound shot on the current tank
 
 			//find center of tank
-			//Point center = new Point(t.getX() + 20, findY(t.getX() + 10) - (t.queryImage().getHeight()) );
-			//g2d.rotate(((Tank)drawable.get(i)).angle(drawable.get(i).getX() + 20, terrain), drawable.get(i).getX(), findY(drawable.get(i).getX()));// this takes a radian. It has to be a very small radian
-
 			double angle = t.angle(t.getX() + 20 , terrain);
 			int length = (int) (t.queryImage().getWidth() * Math.cos(angle));
 			Point center = new Point(t.getX() + (length/2), findY(t.getX() + (length/2)) - (t.queryImage().getHeight() /2) );
@@ -451,8 +449,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 					projectiles.remove(shot);
 					Ticker.removeMethod(shot.getTickerID());
 					tankHit = true;
-					
-								Main.sound.run("impact");   //Impact sound
+					Main.sound.run("impact");   //Impact sound
 					
 					//Explode animation
 					Animation ani = new Animation("explode");
@@ -466,7 +463,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		if (tankHit) {
 			damage(shot, tankHit, radius);
 		}
-
+		
 		boolean terrainHit = false;
 
 		//check against terrain
@@ -500,6 +497,16 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		//check which shot it is so we can tell what kind of damage
 		//For now we only have one kind
 
+		if (!tank && shot instanceof RiskTaker) {//checks to see if the risk of the RiskTaker projectile was mitigtated
+			currentTank().setHealth((currentTank().getHealth() - ((RiskTaker)shot).riskDamage));
+			if (currentTank().getHealth() <= 0) {
+				players.remove(currentTank());
+				drawable.remove(currentTank());
+				maxPlayers = maxPlayers - 1;
+				checkEndOfGame();
+			}
+		}
+		
 		if (tank) {//damage tank first
 			for (Tank t : players) {
 				//check if our shot is within a hit of tank
@@ -774,6 +781,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			this.requestFocus();
 		});
 		weapons.addItem("Terrain Destroyer");
+		weapons.addItem("Risk Taker");
 
 		add(weapons, "cell 7 0, alignx center");
 
@@ -808,7 +816,12 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			break;
 			
 		case "Terrain Destroyer":
-			projectile = new terrainDestroyer(currentTank(), this);
+			projectile = new TerrainDestroyer(currentTank(), this);
+			projectiles.add(projectile);
+			break;
+			
+		case "Risk Taker":
+			projectile = new RiskTaker(currentTank(), this);
 			projectiles.add(projectile);
 			break;
 		}
