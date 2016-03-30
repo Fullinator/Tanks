@@ -84,21 +84,29 @@ public  class Projectile implements Drawable2 {
 //		System.out.println("X:" + intX);
 
 		//System.out.println("Angle:" + angle);
-		intX = .5*tank.queryImage().getWidth() + tank.getX()- 20*Math.cos(barrelAngle);
-		intY = terrain.findY(tank.getX())- tank.queryImage().getHeight()- 20*Math.sin(barrelAngle);
+		intX = .5*tank.queryImage().getWidth() + tank.getX();
+		intY = terrain.findY(tank.getX())- tank.queryImage().getHeight();
+		double[] point = getEndBarrel(intX,intY,angle);
+		intX = point[0];
+		intY = point[1];
+		System.out.println("PI: " + Math.PI);
+		System.out.println("ang: " + angle);
+		System.out.println("X: " + intX);
+		System.out.println("y: " + intY);
+		
 		
 		//System.out.println("X:" + intX);
 
 
 		//System.out.println("Y:" + intY);
-		if(tankAngle < Math.PI/2){
-			intY -= 20*Math.sin( tankAngle);
-			intX += 20*Math.cos( tankAngle);
-		}
-		if(tankAngle > -Math.PI/2){
-			intY -= 20*Math.sin(tankAngle);
-			intX -= 20*Math.cos( tankAngle);
-		}
+//		if(tankAngle < Math.PI/2){
+//			intY -= 20*Math.sin( tankAngle);
+//			intX += 20*Math.cos( tankAngle);
+//		}
+//		if(tankAngle > -Math.PI/2){
+//			intY -= 20*Math.sin(tankAngle);
+//			intX -= 20*Math.cos( tankAngle);
+//		}
 		x0 = intX;
 		y0 = intY;
 		//windSpeed= wind.getWindSpeed();
@@ -202,6 +210,20 @@ public  class Projectile implements Drawable2 {
 	@Override
 	public int getY() {
 		return (int) points[1];
+	}
+	
+	public double[] getEndBarrel(double x, double y, double ang){
+		x += 20*Math.cos(ang - Math.PI);
+		y -= 20*Math.sin(ang);
+		if(ang > Math.PI){
+			y = y + 4;
+		}
+		if(ang < 0){
+			y = y + 4;
+		}
+		double[] newPoint = {x,y};
+		return newPoint;
+		
 	}
 
 	@Override

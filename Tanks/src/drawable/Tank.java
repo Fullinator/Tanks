@@ -5,6 +5,7 @@ import Main.Ticker;
 import terrain.Terrain;
 
 import javax.imageio.ImageIO;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -167,17 +168,17 @@ public abstract class Tank implements Drawable2 {
 	}
 
 	private void moveTank(long elapsedNanos) {
-<<<<<<< HEAD
-		double sub =(70*friction*((double) elapsedNanos / 1000000000)*Math.sin(tankAngle));
-=======
+
+
 		if (gas <= 0) {
 			lastSpeed = 0;
 			return;
 		}
-		gas -= (double) elapsedNanos / 100000000;
-		System.out.println(gas);
 		double sub =(50*friction*((double) elapsedNanos / 1000000000)*Math.sin(tankAngle));
->>>>>>> origin/master
+
+		gas -= (double) elapsedNanos / 100000000 + Math.abs(sub);
+		System.out.println(gas);
+
 		double speed = friction * 100.0 * ((double) elapsedNanos / 1000000000);
 		System.out.print("\t\t\t\t\t\t\t\tspeed: " + speed);
 		double y2 = 0;
@@ -309,7 +310,7 @@ public abstract class Tank implements Drawable2 {
 			return 0;
 		}
 		
-		double angle = Math.atan((y2 - y1) / -15.0);
+		double angle = Math.atan((y2 - y1) / -20.0);
 		tankAngle = angle;
 		return angle;
 	}//end of angle method
