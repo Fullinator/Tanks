@@ -5,7 +5,7 @@ import terrain.Terrain;
 
 public class RiskTaker extends Projectile{
 
-	public int riskDamage = 25;
+	public int riskDamage = 50;
 	
 	public RiskTaker(Tank tank,Terrain terrain) {
 			super(tank,terrain);
