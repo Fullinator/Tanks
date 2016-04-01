@@ -30,7 +30,6 @@ public abstract class Tank implements Drawable2 {
 	private Consumer<Boolean> motionCompleteCallback;
 	private Consumer<Boolean> cannonCompleteCallback;
 	private String projectileType = "Standard Shot";
-
 	protected Color barrelColor;
 
 	public Tank() {
