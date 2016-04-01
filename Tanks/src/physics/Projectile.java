@@ -215,12 +215,13 @@ public  class Projectile implements Drawable2 {
 	public double[] getEndBarrel(double x, double y, double ang){
 		x += 20*Math.cos(ang - Math.PI);
 		y -= 20*Math.sin(ang);
-		if(ang > Math.PI){
+		if(ang > Math.PI ||ang < 0 ){
 			y = y + 4;
 		}
-		if(ang < 0){
-			y = y + 4;
+		else{
+			y = y + 1;
 		}
+		
 		double[] newPoint = {x,y};
 		return newPoint;
 		
