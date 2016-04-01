@@ -171,26 +171,14 @@ public abstract class Tank implements Drawable2 {
 	}
 
 	private void moveTank(long elapsedNanos) {
-<<<<<<< HEAD
-
-
-=======
->>>>>>> origin/master
 		if (gas <= 0) {
 			lastSpeed = 0;
 			stopMotion();
 			return;
 		}
+		gas -= (double) elapsedNanos / 100000000;
 		double sub =(50*friction*((double) elapsedNanos / 1000000000)*Math.sin(tankAngle));
-
-<<<<<<< HEAD
-		gas -= (double) elapsedNanos / 100000000 + Math.abs(sub);
-		System.out.println(gas);
-
-=======
->>>>>>> origin/master
 		double speed = friction * 100.0 * ((double) elapsedNanos / 1000000000);
-		System.out.print("\t\t\t\t\t\t\t\tspeed: " + speed);
 		double y2 = 0;
 		double y1 = Main.getTerrain().findY((int) location.getX());
 		if (goLeft){
@@ -211,7 +199,6 @@ public abstract class Tank implements Drawable2 {
 				speed = speed + sub;
 			}
 		}
-		System.out.println(" --> " + speed);
 //		System.out.println("friction:" + friction);
 //		System.out.println("speed:" + speed);
 //		System.out.println("angleRat:" + Math.sin(tankAngle));
@@ -233,7 +220,6 @@ public abstract class Tank implements Drawable2 {
 			stopMotion();
 			motionCompleteCallback.accept(true);
 		} else if (lastSpeed < minSpeed) {
-			System.out.println("\t\t\t\t" + lastSpeed + " < " + minSpeed);
 			stopMotion();
 			motionCompleteCallback.accept(false);
 		}

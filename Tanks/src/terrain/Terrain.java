@@ -503,6 +503,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				players.remove(currentTank());
 				drawable.remove(currentTank());
 				maxPlayers = maxPlayers - 1;
+				if (currentPlayer > maxPlayers) currentPlayer = maxPlayers;
 				checkEndOfGame();
 			}
 		}
@@ -523,6 +524,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 							drawable.remove(t);
 							maxPlayers = maxPlayers - 1;
 							checkEndOfGame();
+							if (currentPlayer > maxPlayers) currentPlayer = maxPlayers;
 							damage(shot,true,tankCollisionRadius);
 							return;
 						}
@@ -712,11 +714,19 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		}
 	}//end of paintComponent method
 
-	
+	private boolean lockNextPlayerTurnCalls = false;
+
 	/**
 	 * Sets the turn to the next player
 	 */
 	public void nextPlayerTurn() {
+		if (lockNextPlayerTurnCalls) return;
+		lockNextPlayerTurnCalls = true;
+		for (int i = 0; i < 10; i++) {
+			System.out.println("Stabilizing...");
+			try { Thread.sleep(10); } catch (InterruptedException ignored) {}
+		}
+		lockNextPlayerTurnCalls = false;
 		System.out.println("nextPlayerTurn() --> " + System.currentTimeMillis());
 //		Thread.dumpStack();
 		if (currentPlayer + 1 > maxPlayers) {
@@ -731,6 +741,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		power.setText("" + currentTank().getLaunchPower());
 		playerName.setText(currentTank().getName());
 		playerName.setForeground(currentTank().getBarrelColor());
+
+		weapons.setSelectedItem(currentTank().getProjectileType());
 
 		if (currentTank() instanceof AITank) {
 			allowHumanInput = false;
@@ -778,6 +790,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		weapons = new JComboBox<String>();
 		weapons.addItem("Standard Shot");
 		weapons.addActionListener(e -> {
+			if (allowHumanInput) currentTank().setProjectileType((String) weapons.getSelectedItem());
 			this.requestFocus();
 		});
 		weapons.addItem("Terrain Destroyer");
@@ -794,7 +807,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 		// Fuel label
 		fuelLabel = new JLabel("Fuel: " + (int)currentTank().getGas());
-		add(fuelLabel, "cell 9 0, alignx center");
+		add(fuelLabel, "cell 10 0, alignx center");
 	}
 
 	/**
@@ -806,8 +819,10 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		tank.stopMotion();
 		allowHumanInput = false;
 
-		String weapon = (String) weapons.getSelectedItem();
+//		String weapon = (String) weapons.getSelectedItem();
+		String weapon = currentTank().getProjectileType();
 		Projectile Projectile;
+		System.out.println(weapon);
 		
 		switch (weapon) {
 		case "Standard Shot": 
@@ -851,6 +866,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		remove(powerUp);
 		remove(powerDown);
 		remove(power);
+		remove(weapons);
 		remove(fuelLabel);
 		removeAll();
 
@@ -868,9 +884,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		add(powerDown, "cell 6 0, alignx center");
 		add(power, "cell 5 0, alignx center");
 		add(fire, "cell 7 0, alignx center");
-		add(fuelLabel, "cell 8 0, alignx center");
+		add(weapons, "cell 8 0, alignx center");
+		add(fuelLabel, "cell 10 0, alignx center");
 		revalidate();
-		weapons.addItem("Standard Shot");
 		//add(power, "cell 5 0, alignx center");
 	}
 
@@ -1017,7 +1033,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 
 			if (e.getKeyCode() == KeyEvent.VK_PLUS || e.getKeyCode() == KeyEvent.VK_EQUALS) {
-				if (currentTank().getLaunchPower() < currentTank().getHealth()) {
+				if (currentTank().getLaunchPower() < currentTank().getHealth() / 2) {
 					currentTank().setLaunchPower(currentTank().getLaunchPower() + 1);
 					power.setText("" + currentTank().getLaunchPower());
 					requestFocusInWindow();
