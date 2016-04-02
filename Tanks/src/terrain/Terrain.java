@@ -619,29 +619,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				//We already drew this
 			} 
 			else if (drawable.get(i) instanceof Tank) {// draws player controlled tanks
-				g2d.rotate(((Tank)drawable.get(i)).angle((int) ((int)drawable.get(i).getX() + (int) drawable.get(i).queryImage().getWidth()*.5), terrain), drawable.get(i).getX(), findY(drawable.get(i).getX()) - drawable.get(i).queryImage().getHeight());// this takes a radian. It has to be a very small radian
-				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), findY(drawable.get(i).getX()) - (int) drawable.get(i).queryImage().getHeight()+shift, null);
-				
-				//System.out.println(findY(drawable.get(i).getX()) - 18);
-				
-				//draws the barrel on the tank
-				g2d.setColor(((Tank) drawable.get(i)).getBarrelColor());
-				g2d.rotate(((Tank)drawable.get(i)).getBarrelAngle(), drawable.get(i).getX() + (int) drawable.get(i).queryImage().getWidth()*.5, findY(drawable.get(i).getX()) - (int) drawable.get(i).queryImage().getHeight() +2 );
-				g2d.fillRect(drawable.get(i).getX(), findY(drawable.get(i).getX()) - drawable.get(i).queryImage().getHeight() +shift , (int) (drawable.get(i).queryImage().getWidth()*.5) , 4);
-				g2d.setTransform(old);// resets the rotation back to how it was before the painting began
-				//g2d.translate(i,i);
-
-
-				//REMOVE THIS:
-				//Draws the center of the hit box on the tank
-				//double angle = ((Tank) drawable.get(i)).angle(drawable.get(i).getX() + 20 , terrain);
-				//int length = (int) (drawable.get(i).queryImage().getWidth() * Math.cos(angle));
-				//Point center = new Point(drawable.get(i).getX() + (length/2), findY(drawable.get(i).getX() + (length/2)) - (drawable.get(i).queryImage().getHeight() /2) );
-				//g2d.setColor(Color.PINK);
-				//g2d.drawRect((int)center.getX(), (int)center.getY(), 10, 10);
-				//g2d.drawOval((int)center.getX(), (int)center.getY(), 35, 35);
-
-
+				continue;
 			} //else if (drawable.get(i) instanceof standardShell) {// draws the missile
 			//g2d.fillOval(drawable.get(i).getX(), drawable.get(i).getY(), 5, 5);
 			else if (drawable.get(i) instanceof Clouds) {// draws clouds
@@ -651,6 +629,32 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			}
 
 		}// End of loop to draw objects
+
+		drawable.forEach(c -> {
+			if (c instanceof Tank) {
+				g2d.rotate(((Tank)c).angle((int) ((int)c.getX() + (int) c.queryImage().getWidth()*.5), terrain), c.getX(), findY(c.getX()) - c.queryImage().getHeight());// this takes a radian. It has to be a very small radian
+				g2d.drawImage(c.queryImage(), c.getX(), findY(c.getX()) - (int) c.queryImage().getHeight()+shift, null);
+
+				//System.out.println(findY(c.getX()) - 18);
+
+				//draws the barrel on the tank
+				g2d.setColor(((Tank) c).getBarrelColor());
+				g2d.rotate(((Tank)c).getBarrelAngle(), c.getX() + (int) c.queryImage().getWidth()*.5, findY(c.getX()) - (int) c.queryImage().getHeight() +2 );
+				g2d.fillRect(c.getX(), findY(c.getX()) - c.queryImage().getHeight() +shift , (int) (c.queryImage().getWidth()*.5) , 4);
+				g2d.setTransform(old);// resets the rotation back to how it was before the painting began
+				//g2d.translate(i,i);
+
+
+				//REMOVE THIS:
+				//Draws the center of the hit box on the tank
+				//double angle = ((Tank) c).angle(c.getX() + 20 , terrain);
+				//int length = (int) (c.queryImage().getWidth() * Math.cos(angle));
+				//Point center = new Point(c.getX() + (length/2), findY(c.getX() + (length/2)) - (c.queryImage().getHeight() /2) );
+				//g2d.setColor(Color.PINK);
+				//g2d.drawRect((int)center.getX(), (int)center.getY(), 10, 10);
+				//g2d.drawOval((int)center.getX(), (int)center.getY(), 35, 35);
+			}
+		});
 
 		if (staleTerrainImage) {
 			currentTerrainImage = new BufferedImage(xLength, yLength, BufferedImage.TYPE_INT_ARGB);
