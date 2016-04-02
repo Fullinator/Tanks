@@ -796,13 +796,13 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		weapons.addItem("Terrain Destroyer");
 		weapons.addItem("Risk Taker");
 
-		add(weapons, "cell 7 0, alignx center");
+		add(weapons, "cell 8 0, alignx center");
 
 		//Fire Button
 		fire = new FireButton("", this);
-		add(fire, "cell 8 0, alignx center");
+		add(fire, "cell 7 0, alignx center");
 		//Health Label
-
+		
 		//Buy weapons
 
 		// Fuel label
