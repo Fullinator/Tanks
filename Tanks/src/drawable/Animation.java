@@ -23,18 +23,19 @@ public class Animation implements Drawable2{
 
 		this.type = type;
 		
-		if(type.equals("smoke")){
+		if(type.equals("smoke")){ //check if smoke is needed
 			width = 32;
 			height = 32;
 			rows = 1;
 			cols = 10;
 			try {
+				//load the image
 				bigImg = ImageIO.read(getClass().getResourceAsStream("/img/smoke1.png"));
 			} catch (IOException e) {
 				System.out.println("The animation file requested does not exist! Please fix this before continuing!");
 			}
 
-			for(int i = 0; i < rows; i++){
+			for(int i = 0; i < rows; i++){ //load the array with the stages of smoke
 				for(int j = 0; j < cols; j++){
 					smoke[(i*cols)+j] = bigImg.getSubimage(j*width, i*height, width, height);
 				}
@@ -42,18 +43,19 @@ public class Animation implements Drawable2{
 			}
 		}
 		
-		if(type.equals("explode")){
+		if(type.equals("explode")){ //check is an explosion is needed
 			width = 128;
 			height = 128;
 			rows = 1;
 			cols = 10;
 			try {
+				//load the image
 				bigImg = ImageIO.read(getClass().getResourceAsStream("/img/explode.png"));
 			} catch (IOException e) {
 				System.out.println("The animation file requested does not exist! Please fix this before continuing!");
 			}
 
-			for(int i = 0; i < rows; i++){
+			for(int i = 0; i < rows; i++){ //load the array with the stages of explosion
 				for(int j = 0; j < cols; j++){
 					explode[(i*cols)+j] = bigImg.getSubimage(j*width, i*height, width, height);
 				}
@@ -66,69 +68,50 @@ public class Animation implements Drawable2{
 		this.location = location;
 	}
 
-	@Override
 	public Point getLocation() {
 		return location;
 	}
 
-	@Override
 	public int getX() {
 		return (int) location.getX();
 	}
 
-	@Override
 	public int getY() {
 		return (int) location.getY();
 	}
 
-	@Override
 	public BufferedImage queryImage() {
-		if(type.equals("smoke")){
+		if(type.equals("smoke")){ //start sending smoke animation
 			if(tick >= 99){
 				BufferedImage temp = smoke[tick/10];
 				tick = 0;
 				ArrayList<Drawable2> d = Main.getTerrain().getDrawable();
-				d.remove(this);
+				d.remove(this); //animation removes itself
 				Main.getTerrain().setDrawable(d);
 				return temp;
-			}
-			else if(tick >= 90){
-				BufferedImage temp = smoke[tick/10];
-				tick++;
-				return temp;
-				
 			}
 			else{
 				BufferedImage temp = smoke[tick/10];
 				tick++;
 				return temp;
-
 			}
 		}
 		
-		if(type.equals("explode")){
+		if(type.equals("explode")){ //start sending explosion animation
 			if(tick >= 29){
 				BufferedImage temp = explode[tick/3];
 				tick = 0;
 				ArrayList<Drawable2> d = Main.getTerrain().getDrawable();
-				d.remove(this);
+				d.remove(this); //animation removes itself
 				Main.getTerrain().setDrawable(d);
 				return temp;
-			}
-			else if(tick >= 25){
-				BufferedImage temp = explode[tick/3];
-				tick++;
-				return temp;
-				
 			}
 			else{
 				BufferedImage temp = explode[tick/3];
 				tick++;
 				return temp;
-
 			}
 		}
 		return null;
 	}
-
 }

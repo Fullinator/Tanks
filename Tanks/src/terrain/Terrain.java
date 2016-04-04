@@ -453,7 +453,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 					
 					//Explode animation
 					Animation ani = new Animation("explode");
-					ani.setLocation(center);
+					Point a = new Point(shot.getX()-64, shot.getY()+64);
+					ani.setLocation(a);
 					drawable.add(ani);
 
 					//pause();
@@ -475,7 +476,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			projectiles.remove(shot);
 			Ticker.removeMethod(shot.getTickerID());
 			//call for damage
-				Main.sound.run("impact");   //Impact sound
+			Main.sound.run("impact");   //Impact sound
 			Animation ani = new Animation("explode"); 
 			Point p = new Point(shot.getX()-64, shot.getY()+64);
 			ani.setLocation(p);
@@ -503,6 +504,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				players.remove(currentTank());
 				drawable.remove(currentTank());
 				maxPlayers = maxPlayers - 1;
+				if (currentPlayer > maxPlayers) currentPlayer = maxPlayers;
 				checkEndOfGame();
 			}
 		}
@@ -523,6 +525,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 							drawable.remove(t);
 							maxPlayers = maxPlayers - 1;
 							checkEndOfGame();
+							if (currentPlayer > maxPlayers) currentPlayer = maxPlayers;
 							damage(shot,true,tankCollisionRadius);
 							return;
 						}
@@ -617,29 +620,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				//We already drew this
 			} 
 			else if (drawable.get(i) instanceof Tank) {// draws player controlled tanks
-				g2d.rotate(((Tank)drawable.get(i)).angle((int) ((int)drawable.get(i).getX() + (int) drawable.get(i).queryImage().getWidth()*.5), terrain), drawable.get(i).getX(), findY(drawable.get(i).getX()) - drawable.get(i).queryImage().getHeight());// this takes a radian. It has to be a very small radian
-				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), findY(drawable.get(i).getX()) - (int) drawable.get(i).queryImage().getHeight()+shift, null);
-				
-				//System.out.println(findY(drawable.get(i).getX()) - 18);
-				
-				//draws the barrel on the tank
-				g2d.setColor(((Tank) drawable.get(i)).getBarrelColor());
-				g2d.rotate(((Tank)drawable.get(i)).getBarrelAngle(), drawable.get(i).getX() + (int) drawable.get(i).queryImage().getWidth()*.5, findY(drawable.get(i).getX()) - (int) drawable.get(i).queryImage().getHeight() +2 +shift);
-				g2d.fillRect(drawable.get(i).getX(), findY(drawable.get(i).getX()) - drawable.get(i).queryImage().getHeight() +shift , (int) (drawable.get(i).queryImage().getWidth()*.5) , 4);
-				g2d.setTransform(old);// resets the rotation back to how it was before the painting began
-				//g2d.translate(i,i);
-
-
-				//REMOVE THIS:
-				//Draws the center of the hit box on the tank
-				//double angle = ((Tank) drawable.get(i)).angle(drawable.get(i).getX() + 20 , terrain);
-				//int length = (int) (drawable.get(i).queryImage().getWidth() * Math.cos(angle));
-				//Point center = new Point(drawable.get(i).getX() + (length/2), findY(drawable.get(i).getX() + (length/2)) - (drawable.get(i).queryImage().getHeight() /2) );
-				//g2d.setColor(Color.PINK);
-				//g2d.drawRect((int)center.getX(), (int)center.getY(), 10, 10);
-				//g2d.drawOval((int)center.getX(), (int)center.getY(), 35, 35);
-
-
+				continue;
 			} //else if (drawable.get(i) instanceof standardShell) {// draws the missile
 			//g2d.fillOval(drawable.get(i).getX(), drawable.get(i).getY(), 5, 5);
 			else if (drawable.get(i) instanceof Clouds) {// draws clouds
@@ -649,6 +630,33 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			}
 
 		}// End of loop to draw objects
+
+		drawable.forEach(c -> {
+			if (c instanceof Tank) {
+				g2d.rotate(((Tank)c).angle((int) ((int)c.getX() + (int) c.queryImage().getWidth()*.5), terrain), c.getX(), findY(c.getX()) - c.queryImage().getHeight());// this takes a radian. It has to be a very small radian
+				g2d.drawImage(c.queryImage(), c.getX(), findY(c.getX()) - (int) c.queryImage().getHeight()+shift, null);
+
+				//System.out.println(findY(c.getX()) - 18);
+
+				//draws the barrel on the tank
+
+				g2d.setColor(((Tank) c).getBarrelColor());
+				g2d.rotate(((Tank)c).getBarrelAngle(), c.getX() + (int) c.queryImage().getWidth()*.5, findY(c.getX()) - (int) c.queryImage().getHeight() +2+shift );
+				g2d.fillRect(c.getX(), findY(c.getX()) - c.queryImage().getHeight() +shift , (int) (c.queryImage().getWidth()*.5) , 4);
+				g2d.setTransform(old);// resets the rotation back to how it was before the painting began
+				//g2d.translate(i,i);
+
+
+				//REMOVE THIS:
+				//Draws the center of the hit box on the tank
+				//double angle = ((Tank) c).angle(c.getX() + 20 , terrain);
+				//int length = (int) (c.queryImage().getWidth() * Math.cos(angle));
+				//Point center = new Point(c.getX() + (length/2), findY(c.getX() + (length/2)) - (c.queryImage().getHeight() /2) );
+				//g2d.setColor(Color.PINK);
+				//g2d.drawRect((int)center.getX(), (int)center.getY(), 10, 10);
+				//g2d.drawOval((int)center.getX(), (int)center.getY(), 35, 35);
+			}
+		});
 
 		if (staleTerrainImage) {
 			currentTerrainImage = new BufferedImage(xLength, yLength, BufferedImage.TYPE_INT_ARGB);
@@ -712,11 +720,19 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		}
 	}//end of paintComponent method
 
-	
+	private boolean lockNextPlayerTurnCalls = false;
+
 	/**
 	 * Sets the turn to the next player
 	 */
 	public void nextPlayerTurn() {
+		if (lockNextPlayerTurnCalls) return;
+		lockNextPlayerTurnCalls = true;
+		for (int i = 0; i < 10; i++) {
+			System.out.println("Stabilizing...");
+			try { Thread.sleep(10); } catch (InterruptedException ignored) {}
+		}
+		lockNextPlayerTurnCalls = false;
 		System.out.println("nextPlayerTurn() --> " + System.currentTimeMillis());
 //		Thread.dumpStack();
 		if (currentPlayer + 1 > maxPlayers) {
@@ -731,6 +747,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		power.setText("" + currentTank().getLaunchPower());
 		playerName.setText(currentTank().getName());
 		playerName.setForeground(currentTank().getBarrelColor());
+
+		weapons.setSelectedItem(currentTank().getProjectileType());
 
 		if (currentTank() instanceof AITank) {
 			allowHumanInput = false;
@@ -778,23 +796,24 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		weapons = new JComboBox<String>();
 		weapons.addItem("Standard Shot");
 		weapons.addActionListener(e -> {
+			if (allowHumanInput) currentTank().setProjectileType((String) weapons.getSelectedItem());
 			this.requestFocus();
 		});
 		weapons.addItem("Terrain Destroyer");
 		weapons.addItem("Risk Taker");
 
-		add(weapons, "cell 7 0, alignx center");
+		add(weapons, "cell 8 0, alignx center");
 
 		//Fire Button
 		fire = new FireButton("", this);
-		add(fire, "cell 8 0, alignx center");
+		add(fire, "cell 7 0, alignx center");
 		//Health Label
-
+		
 		//Buy weapons
 
 		// Fuel label
 		fuelLabel = new JLabel("Fuel: " + (int)currentTank().getGas());
-		add(fuelLabel, "cell 9 0, alignx center");
+		add(fuelLabel, "cell 10 0, alignx center");
 	}
 
 	/**
@@ -806,8 +825,10 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		tank.stopMotion();
 		allowHumanInput = false;
 
-		String weapon = (String) weapons.getSelectedItem();
+//		String weapon = (String) weapons.getSelectedItem();
+		String weapon = currentTank().getProjectileType();
 		Projectile Projectile;
+		System.out.println(weapon);
 		
 		switch (weapon) {
 		case "Standard Shot": 
@@ -851,6 +872,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		remove(powerUp);
 		remove(powerDown);
 		remove(power);
+		remove(weapons);
 		remove(fuelLabel);
 		removeAll();
 
@@ -868,9 +890,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		add(powerDown, "cell 6 0, alignx center");
 		add(power, "cell 5 0, alignx center");
 		add(fire, "cell 7 0, alignx center");
-		add(fuelLabel, "cell 8 0, alignx center");
+		add(weapons, "cell 8 0, alignx center");
+		add(fuelLabel, "cell 10 0, alignx center");
 		revalidate();
-		weapons.addItem("Standard Shot");
 		//add(power, "cell 5 0, alignx center");
 	}
 
@@ -1017,7 +1039,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 
 			if (e.getKeyCode() == KeyEvent.VK_PLUS || e.getKeyCode() == KeyEvent.VK_EQUALS) {
-				if (currentTank().getLaunchPower() < currentTank().getHealth()) {
+				if (currentTank().getLaunchPower() < currentTank().getHealth() / 2) {
 					currentTank().setLaunchPower(currentTank().getLaunchPower() + 1);
 					power.setText("" + currentTank().getLaunchPower());
 					requestFocusInWindow();

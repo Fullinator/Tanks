@@ -89,10 +89,10 @@ public  class Projectile implements Drawable2 {
 		double[] point = getEndBarrel(intX,intY,angle);
 		intX = point[0];
 		intY = point[1];
-		System.out.println("PI: " + Math.PI);
-		System.out.println("ang: " + angle);
-		System.out.println("X: " + intX);
-		System.out.println("y: " + intY);
+//		System.out.println("PI: " + Math.PI);
+//		System.out.println("ang: " + angle);
+//		System.out.println("X: " + intX);
+//		System.out.println("y: " + intY);
 		
 		
 		//System.out.println("X:" + intX);
@@ -215,12 +215,13 @@ public  class Projectile implements Drawable2 {
 	public double[] getEndBarrel(double x, double y, double ang){
 		x += 20*Math.cos(ang - Math.PI);
 		y -= 20*Math.sin(ang);
-		if(ang > Math.PI){
+		if(ang > Math.PI ||ang < 0 ){
 			y = y + 4;
 		}
-		if(ang < 0){
-			y = y + 4;
+		else{
+			y = y + 1;
 		}
+		
 		double[] newPoint = {x,y};
 		return newPoint;
 		
