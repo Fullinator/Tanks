@@ -1126,4 +1126,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		return drawable;
 	}
 
+	public boolean getHumanInputAllowed() {
+		return allowHumanInput;
+	}
 }// End of abstract Terrain Class
