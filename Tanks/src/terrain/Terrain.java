@@ -453,7 +453,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 					
 					//Explode animation
 					Animation ani = new Animation("explode");
-					ani.setLocation(center);
+					Point a = new Point(shot.getX()-64, shot.getY()+64);
+					ani.setLocation(a);
 					drawable.add(ani);
 
 					//pause();
@@ -475,7 +476,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			projectiles.remove(shot);
 			Ticker.removeMethod(shot.getTickerID());
 			//call for damage
-				Main.sound.run("impact");   //Impact sound
+			Main.sound.run("impact");   //Impact sound
 			Animation ani = new Animation("explode"); 
 			Point p = new Point(shot.getX()-64, shot.getY()+64);
 			ani.setLocation(p);
@@ -639,8 +640,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				//System.out.println(findY(c.getX()) - 18);
 
 				//draws the barrel on the tank
+
 				g2d.setColor(((Tank) c).getBarrelColor());
-				g2d.rotate(((Tank)c).getBarrelAngle(), c.getX() + (int) c.queryImage().getWidth()*.5, findY(c.getX()) - (int) c.queryImage().getHeight() +2 );
+				g2d.rotate(((Tank)c).getBarrelAngle(), c.getX() + (int) c.queryImage().getWidth()*.5, findY(c.getX()) - (int) c.queryImage().getHeight() +2+shift );
 				g2d.fillRect(c.getX(), findY(c.getX()) - c.queryImage().getHeight() +shift , (int) (c.queryImage().getWidth()*.5) , 4);
 				g2d.setTransform(old);// resets the rotation back to how it was before the painting began
 				//g2d.translate(i,i);
