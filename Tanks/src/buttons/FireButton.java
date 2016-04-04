@@ -55,10 +55,9 @@ public class FireButton extends JButton implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		try {
 			this.setFocusable(false);
-			if (!terrain.getGameStatus()) {
+			if (!terrain.getGameStatus() && terrain.getHumanInputAllowed()) {
 					terrain.fire();
 					terrain.requestFocusInWindow();
-				
 			}
 		}
 		catch (Exception e){Main.error(e);}
