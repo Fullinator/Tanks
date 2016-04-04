@@ -639,8 +639,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				//System.out.println(findY(c.getX()) - 18);
 
 				//draws the barrel on the tank
+
 				g2d.setColor(((Tank) c).getBarrelColor());
-				g2d.rotate(((Tank)c).getBarrelAngle(), c.getX() + (int) c.queryImage().getWidth()*.5, findY(c.getX()) - (int) c.queryImage().getHeight() +2 );
+				g2d.rotate(((Tank)c).getBarrelAngle(), c.getX() + (int) c.queryImage().getWidth()*.5, findY(c.getX()) - (int) c.queryImage().getHeight() +2+shift );
 				g2d.fillRect(c.getX(), findY(c.getX()) - c.queryImage().getHeight() +shift , (int) (c.queryImage().getWidth()*.5) , 4);
 				g2d.setTransform(old);// resets the rotation back to how it was before the painting began
 				//g2d.translate(i,i);
