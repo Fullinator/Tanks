@@ -29,14 +29,14 @@ public class Shift {
 		if(physics.Projectile.outOfScreen){ 				// if out of screen
 			if(Y < prevY){
 				//System.out.println("OUT UP : y = "+ Y + "prevY=" + prevY);
-				//shift = shift+x;
-				shift=shift+Math.abs((int)physics.Projectile.vY);
+				shift = shift+x;
+				//shift=shift+Math.abs((int)physics.Projectile.vY);
 				return shift;		//shifting up
 			}
 			else if(Y > prevY){ 
 				//System.out.println("OUT down");
-				//shift = shift-x;
-				shift=shift-Math.abs((int)physics.Projectile.vY);
+				shift = shift-x;
+				//shift=shift-Math.abs((int)physics.Projectile.vY);
 				return shift;		//shift down
 			}
 			else 
