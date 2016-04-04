@@ -453,7 +453,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 					
 					//Explode animation
 					Animation ani = new Animation("explode");
-					ani.setLocation(center);
+					Point a = new Point(shot.getX()-64, shot.getY()+64);
+					ani.setLocation(a);
 					drawable.add(ani);
 
 					//pause();
@@ -475,7 +476,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			projectiles.remove(shot);
 			Ticker.removeMethod(shot.getTickerID());
 			//call for damage
-				Main.sound.run("impact");   //Impact sound
+			Main.sound.run("impact");   //Impact sound
 			Animation ani = new Animation("explode"); 
 			Point p = new Point(shot.getX()-64, shot.getY()+64);
 			ani.setLocation(p);
