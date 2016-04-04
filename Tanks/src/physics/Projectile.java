@@ -10,8 +10,8 @@ import drawable.Tank;
 import terrain.Terrain;
 
 public  class Projectile implements Drawable2 {
-	double intX;
-	double intY;
+	public double intX;
+	public double intY;
 	double x0;
 	double y0;
 	double g;

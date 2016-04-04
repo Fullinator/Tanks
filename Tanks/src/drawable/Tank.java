@@ -177,6 +177,14 @@ public abstract class Tank implements Drawable2 {
 		}
 		gas -= (double) elapsedNanos / 100000000;
 		double sub =(50*friction*((double) elapsedNanos / 1000000000)*Math.sin(tankAngle));
+<<<<<<< HEAD
+
+
+		gas -= (double) elapsedNanos / 100000000 + Math.abs(sub);
+
+
+=======
+>>>>>>> origin/master
 		double speed = friction * 100.0 * ((double) elapsedNanos / 1000000000);
 		double y2 = 0;
 		double y1 = Main.getTerrain().findY((int) location.getX());
