@@ -56,7 +56,7 @@ public class DownButton extends JButton implements ActionListener {
 		try {
 			this.setFocusable(false);
 			if (!terrain.getGameStatus()) {
-				if ( terrain.currentTank().getLaunchPower() > 0) {
+				if ( terrain.currentTank().getLaunchPower() > 0 && !terrain.getGameStatus() && terrain.getHumanInputAllowed()) {
 					terrain.currentTank().setLaunchPower(terrain.currentTank().getLaunchPower() - 1);
 					terrain.power.setText("" + terrain.currentTank().getLaunchPower());
 					terrain.requestFocusInWindow();
