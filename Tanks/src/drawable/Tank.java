@@ -175,16 +175,8 @@ public abstract class Tank implements Drawable2 {
 			stopMotion();
 			return;
 		}
-		gas -= (double) elapsedNanos / 100000000;
 		double sub =(50*friction*((double) elapsedNanos / 1000000000)*Math.sin(tankAngle));
-<<<<<<< HEAD
-
-
 		gas -= (double) elapsedNanos / 100000000 + Math.abs(sub);
-
-
-=======
->>>>>>> origin/master
 		double speed = friction * 100.0 * ((double) elapsedNanos / 1000000000);
 		double y2 = 0;
 		double y1 = Main.getTerrain().findY((int) location.getX());
@@ -214,7 +206,7 @@ public abstract class Tank implements Drawable2 {
 //		System.out.println("sand" + physics.Friction.sand);
 		double newX = location.getX() + (goLeft ? -speed : speed);
 		lastSpeed = speed;
-		if (newX > 0 && newX < Main.xLength - queryImage().getWidth()) location.setLocation(newX, 1000);
+		if (newX > 50 && newX < Main.xLength - queryImage().getWidth() - 50) location.setLocation(newX, 1000);
 	}
 
 	private double minSpeed;
@@ -238,8 +230,11 @@ public abstract class Tank implements Drawable2 {
 		double rate = 3.0 * ((double) elapsedNanos / 1000000000);
 		double newAng = barrelAngle + (counterClockwise ? rate : -rate);
 		if (newAng >= 0 && newAng <= Math.PI) {
-			clippedAngle = true;
+//			clippedAngle = true;
 			barrelAngle = newAng;
+		} else {
+			System.out.println("Clipping angle!");
+			clippedAngle = true;
 		}
 	}
 
