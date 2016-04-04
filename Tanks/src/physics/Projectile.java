@@ -89,10 +89,10 @@ public  class Projectile implements Drawable2 {
 		double[] point = getEndBarrel(intX,intY,angle);
 		intX = point[0];
 		intY = point[1];
-		System.out.println("PI: " + Math.PI);
-		System.out.println("ang: " + angle);
-		System.out.println("X: " + intX);
-		System.out.println("y: " + intY);
+//		System.out.println("PI: " + Math.PI);
+//		System.out.println("ang: " + angle);
+//		System.out.println("X: " + intX);
+//		System.out.println("y: " + intY);
 		
 		
 		//System.out.println("X:" + intX);

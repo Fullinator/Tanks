@@ -62,7 +62,7 @@ public class AITank extends Tank {
 		double idealAngle = Math.PI;
 		int power = 1;
 		powerLoop:
-		for (; power <= getHealth(); power++) {
+		for (; power <= getHealth() / 2; power++) {
 			if (newX < target.getX()) {
 				for (double a = 1; a > 0.5; a -= 0.05) {
 					if (fuzzyTankIntersection(newX, a * Math.PI, power, target, 5)) {
@@ -86,6 +86,8 @@ public class AITank extends Tank {
 
 		setLaunchPower(power);
 		aimCannon(idealAngle, this::cannonComplete);
+
+		firedThisRound = false;
 
 		fireWhenReadyID = Ticker.addMethod(this::fireWhenReady);
 	}
@@ -122,6 +124,7 @@ public class AITank extends Tank {
 			setLaunchPower(power);
 			aimCannon(idealAngle, this::cannonComplete);
 		}
+		if (Math.abs(getX() - target.getX()) < 50) setProjectileType("Risk Taker");
 		motionComplete = true;
 	}
 
@@ -131,11 +134,16 @@ public class AITank extends Tank {
 		cannonComplete = true;
 	}
 
+	private boolean firedThisRound = false;
+
 	private void fireWhenReady(long elapsedNanos) {
 		if (cannonComplete && motionComplete) {
-			owner.fire();
 			Ticker.removeMethod(fireWhenReadyID);
 			fireWhenReadyID = -1;
+			if (!firedThisRound) {
+				owner.fire();
+				firedThisRound = true;
+			}
 		}
 	}
 
