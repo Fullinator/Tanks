@@ -30,6 +30,7 @@ public  class Projectile implements Drawable2 {
 	public double barrelAngle;
 	private BufferedImage image;
 	public static boolean outOfScreen;
+	public static boolean outOfScreenX;
 	private int tickerID;
 	public double tankAngle;
 
@@ -185,6 +186,13 @@ public  class Projectile implements Drawable2 {
 		}
 		else{
 			outOfScreen = false;
+		}
+		
+		if(points[0] > 0 && points[0] < 1000){
+			outOfScreenX = false;
+		}
+		else{
+			outOfScreenX = true;
 		}
 		//System.out.println("Out Of Screen:"+outOfScreen);
 

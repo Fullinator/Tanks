@@ -26,6 +26,7 @@ public class Shift {
 	int shifter(double[] points){
 		prevY = Y;
 		Y = (int) points[1];
+
 		if(physics.Projectile.outOfScreen){ 				// if out of screen
 			if(Y < prevY){
 				//System.out.println("OUT UP : y = "+ Y + "prevY=" + prevY);
@@ -39,14 +40,19 @@ public class Shift {
 				//shift=shift-Math.abs((int)physics.Projectile.vY);
 				return shift;		//shift down
 			}
+			if(physics.Projectile.outOfScreenX){
+			shift =0;	return shift;
+			}
 			else 
 				return shift;
 		}
+
 		else{					//if not out of the screen
 		//	System.out.println("IN");
 			shift = 0;
 			return shift;
 		}
+
 	}
 	
 }
