@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 public abstract class Tank implements Drawable2 {
 	private double barrelAngle = 0.0;
 	private double tankAngle = 0.0;
-	private double gas = 200;
+	private double gas = 400;
 	private Point location;
 	private BufferedImage image;
 	private int healthPercent;
@@ -178,17 +178,35 @@ public abstract class Tank implements Drawable2 {
 			stopMotion();
 			return;
 		}
+<<<<<<< HEAD
+		
+		//gas -= (double) elapsedNanos / 100000000;
+		double sub =(50*friction*((double) elapsedNanos / 1000000000)*Math.sin(tankAngle));
+		System.out.println(tankAngle);
+
+
+		gas -= (double) elapsedNanos / 100000000 + Math.abs(sub);
+
+
+=======
 		double sub =(50*friction*((double) elapsedNanos / 1000000000)*Math.sin(tankAngle));
 
 		gas -= (double) elapsedNanos / 100000000 + Math.abs(sub);
+>>>>>>> origin/master
 		double speed = friction * 100.0 * ((double) elapsedNanos / 1000000000);
 		double y2 = 0;
 		double y1 = Main.getTerrain().findY((int) location.getX());
 		if (goLeft){
 			 y2 = Main.getTerrain().findY((int) location.getX() - 5);
+			 if(tankAngle >  .61){
+				 return;
+			 }
 		}
 		else{
 			y2 = Main.getTerrain().findY((int) location.getX() + 5);
+			if(tankAngle < - .61){
+				 return;
+			 }
 		}
 		double diff = y2 - y1;
 	
