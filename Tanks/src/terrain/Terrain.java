@@ -731,6 +731,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		lockNextPlayerTurnCalls = true;
 		try { Thread.sleep(100); } catch (InterruptedException ignored) {}
 		lockNextPlayerTurnCalls = false;
+		currentTank().completeFirstTurn();
 //		System.out.println("nextPlayerTurn() --> " + System.currentTimeMillis());
 //		Thread.dumpStack();
 		if (currentPlayer + 1 > maxPlayers) {
@@ -753,6 +754,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		} else {
 			allowHumanInput = true;
 		}
+
+		if (currentTank().isFirstTurnTaken())
+			currentTank().setGas(currentTank().getGas() + Math.max(10, currentTank().getHealth() / 2));
 	}
 
 	/**

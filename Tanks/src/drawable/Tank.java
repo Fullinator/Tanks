@@ -30,6 +30,7 @@ public abstract class Tank implements Drawable2 {
 	private Consumer<Boolean> motionCompleteCallback;
 	private Consumer<Boolean> cannonCompleteCallback;
 	private String projectileType = "Standard Shot";
+	private boolean firstTurnTaken = false;
 
 	protected Color barrelColor;
 
@@ -319,6 +320,14 @@ public abstract class Tank implements Drawable2 {
 		double angle = angle(getX() + 20 , terrain.getTerrain());
 		int length = (int) (queryImage().getWidth() * Math.cos(angle));
 		return new Point(getX() + (length/2), terrain.findY(getX() + (length/2)) - (queryImage().getHeight() /2) );
+	}
+
+	public void completeFirstTurn() {
+		firstTurnTaken = true;
+	}
+
+	public boolean isFirstTurnTaken() {
+		return firstTurnTaken;
 	}
 
 	public Color getBarrelColor() {
