@@ -30,6 +30,8 @@ public abstract class Tank implements Drawable2 {
 	private Consumer<Boolean> motionCompleteCallback;
 	private Consumer<Boolean> cannonCompleteCallback;
 	private String projectileType = "Standard Shot";
+	private boolean firstTurnTaken = false;
+
 	protected Color barrelColor;
 
 	public Tank() {
@@ -39,7 +41,7 @@ public abstract class Tank implements Drawable2 {
 		try {
 			image = ImageIO.read(getClass().getResourceAsStream("/img/temporaryTank.png"));
 		} catch (IOException e) {
-			System.out.println("The tank file requested does not exist! Please fix this before continuing!");
+			System.err.println("The tank file requested does not exist! Please fix this before continuing!");
 		}
 		location = new Point(100, 100000);
 
@@ -170,13 +172,15 @@ public abstract class Tank implements Drawable2 {
 	}
 
 	private void moveTank(long elapsedNanos) {
+
 		if (gas <= 0) {
 			lastSpeed = 0;
 			stopMotion();
 			return;
 		}
-		gas -= (double) elapsedNanos / 100000000;
 		double sub =(50*friction*((double) elapsedNanos / 1000000000)*Math.sin(tankAngle));
+
+		gas -= (double) elapsedNanos / 100000000 + Math.abs(sub);
 		double speed = friction * 100.0 * ((double) elapsedNanos / 1000000000);
 		double y2 = 0;
 		double y1 = Main.getTerrain().findY((int) location.getX());
@@ -206,7 +210,7 @@ public abstract class Tank implements Drawable2 {
 //		System.out.println("sand" + physics.Friction.sand);
 		double newX = location.getX() + (goLeft ? -speed : speed);
 		lastSpeed = speed;
-		if (newX > 0 && newX < Main.xLength - queryImage().getWidth()) location.setLocation(newX, 1000);
+		if (newX > 50 && newX < Main.xLength - queryImage().getWidth() - 50) location.setLocation(newX, 1000);
 	}
 
 	private double minSpeed;
@@ -230,8 +234,10 @@ public abstract class Tank implements Drawable2 {
 		double rate = 3.0 * ((double) elapsedNanos / 1000000000);
 		double newAng = barrelAngle + (counterClockwise ? rate : -rate);
 		if (newAng >= 0 && newAng <= Math.PI) {
-			clippedAngle = true;
+//			clippedAngle = true;
 			barrelAngle = newAng;
+		} else {
+			clippedAngle = true;
 		}
 	}
 
@@ -314,6 +320,14 @@ public abstract class Tank implements Drawable2 {
 		double angle = angle(getX() + 20 , terrain.getTerrain());
 		int length = (int) (queryImage().getWidth() * Math.cos(angle));
 		return new Point(getX() + (length/2), terrain.findY(getX() + (length/2)) - (queryImage().getHeight() /2) );
+	}
+
+	public void completeFirstTurn() {
+		firstTurnTaken = true;
+	}
+
+	public boolean isFirstTurnTaken() {
+		return firstTurnTaken;
 	}
 
 	public Color getBarrelColor() {

@@ -501,10 +501,11 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		if (!tank && shot instanceof RiskTaker) {//checks to see if the risk of the RiskTaker projectile was mitigtated
 			currentTank().setHealth((currentTank().getHealth() - ((RiskTaker)shot).riskDamage));
 			if (currentTank().getHealth() <= 0) {
-				players.remove(currentTank());
-				drawable.remove(currentTank());
+				Tank toRemove = currentTank();
 				maxPlayers = maxPlayers - 1;
 				if (currentPlayer > maxPlayers) currentPlayer = maxPlayers;
+				players.remove(toRemove);
+				drawable.remove(toRemove);
 				checkEndOfGame();
 			}
 		}
@@ -521,11 +522,11 @@ public abstract class Terrain extends JPanel implements KeyListener{
 						t.setHealth(t.getHealth() - shot.damage);
 						//System.out.println("damage!");
 						if (t.getHealth() <= 0) {
+							maxPlayers = maxPlayers - 1;
+							if (currentPlayer > maxPlayers) currentPlayer = maxPlayers;
 							players.remove(t);
 							drawable.remove(t);
-							maxPlayers = maxPlayers - 1;
 							checkEndOfGame();
-							if (currentPlayer > maxPlayers) currentPlayer = maxPlayers;
 							damage(shot,true,tankCollisionRadius);
 							return;
 						}
@@ -728,19 +729,16 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	public void nextPlayerTurn() {
 		if (lockNextPlayerTurnCalls) return;
 		lockNextPlayerTurnCalls = true;
-		for (int i = 0; i < 10; i++) {
-			System.out.println("Stabilizing...");
-			try { Thread.sleep(10); } catch (InterruptedException ignored) {}
-		}
+		try { Thread.sleep(100); } catch (InterruptedException ignored) {}
 		lockNextPlayerTurnCalls = false;
-		System.out.println("nextPlayerTurn() --> " + System.currentTimeMillis());
+		currentTank().completeFirstTurn();
+//		System.out.println("nextPlayerTurn() --> " + System.currentTimeMillis());
 //		Thread.dumpStack();
 		if (currentPlayer + 1 > maxPlayers) {
 			currentPlayer = 1;
 		} else {
 			currentPlayer = currentPlayer + 1;
 		}
-		System.out.println("\t\tAdvancing to player " + currentPlayer);
 
 		//Change the status bar to the information
 		//of the current player
@@ -756,6 +754,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		} else {
 			allowHumanInput = true;
 		}
+
+		if (currentTank().isFirstTurnTaken())
+			currentTank().setGas(currentTank().getGas() + Math.max(10, currentTank().getHealth() / 2));
 	}
 
 	/**
@@ -828,7 +829,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 //		String weapon = (String) weapons.getSelectedItem();
 		String weapon = currentTank().getProjectileType();
 		Projectile Projectile;
-		System.out.println(weapon);
 		
 		switch (weapon) {
 		case "Standard Shot": 
@@ -1128,4 +1128,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		return drawable;
 	}
 
+	public boolean getHumanInputAllowed() {
+		return allowHumanInput;
+	}
 }// End of abstract Terrain Class

@@ -84,7 +84,7 @@ public class StartMenu extends JPanel implements ActionListener {
 		comboBox = new JComboBox();
 		add(comboBox, "cell 2 2, alignx center");
 		comboBox.addItem("Sand");
-		//comboBox.addItem("Forest");
+		comboBox.addItem("Grasslands");
 		comboBox.addItem("Snow");
 
 		//add physics options
@@ -303,7 +303,7 @@ public class StartMenu extends JPanel implements ActionListener {
 				Main.AITanks = Integer.parseInt((String) AISelect.getSelectedItem());
 				Main.startSnow(names);
 				
-			} else if (comboBox.getSelectedItem().equals("Forest")) {
+			} else if (comboBox.getSelectedItem().equals("Grasslands")) {
 				physics.Friction.Forest();
 				Main.manualTanks = Integer.parseInt((String) humanSelect.getSelectedItem());;
 				Main.AITanks = Integer.parseInt((String) AISelect.getSelectedItem());
