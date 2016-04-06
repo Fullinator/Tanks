@@ -2,6 +2,7 @@ package terrain;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -600,10 +601,15 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 		Graphics2D g2d=(Graphics2D)g;
 		super.paintComponent(g);// prevents older objects from staying on the screen
-
-		g2d.setColor(new Color(0x21a1cb));// The skies color
+		GradientPaint gp = new GradientPaint(0,0,Color.BLACK,0,getYTerrain()-50 ,Color.WHITE);
+		if(shift > 400){
+			gp = new GradientPaint(0,0,Color.BLACK,0,getYTerrain()-50 ,new Color(0x21a1cb));
+		}
+		else{
+			gp = new GradientPaint(0,0,new Color(0x21a1cb),0,getYTerrain()-50 ,new Color(0xAFEEEE));
+		}
+		g2d.setPaint(gp);// The skies color
 		g2d.fillRect(0, 0, getXTerrain(), getYTerrain());// fills the entire background with the sky       
-
 		AffineTransform old = g2d.getTransform();// Saves a copy of the old transform so the rotation can be reset later
 
 		for (int i = 0; i < drawable.size(); i++) {
