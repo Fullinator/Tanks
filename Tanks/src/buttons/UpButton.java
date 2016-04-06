@@ -27,6 +27,7 @@ public class UpButton extends JButton implements ActionListener {
 		setOpaque(false);
 		addActionListener(this);
 		this.terrain = terrain;
+		collectButton();
 	}
 
 

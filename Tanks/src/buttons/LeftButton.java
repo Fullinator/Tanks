@@ -29,6 +29,7 @@ public class LeftButton extends JButton implements ActionListener {
 		setOpaque(false);
 		addActionListener(this);
 		this.terrain = terrain;
+		collectButton();
 	}
 
 
