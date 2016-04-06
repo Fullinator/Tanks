@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.LongConsumer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -596,6 +597,8 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	Shift shift1 = new Shift(Projectile.points);
 	int shift = 0;
 	public void paintComponent(Graphics g) {
+		ArrayList<Projectile> projectiles = (ArrayList<Projectile>) ((ArrayList<Projectile>) this.projectiles).clone();
+
 		//int shift = 0;
 		shift =shift1.shifter(Projectile.points);
 
@@ -817,10 +820,27 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		add(fuelLabel, "cell 10 0, alignx center");
 	}
 
+	private boolean allowFire = true;
+	private int fireCooldownId;
+
 	/**
 	 * Stops tank movement and creates the requested shot from current parameters and then changes the turn
 	 */
 	public void fire() {
+		if (!allowFire) return;
+		allowFire = false;
+		fireCooldownId = Ticker.addMethod(new LongConsumer() {
+			long cumulative = 0;
+			@Override
+			public void accept(long value) {
+				cumulative += value;
+				if (cumulative > 1000000000) {
+					allowFire = true;
+					Ticker.removeMethod(fireCooldownId);
+					fireCooldownId = -1;
+				}
+			}
+		});
 		Tank tank = players.get(currentPlayer - 1);
 		tank.stopAimCannon();
 		tank.stopMotion();
@@ -1087,7 +1107,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			}
 		}
 	}//end of keyPressed method
-
 
 	@Override
 	public void keyReleased(KeyEvent e) {
