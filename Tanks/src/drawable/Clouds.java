@@ -42,8 +42,9 @@ public class Clouds implements Drawable2 {
 		collectCloud();
 		start = startingPosition;
 
-		y = (int) (Math.random() * (yHeight / 4)) + 50;
-		rate = Math.random() * 25 + 20;
+		y = (int) (Math.random() * (yHeight / 3));
+		x = Math.random() * landscape.getXTerrain();
+		rate = Math.random() * 40 + 20;
 		offset = (int) (Math.random() * 200);
 
 		Ticker.addMethod(this::moveCloud);
@@ -64,7 +65,7 @@ public class Clouds implements Drawable2 {
 		try {                
 			cloud = ImageIO.read(getClass().getResourceAsStream("/img/tempCloud.png"));
 		} catch (IOException ex) {
-			System.out.println("The cloud file requested does not exist! Please fix this before contueing!");
+			System.err.println("The cloud file requested does not exist! Please fix this before contueing!");
 		}
 	}//end of collectCloud method
 
@@ -83,60 +84,6 @@ public class Clouds implements Drawable2 {
 		return y;
 	}//end of getY method
 
-	/**
-	 * makes the cloud move across the screen
-	 */
-	public void run() {
-		while(true) {
-			x = start;
-			if (start < 0) {// This is the cloud that runs from the left
-				x = -384;
-				while(true) {// generates a random Y position
-					y = (int)(Math.random()*160);
-					if ( y < (yHeight - (yHeight / 4)) && y > 50){
-						break;
-					}
-				}
-				while(true){
-					if (x == xLength){
-						break;
-					}
-					x++;
-					terrain.repaint();
-					try {
-						Thread.sleep(100);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}
-			else {// This is the cloud that runs from the right
-				while(true) {// generates a random Y position
-					y = (int)(Math.random()*160);
-					if ( y < (yHeight - (yHeight / 4)) && y > 50){
-						break;
-					}
-				}
-
-				while(true){
-					if (x == -384){
-						break;
-					}
-					x = x -1;
-					//System.out.println(x);
-					terrain.repaint();
-					try {
-						Thread.sleep(125);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}
-		}
-	}//end of run method
-
 	private void moveCloud(long elapsedNanos) {
 		if (x > xLength + offset) {
 			x = -cloud.getWidth();
@@ -148,8 +95,7 @@ public class Clouds implements Drawable2 {
 
 	@Override
 	public Point getLocation() {
-		// TODO Auto-generated method stub
-		return null;
+		return new Point((int) x, y);
 	}
 
 }//end of Clouds class
