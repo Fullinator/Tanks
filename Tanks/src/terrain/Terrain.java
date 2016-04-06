@@ -738,7 +738,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		} else {
 			currentPlayer = currentPlayer + 1;
 		}
-		System.out.println("\t\tAdvancing to player " + currentPlayer);
 
 		//Change the status bar to the information
 		//of the current player
@@ -826,7 +825,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 //		String weapon = (String) weapons.getSelectedItem();
 		String weapon = currentTank().getProjectileType();
 		Projectile Projectile;
-		System.out.println(weapon);
 		
 		switch (weapon) {
 		case "Standard Shot": 

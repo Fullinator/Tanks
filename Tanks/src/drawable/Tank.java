@@ -40,7 +40,7 @@ public abstract class Tank implements Drawable2 {
 		try {
 			image = ImageIO.read(getClass().getResourceAsStream("/img/temporaryTank.png"));
 		} catch (IOException e) {
-			System.out.println("The tank file requested does not exist! Please fix this before continuing!");
+			System.err.println("The tank file requested does not exist! Please fix this before continuing!");
 		}
 		location = new Point(100, 100000);
 
@@ -181,7 +181,6 @@ public abstract class Tank implements Drawable2 {
 
 		gas -= (double) elapsedNanos / 100000000 + Math.abs(sub);
 		double speed = friction * 100.0 * ((double) elapsedNanos / 1000000000);
-		System.out.print("\t\t\t\t\t\t\t\tspeed: " + speed);
 		double y2 = 0;
 		double y1 = Main.getTerrain().findY((int) location.getX());
 		if (goLeft){
@@ -202,7 +201,6 @@ public abstract class Tank implements Drawable2 {
 				speed = speed + sub;
 			}
 		}
-		System.out.println(" --> " + speed);
 //		System.out.println("friction:" + friction);
 //		System.out.println("speed:" + speed);
 //		System.out.println("angleRat:" + Math.sin(tankAngle));
@@ -224,7 +222,6 @@ public abstract class Tank implements Drawable2 {
 			stopMotion();
 			motionCompleteCallback.accept(true);
 		} else if (lastSpeed < minSpeed) {
-			System.out.println("\t\t\t\t" + lastSpeed + " < " + minSpeed);
 			stopMotion();
 			motionCompleteCallback.accept(false);
 		}
@@ -239,7 +236,6 @@ public abstract class Tank implements Drawable2 {
 //			clippedAngle = true;
 			barrelAngle = newAng;
 		} else {
-			System.out.println("Clipping angle!");
 			clippedAngle = true;
 		}
 	}
