@@ -27,6 +27,7 @@ public class FireButton extends JButton implements ActionListener {
 		setOpaque(false);
 		addActionListener(this);
 		this.terrain = terrain;
+		collectButton();
 	}
 
 
@@ -41,7 +42,6 @@ public class FireButton extends JButton implements ActionListener {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		collectButton();
 		g.drawImage(button, 0, 0, null);
 	}
 
