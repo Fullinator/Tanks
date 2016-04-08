@@ -244,7 +244,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 		while (yGenCount < yPoints.length) {// Y-coordinate generation
 			double temp = Math.round(Math.random() * 1000);
-			if (temp < getYTerrain() && temp > 300) {
+			if (temp < (getYTerrain() - 150) && temp > 300) {
 				yPoints[yGenCount] = temp;
 				yGenCount++;
 			}
