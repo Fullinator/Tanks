@@ -8,7 +8,7 @@ import java.math.*;
 
 import javax.imageio.ImageIO;
 
-public class DayCycle implements Drawable2 {
+public class DayCycle implements Drawable {
 	private BufferedImage sun;
 	private BufferedImage moon;
 	private int x = -150;

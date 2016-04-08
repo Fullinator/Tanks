@@ -41,7 +41,7 @@ import drawable.Animation;
 import drawable.Cactus;
 import drawable.Clouds;
 import net.miginfocom.swing.MigLayout;
-import drawable.Drawable2;
+import drawable.Drawable;
 import drawable.Snowman;
 //import drawable.Cactus;
 import drawable.DayCycle;
@@ -68,7 +68,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	public JLabel playerName;
 	Color primary;
 	Color secondary;
-	protected ArrayList<Drawable2> drawable;
+	protected ArrayList<Drawable> drawable;
 	protected ArrayList<Tank> players;
 	protected java.util.List<Long> downKeys = new ArrayList<>();
 	private boolean paintLock;
@@ -164,7 +164,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 * 
 	 * @param drawable ArrayList of drawable objects for the paint class to draw
 	 */
-	public void setDrawable(ArrayList<Drawable2> drawable) {
+	public void setDrawable(ArrayList<Drawable> drawable) {
 		this.drawable = drawable;
 	}
 
@@ -367,7 +367,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 */
 	protected void createTanks(int numHumans, int numAI, String[] names) {
 		players  = new ArrayList<Tank>();
-		drawable = new ArrayList<Drawable2>();
+		drawable = new ArrayList<Drawable>();
 		Color[] c = new Color[] {Color.RED, Color.BLUE, Color.GREEN, Color.MAGENTA, Color.ORANGE};
 		for (int i = 0; i < numHumans; i++) {
 			Tank t = new UserTank(c[i]);
@@ -574,7 +574,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	}
 
 	protected void terrarinElementRemove(Projectile shot) {
-		for (Drawable2 object: drawable) {
+		for (Drawable object: drawable) {
 			if ( (object instanceof Cactus  || object instanceof Snowman)  && ((object.getX() + object.queryImage().getWidth()/2) >= (shot.getX() - shot.terrainMag) && (object.getX() + object.queryImage().getWidth()/2) <= (shot.getX() + shot.terrainMag))) {
 				drawable.remove(object);
 				terrarinElementRemove(shot);
@@ -668,7 +668,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		});
 
 		@SuppressWarnings("unchecked")
-		ArrayList<Drawable2> t = (ArrayList<Drawable2>) drawable.clone();
+		ArrayList<Drawable> t = (ArrayList<Drawable>) drawable.clone();
 		t.forEach(a -> {
 			g2d.drawImage(a.queryImage(), a.getX(), a.getY() - a.queryImage().getHeight()+shift, null);
 
@@ -1155,7 +1155,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 	}
 
-	public ArrayList<Drawable2> getDrawable(){
+	public ArrayList<Drawable> getDrawable(){
 		return drawable;
 	}
 
