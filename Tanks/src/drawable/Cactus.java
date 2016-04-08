@@ -10,7 +10,7 @@ import javax.imageio.ImageIO;
 
 import Main.Main;
 
-public class Cactus implements Drawable2 {
+public class Cactus implements Drawable {
 	private BufferedImage image = null;
 	private Point location;
 	private Dimension size;

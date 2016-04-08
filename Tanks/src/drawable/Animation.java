@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 
 import Main.Main;
 
-public class Animation implements Drawable2{
+public class Animation implements Drawable{
 
 	private Point location;
 	String type;
@@ -85,7 +85,7 @@ public class Animation implements Drawable2{
 			if(tick >= 99){
 				BufferedImage temp = smoke[tick/10];
 				tick = 0;
-				ArrayList<Drawable2> d = Main.getTerrain().getDrawable();
+				ArrayList<Drawable> d = Main.getTerrain().getDrawable();
 				d.remove(this); //animation removes itself
 				Main.getTerrain().setDrawable(d);
 				return temp;
@@ -101,7 +101,7 @@ public class Animation implements Drawable2{
 			if(tick >= 29){
 				BufferedImage temp = explode[tick/3];
 				tick = 0;
-				ArrayList<Drawable2> d = Main.getTerrain().getDrawable();
+				ArrayList<Drawable> d = Main.getTerrain().getDrawable();
 				d.remove(this); //animation removes itself
 				Main.getTerrain().setDrawable(d);
 				return temp;

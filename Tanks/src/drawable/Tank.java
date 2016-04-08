@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.function.Consumer;
 
-public abstract class Tank implements Drawable2 {
+public abstract class Tank implements Drawable {
 	private double barrelAngle = 0.0;
 	private double tankAngle = 0.0;
 	private double gas = 400;

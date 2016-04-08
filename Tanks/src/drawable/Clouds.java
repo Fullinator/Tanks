@@ -14,7 +14,7 @@ import terrain.Terrain;
  * @author Joel Cherney
  *
  */
-public class Clouds implements Drawable2 {
+public class Clouds implements Drawable {
 
 	private double x = 0;
 	private int y = 30;
