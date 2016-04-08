@@ -601,7 +601,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	public void paintComponent(Graphics g) {
 		ArrayList<Projectile> projectiles = new ArrayList<>(this.projectiles.size());
 		projectiles.addAll(this.projectiles);
-		ArrayList<Drawable2> drawable = new ArrayList<>(this.drawable.size());
+		ArrayList<Drawable> drawable = new ArrayList<>(this.drawable.size());
 		drawable.addAll(this.drawable);
 
 		//int shift = 0;
@@ -672,11 +672,14 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			}
 		});
 
-		@SuppressWarnings("unchecked")
-		ArrayList<Drawable> t = (ArrayList<Drawable>) drawable.clone();
-		t.forEach(a -> {
-			g2d.drawImage(a.queryImage(), a.getX(), a.getY() - a.queryImage().getHeight()+shift, null);
-
+//		@SuppressWarnings("unchecked")
+//		ArrayList<Drawable> t = (ArrayList<Drawable>) drawable.clone();
+//		t.forEach(a -> {
+//			g2d.drawImage(a.queryImage(), a.getX(), a.getY() - a.queryImage().getHeight()+shift, null);
+//
+//		});
+		drawable.forEach(a -> {
+			if (a instanceof Animation) g2d.drawImage(a.queryImage(), a.getX(), a.getY() - a.queryImage().getHeight()+shift, null);
 		});
 
 		if (staleTerrainImage) {
