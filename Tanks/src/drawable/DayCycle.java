@@ -14,7 +14,7 @@ public class DayCycle implements Drawable {
 	private int x = -150;
 	private int y = 0;
 	private int radius;
-	private int wait = 0;
+	private int wait = 2;
 	private int count = 0;
 	private int yLength;
 	private int xLength;
