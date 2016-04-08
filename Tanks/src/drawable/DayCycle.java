@@ -8,13 +8,13 @@ import java.math.*;
 
 import javax.imageio.ImageIO;
 
-public class DayCycle implements Drawable2 {
+public class DayCycle implements Drawable {
 	private BufferedImage sun;
 	private BufferedImage moon;
 	private int x = -150;
 	private int y = 0;
 	private int radius;
-	private int wait = 0;
+	private int wait = 2;
 	private int count = 0;
 	private int yLength;
 	private int xLength;
