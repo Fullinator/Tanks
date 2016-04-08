@@ -16,6 +16,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.LongConsumer;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -597,7 +599,10 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	Shift shift1 = new Shift(Projectile.points);
 	int shift = 0;
 	public void paintComponent(Graphics g) {
-		ArrayList<Projectile> projectiles = (ArrayList<Projectile>) ((ArrayList<Projectile>) this.projectiles).clone();
+		ArrayList<Projectile> projectiles = new ArrayList<>(this.projectiles.size());
+		projectiles.addAll(this.projectiles);
+		ArrayList<Drawable2> drawable = new ArrayList<>(this.drawable.size());
+		drawable.addAll(this.drawable);
 
 		//int shift = 0;
 		shift =shift1.shifter(Projectile.points);
