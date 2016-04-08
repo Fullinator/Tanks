@@ -45,6 +45,7 @@ public class AITank extends Tank {
 		target = minTank;
 		if (target == null) {
 //			owner.nextPlayerTurn();
+			try { Thread.sleep(1250); } catch (InterruptedException ignored) {}
 			owner.fire();
 			firedThisRound = true;
 			return;
@@ -141,6 +142,7 @@ public class AITank extends Tank {
 			Ticker.removeMethod(fireWhenReadyID);
 			fireWhenReadyID = -1;
 			if (!firedThisRound) {
+				try { Thread.sleep(1250); } catch (InterruptedException ignored) {}
 				owner.fire();
 				firedThisRound = true;
 			}
