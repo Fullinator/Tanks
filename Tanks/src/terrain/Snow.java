@@ -38,9 +38,16 @@ public class Snow extends Terrain {
 		int max = xLength;
 		int min = 1;
 		int type;
+		int offset = 75;
+		int[] placement = new int[3];
 		for (int i = 0; i < amount; i++) {
 			type = random.nextInt(max - min + 1) + min;
-			drawable.add(new Snowman(new Point(type, findY(type))));
+			if (type == placement[0] || type == placement[1] || type == placement[2] || (type - offset == placement[0] || type - offset == placement[1] || type - offset == placement[2]) || (type + offset == placement[0] || type + offset == placement[1] || type + offset == placement[2])) {
+				i--;
+				continue;
+			}
+			placement[i] = type;
+			drawable.add(new Snowman(new Point(type, findY(type + 25) + 4)));
 		}
 	}
 

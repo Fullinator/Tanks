@@ -42,8 +42,15 @@ public class Sand extends Terrain{
 		int max = xLength;
 		int min = 1;
 		int type;
+		int offset = 75;
+		int[] placement = new int[3];
 		for (int i = 0; i < amount; i++) {
 			type = random.nextInt(max - min + 1) + min;
+			if (type == placement[0] || type == placement[1] || type == placement[2] || (type - offset == placement[0] || type - offset == placement[1] || type - offset == placement[2]) || (type + offset == placement[0] || type + offset == placement[1] || type + offset == placement[2])) {
+				i--;
+				continue;
+			}
+			placement[i] = type;
 			drawable.add(new Cactus(new Point(type, findY(type))));
 		}
 	}
