@@ -33,8 +33,8 @@ public class HelpMenu extends JPanel{
 			"<li>Fire: Space</li>" +
 			"<li>Move Turret Up: Up Arrow Key</li>" +
 			"<li>Move Turret Down: Down Arrow Key</li>" +
-			"<li>Power Up: 			</li>" +
-			"<li>Power Down: 		</li>" +
+			"<li>Power Up: Plus Key</li>" +
+			"<li>Power Down: Minus Key</li>" +
 			"<li>Pause: Escape" +
 			"<li>Player Stats: Tab</li>" +
 		"</ul></html>");

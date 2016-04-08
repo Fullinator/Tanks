@@ -30,15 +30,12 @@ public class AITank extends Tank {
 	}
 
 	public void takeTurn() {
-		System.out.println("Taking turn for AI " + getName());
-
 		Tank minTank = null;
 		double minCost = Double.POSITIVE_INFINITY;
 
 		for (Tank t : tanks) {
 			if (t == this) continue;
 			double cost = Math.sqrt(Math.pow(getX() - t.getX(), 2) + Math.pow(getY() - t.getY(), 2)) * 3 + (100 - t.getHealth());// + (t instanceof AITank ? 500000 : 0) + (Math.random() * 100000 - 50000);
-			System.out.println(getName() + " -> " + t.getName() + ": " + cost);
 			if (cost < minCost) {
 				minCost = cost;
 				minTank = t;
@@ -47,9 +44,9 @@ public class AITank extends Tank {
 
 		target = minTank;
 		if (target == null) {
-			System.out.println("========== NO TARGET FOUND ==========");
 //			owner.nextPlayerTurn();
 			owner.fire();
+			firedThisRound = true;
 			return;
 		}
 
@@ -96,7 +93,6 @@ public class AITank extends Tank {
 	}
 
 	private void motionComplete(boolean success) {
-		System.out.println("\t\t\t\tMotion complete = " + success);
 		if (!success) {
 			// figure out workable angle
 			double idealAngle = Math.PI;
@@ -135,8 +131,6 @@ public class AITank extends Tank {
 	}
 
 	private void cannonComplete(boolean success) {
-//		Thread.dumpStack();
-		System.out.println("\t\t\t\tCannon complete = " + success);
 		cannonComplete = true;
 	}
 
@@ -207,8 +201,6 @@ public class AITank extends Tank {
 		// Check for rough intersection
 		Point targetLoc = target.getCenterPoint(owner);
 		DoubleFunction<Double> quad = value -> a * value * value + b * value + c;
-//		System.out.println("Points: " + Arrays.toString(p1) + " " + Arrays.toString(p2) + " " + Arrays.toString(p3));
-//		System.out.println("a: " + a + "\tb: " + b + "\tc: " + c);
 
 		return quad.apply(targetLoc.x - maxOffset) >= targetLoc.y - maxOffset && quad.apply(targetLoc.x - maxOffset) <= targetLoc.y - maxOffset
 				|| quad.apply(targetLoc.x) >= targetLoc.y - maxOffset && quad.apply(targetLoc.x) <= targetLoc.y + maxOffset
