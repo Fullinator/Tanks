@@ -432,6 +432,11 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	}
 
 
+	/**
+	 * detects whether the projectile collides with a player or the terrain and then calls the damage method
+	 * 
+	 * @param shot a Projectile object that contain the information of the standard shot
+	 */
 	public void collisionDetection(Projectile shot) {
 		int radius = 15;//radius around tank in pixels to check collision
 		boolean tankHit = false;
@@ -498,6 +503,12 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 	}
 
+	/**
+	 * damges the terrain and tanks
+	 * @param shot the projectile that is colliding
+	 * @param tank a boolean that's true if it's colliding with a tank and false if not
+	 * @param tankCollisionRadius the radius that a tank will collide within
+	 */
 	public void damage(Projectile shot, boolean tank, int tankCollisionRadius) {
 		//check which shot it is so we can tell what kind of damage
 		//For now we only have one kind
@@ -575,6 +586,10 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		}
 	}
 
+	/**
+	 * removes a terrain specific element from the map. This might be a cactus or snow man
+	 * @param shot the shot that is colliding with the terrain
+	 */
 	protected void terrarinElementRemove(Projectile shot) {
 		for (Drawable object: drawable) {
 			if ( (object instanceof Cactus  || object instanceof Snowman)  && ((object.getX() + object.queryImage().getWidth()/2) >= (shot.getX() - shot.terrainMag) && (object.getX() + object.queryImage().getWidth()/2) <= (shot.getX() + shot.terrainMag))) {
@@ -585,6 +600,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		}
 	}
 
+	/**
+	 * checks whether the game has finished. IE if there is only one player left
+	 */
 	protected void checkEndOfGame() {
 		if (maxPlayers == 1) {
 			playerWin();
@@ -986,7 +1004,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		}
 	}
 
-
+	/**
+	 * Ends the game and shows the end game screen
+	 */
 	protected void playerWin() {
 		hidePlayerStats();
 		paused = true;
@@ -1063,6 +1083,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		requestFocusInWindow();
 	}
 
+	/**
+	 * is called when a key is pressed
+	 */
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (downKeys.contains((long) e.getKeyCode())) return;
@@ -1128,6 +1151,9 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		}
 	}//end of keyPressed method
 
+	/**
+	 * is called when a key is released
+	 */
 	@Override
 	public void keyReleased(KeyEvent e) {
 		downKeys.remove(((long) e.getKeyCode()));
@@ -1157,16 +1183,27 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			break;
 		}
 	}
-
+	
+	/**
+	 * is called when a key is typed
+	 */
 	@Override
 	public void keyTyped(KeyEvent e) {
 
 	}
-
+	
+	/**
+	 * returns the drawable array list
+	 * @return srray lsit of drawables
+	 */
 	public ArrayList<Drawable> getDrawable(){
 		return drawable;
 	}
 
+	/**
+	 * returns if human input is allowed
+	 * @return boolean true if input is allowed and false if it is not
+	 */
 	public boolean getHumanInputAllowed() {
 		return allowHumanInput;
 	}
