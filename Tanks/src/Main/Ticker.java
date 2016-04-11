@@ -17,17 +17,17 @@ public class Ticker implements Runnable {
 	private long sleepMillis;
 	private static int id = -1;
 
-	public Ticker(long sleepMillis) {
+	Ticker(long sleepMillis) {
 		stop = false;
 		pause = false;
 		this.sleepMillis = sleepMillis;
 	}
 
-	public void stopTicking() {
+	void stopTicking() {
 		stop = true;
 	}
 
-	public void setPaused(boolean pause) {
+	void setPaused(boolean pause) {
 		this.pause = pause;
 	}
 

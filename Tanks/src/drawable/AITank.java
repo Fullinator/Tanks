@@ -5,7 +5,6 @@ import terrain.Terrain;
 
 import java.awt.*;
 import java.util.List;
-import java.util.Random;
 import java.util.function.DoubleFunction;
 
 /**
@@ -44,7 +43,6 @@ public class AITank extends Tank {
 
 		target = minTank;
 		if (target == null) {
-//			owner.nextPlayerTurn();
 			try { Thread.sleep(1250); } catch (InterruptedException ignored) {}
 			owner.fire();
 			firedThisRound = true;
@@ -78,12 +76,7 @@ public class AITank extends Tank {
 			}
 		}
 
-//		Random r = new Random();
-//		power += r.nextGaussian() * 2;
-//		idealAngle += r.nextGaussian() * 0.05;
-
-//		power += Math.random() * 4 - 2;
-//		idealAngle += Math.random() * 0.1 - 0.5;
+		idealAngle += Math.random() * 0.1 - 0.5;
 
 		setLaunchPower(power);
 		aimCannon(idealAngle, this::cannonComplete);
@@ -117,12 +110,7 @@ public class AITank extends Tank {
 				}
 			}
 
-//			Random r = new Random();
-//			power += r.nextGaussian() * 2;
-//			idealAngle += r.nextGaussian() * 0.05;
-
-//			power += Math.random() * 4 - 1;
-//			idealAngle += Math.random() * 0.1 - 0.5;
+			idealAngle += Math.random() * 0.1 - 0.5;
 
 			setLaunchPower(power);
 			aimCannon(idealAngle, this::cannonComplete);
