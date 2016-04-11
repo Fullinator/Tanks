@@ -31,7 +31,7 @@ public class CloudsTest {
 
 	@Test
 	public void testQueryImage() throws Exception {
-		Clouds cloud = new Clouds(terrain, terrain.getXTerrain(), terrain.getYTerrain(), 250);
+		Clouds cloud = new Clouds(terrain, terrain.getXTerrain(), terrain.getYTerrain());
 		BufferedImage correctImage = ImageIO.read(getClass().getResourceAsStream("/img/tempCloud.png"));
 		assertEquals(cloud.queryImage().getWidth(), correctImage.getWidth());
 		assertEquals(cloud.queryImage().getHeight(), correctImage.getHeight());
