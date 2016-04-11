@@ -285,7 +285,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 */
 	private void createClouds(int numberOfClouds) {
 		for (int i = 0; i < numberOfClouds; i++) {
-			Clouds c = new Clouds(this, getXTerrain(), getYTerrain(), getXTerrain() - (getXTerrain() + 1));
+			Clouds c = new Clouds(this, getXTerrain(), getYTerrain());
 			drawable.add(c);
 		}
 	}

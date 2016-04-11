@@ -18,11 +18,8 @@ public class Clouds implements Drawable {
 
 	private double x = 0;
 	private int y = 30;
-	private Thread t;
-	private Terrain terrain;
 	private int yHeight;
 	private int xLength;
-	private int start;
 	private BufferedImage cloud;
 	private double rate;
 	private int offset;
@@ -33,14 +30,11 @@ public class Clouds implements Drawable {
 	 * @param landscape The terrain object the cloud is being drawn on
 	 * @param x1 Width of the frame
 	 * @param y1 Height of the frame
-	 * @param startingPosition Starting position of the cloud
 	 */
-	public Clouds(Terrain landscape, int x1, int y1, int startingPosition){
-		terrain = landscape;
+	public Clouds(Terrain landscape, int x1, int y1){
 		xLength = x1;
 		yHeight = y1;
 		collectCloud();
-		start = startingPosition;
 
 		y = (int) (Math.random() * (yHeight / 3));
 		x = Math.random() * landscape.getXTerrain();
