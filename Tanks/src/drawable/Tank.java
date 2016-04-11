@@ -20,7 +20,7 @@ public abstract class Tank implements Drawable {
 	private int healthPercent;
 	private String name;
 	private int launchPower;
-	double friction;
+	private double friction;
 	private int motionTickerID = -1;
 	private int cannonTickerID = -1;
 	private boolean goLeft;
@@ -32,9 +32,9 @@ public abstract class Tank implements Drawable {
 	private String projectileType = "Standard Shot";
 	private boolean firstTurnTaken = false;
 
-	protected Color barrelColor;
+	Color barrelColor;
 
-	public Tank() {
+	Tank() {
 		launchPower = 10;
 		healthPercent = 100;
 		name = "";
@@ -57,7 +57,7 @@ public abstract class Tank implements Drawable {
 	public BufferedImage getImage() {
 		return image;
 	}
-	public void getFriction(){
+	private void getFriction(){
 	friction = physics.Friction.getFriction();
 	}
 	public void setImage(BufferedImage image) {
@@ -92,10 +92,6 @@ public abstract class Tank implements Drawable {
 
 	public double getBarrelAngle() { return barrelAngle; }
 
-	public void setTankAngle(double angle) { tankAngle = angle; }
-
-	public double getTankAngle() { return tankAngle; }
-
 	public void setGas(double gas) { this.gas = gas; }
 
 	public double getGas() { return gas; }
@@ -128,7 +124,7 @@ public abstract class Tank implements Drawable {
 		}
 	}
 
-	public void startMotion(int target, Consumer<Boolean> callback, double dxGiveUp) {
+	void startMotion(int target, Consumer<Boolean> callback, double dxGiveUp) {
 		motionTarget = Math.max(0, Math.min(target, Main.xLength - queryImage().getWidth()));
 		this.minSpeed = dxGiveUp;
 		if (motionTickerID == -1 && gas > 0) {
@@ -153,7 +149,7 @@ public abstract class Tank implements Drawable {
 		Main.sound.runLoop("turret");
 	}
 
-	public void aimCannon(double target, Consumer<Boolean> callback) {
+	void aimCannon(double target, Consumer<Boolean> callback) {
 		cannonTarget = Math.max(0, Math.min(target, Math.PI));
 		clippedAngle = false;
 		if (cannonTickerID == -1) {
@@ -182,7 +178,7 @@ public abstract class Tank implements Drawable {
 
 		gas -= (double) elapsedNanos / 100000000 + Math.abs(sub);
 		double speed = friction * 100.0 * ((double) elapsedNanos / 1000000000);
-		double y2 = 0;
+		double y2;
 		double y1 = Main.getTerrain().findY((int) location.getX());
 		if (goLeft){
 			 y2 = Main.getTerrain().findY((int) location.getX() - 5);
@@ -208,12 +204,7 @@ public abstract class Tank implements Drawable {
 				speed = speed + sub;
 			}
 		}
-//		System.out.println("friction:" + friction);
-//		System.out.println("speed:" + speed);
-//		System.out.println("angleRat:" + Math.sin(tankAngle));
-//		System.out.println("forrest" + physics.Friction.forest);
-//		System.out.println("snow" + physics.Friction.snow);
-//		System.out.println("sand" + physics.Friction.sand);
+
 		double newX = location.getX() + (goLeft ? -speed : speed);
 		lastSpeed = speed;
 		if (newX > 50 && newX < Main.xLength - queryImage().getWidth() - 50) location.setLocation(newX, 1000);
@@ -240,7 +231,6 @@ public abstract class Tank implements Drawable {
 		double rate = 3.0 * ((double) elapsedNanos / 1000000000);
 		double newAng = barrelAngle + (counterClockwise ? rate : -rate);
 		if (newAng >= 0 && newAng <= Math.PI) {
-//			clippedAngle = true;
 			barrelAngle = newAng;
 		} else {
 			clippedAngle = true;
@@ -275,20 +265,6 @@ public abstract class Tank implements Drawable {
 	public double angle(int x, int[][] points) {
 		int y1 = 0;
 		int y2 = 0;
-		/*for(int i = 0; i < points[x].length; i += 1){
-			if(points[x][i] > 0 && i++ < points[x].length && points[x][i++] <= 0){
-				y1 = i;
-				break;
-			}
-		}
-
-		for(int i = 0; i < points[x].length; i += 1){
-			if(points[x - 15][i] > 0 && i++ < points[x].length && points[x - 15][i++] <= 0){
-				y2 = i;
-				break;
-			}
-		}
-		*/
 		
 		if(x > 0 && x < points.length){//find Y position from damage
 			for(int i = 0; i < points[0].length; i ++ ){
@@ -310,10 +286,8 @@ public abstract class Tank implements Drawable {
 				break;
 			}
 		}
-		
-		//System.out.println(y1 + "     " + y2);
-		if (y1 == 0 || y2 == 0 || (y1 > 690 && y2 > 690)){//y2 == 0 && y1 > (points[0].length - 20) || y1 == 0 && y2 > (points[0].length - 20)) {
-			//System.out.println("zero!");
+
+		if (y1 == 0 || y2 == 0 || (y1 > 690 && y2 > 690)){
 			return 0;
 		}
 		
@@ -322,7 +296,7 @@ public abstract class Tank implements Drawable {
 		return angle;
 	}//end of angle method
 
-	public Point getCenterPoint(Terrain terrain) {
+	Point getCenterPoint(Terrain terrain) {
 		double angle = angle(getX() + 20 , terrain.getTerrain());
 		int length = (int) (queryImage().getWidth() * Math.cos(angle));
 		return new Point(getX() + (length/2), terrain.findY(getX() + (length/2)) - (queryImage().getHeight() /2) );
