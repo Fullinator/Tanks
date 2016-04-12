@@ -260,7 +260,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		c = bArray[2][0]; 
 		d = bArray[3][0]; 
 
-		//System.out.println("A: " + a + " B: " + b +" C: " + c + " D: " + d);
 
 		y = a+b*x+c*Math.pow(x, 2)+d*Math.pow(x, 3);
 
@@ -429,7 +428,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 
 		if (tankHit || terrainHit) {
 			allowHumanInput = true;
-			System.out.println("nextPlayerTurn -> " + !tankDestroyed);
 			nextPlayerTurn(!tankDestroyed);
 		}
 
@@ -469,7 +467,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				if (shot.getX() >= center.getX() - tankCollisionRadius && shot.getX() <= center.getX() + tankCollisionRadius) {//check X
 					if (shot.getY() >= center.getY() - tankCollisionRadius && shot.getY() <= center.getY() + tankCollisionRadius) {//check Y
 						t.setHealth(t.getHealth() - shot.damage);
-						//System.out.println("damage!");
 						if (t.getHealth() <= 0) {
 							remTank = players.indexOf(t) + 1;
 							maxPlayers = maxPlayers - 1;
@@ -575,7 +572,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 		AffineTransform old = g2d.getTransform();// Saves a copy of the old transform so the rotation can be reset later
 
 		for (int i = 0; i < drawable.size(); i++) {
-			//System.out.println("Shift = " + shift);
 			if (drawable.get(i) instanceof DayCycle) {//Make sure to draw the sun/moon first.
 				g2d.drawImage(drawable.get(i).queryImage(), drawable.get(i).getX(), drawable.get(i).getY() - drawable.get(i).queryImage().getHeight()+shift, null);
 				nightShiftAmount = ((DayCycle) drawable.get(i)).shiftNightAmount();
@@ -690,7 +686,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			} else {
 				currentPlayer = currentPlayer + 1;
 			}
-			System.out.println("Advancing player to " + currentPlayer);
 		}
 
 		currentTank().setLaunchPower(Math.min(currentTank().getHealth() / 2, currentTank().getLaunchPower()));
@@ -1056,7 +1051,6 @@ public abstract class Terrain extends JPanel implements KeyListener{
 				t.setHealth(-100);
 				maxPlayers = maxPlayers - 1;
 				if (currentPlayer > maxPlayers) currentPlayer = maxPlayers;
-				System.out.println(maxPlayers + "\t" + currentPlayer);
 				players.remove(t);
 				drawable.remove(t);
 				checkEndOfGame();
