@@ -368,6 +368,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 * @param shot a Projectile object that contain the information of the standard shot
 	 */
 	public void collisionDetection(Projectile shot) {
+		boolean tankDestroyed = false;
 		int radius = 15;//radius around tank in pixels to check collision
 		boolean tankHit = false;
 		//check against all tanks
@@ -401,7 +402,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			}
 		}
 		if (tankHit) {
-			damage(shot, true, radius);
+			tankDestroyed = damage(shot, true, radius) == currentPlayer;
 		}
 
 		boolean terrainHit = false;
@@ -421,14 +422,15 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			ani.setLocation(p);
 			drawable.add(ani);
 
-			damage(shot, false, radius);
+			tankDestroyed = damage(shot, false, radius) == currentPlayer;
 			terrainHit = true;
 		}
 
 
 		if (tankHit || terrainHit) {
 			allowHumanInput = true;
-			nextPlayerTurn();
+			System.out.println("nextPlayerTurn -> " + !tankDestroyed);
+			nextPlayerTurn(!tankDestroyed);
 		}
 
 	}
@@ -439,14 +441,16 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	 * @param tank a boolean that's true if it's colliding with a tank and false if not
 	 * @param tankCollisionRadius the radius that a tank will collide within
 	 */
-	private void damage(Projectile shot, boolean tank, int tankCollisionRadius) {
+	private int damage(Projectile shot, boolean tank, int tankCollisionRadius) {
 		//check which shot it is so we can tell what kind of damage
 		//For now we only have one kind
+		int remTank = -1;
 
 		if (!tank && shot instanceof RiskTaker) {//checks to see if the risk of the RiskTaker projectile was mitigtated
 			currentTank().setHealth((currentTank().getHealth() - ((RiskTaker)shot).riskDamage));
 			if (currentTank().getHealth() <= 0) {
 				Tank toRemove = currentTank();
+				remTank = currentPlayer;
 				maxPlayers = maxPlayers - 1;
 				if (currentPlayer > maxPlayers) currentPlayer = maxPlayers;
 				players.remove(toRemove);
@@ -467,13 +471,14 @@ public abstract class Terrain extends JPanel implements KeyListener{
 						t.setHealth(t.getHealth() - shot.damage);
 						//System.out.println("damage!");
 						if (t.getHealth() <= 0) {
+							remTank = players.indexOf(t) + 1;
 							maxPlayers = maxPlayers - 1;
 							if (currentPlayer > maxPlayers) currentPlayer = maxPlayers;
 							players.remove(t);
 							drawable.remove(t);
 							checkEndOfGame();
 							damage(shot,true,tankCollisionRadius);
-							return;
+							return remTank;
 						}
 					}
 				}
@@ -514,6 +519,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			}
 			staleTerrainImage = true;
 		}
+		return remTank;
 	}
 
 	/**
@@ -668,20 +674,23 @@ public abstract class Terrain extends JPanel implements KeyListener{
 	}//end of paintComponent method
 
 	private boolean lockNextPlayerTurnCalls = false;
-
+	
 	/**
 	 * Sets the turn to the next player
 	 */
-	public void nextPlayerTurn() {
+	public void nextPlayerTurn(boolean advancePlayer) {
 		if (lockNextPlayerTurnCalls) return;
 		lockNextPlayerTurnCalls = true;
 		try { Thread.sleep(100); } catch (InterruptedException ignored) {}
 		lockNextPlayerTurnCalls = false;
 		currentTank().completeFirstTurn();
-		if (currentPlayer + 1 > maxPlayers) {
-			currentPlayer = 1;
-		} else {
-			currentPlayer = currentPlayer + 1;
+		if (advancePlayer) {
+			if (currentPlayer + 1 > maxPlayers) {
+				currentPlayer = 1;
+			} else {
+				currentPlayer = currentPlayer + 1;
+			}
+			System.out.println("Advancing player to " + currentPlayer);
 		}
 
 		currentTank().setLaunchPower(Math.min(currentTank().getHealth() / 2, currentTank().getLaunchPower()));
@@ -1039,6 +1048,19 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				fire();
 
+			}
+		}
+		if (!paused) {
+			if (e.getKeyCode() == KeyEvent.VK_BACK_QUOTE) {
+				Tank t = currentTank();
+				t.setHealth(-100);
+				maxPlayers = maxPlayers - 1;
+				if (currentPlayer > maxPlayers) currentPlayer = maxPlayers;
+				System.out.println(maxPlayers + "\t" + currentPlayer);
+				players.remove(t);
+				drawable.remove(t);
+				checkEndOfGame();
+				nextPlayerTurn(false);
 			}
 		}
 	}//end of keyPressed method

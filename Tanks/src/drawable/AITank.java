@@ -76,7 +76,7 @@ public class AITank extends Tank {
 			}
 		}
 
-		idealAngle += Math.random() * 0.1 - 0.5;
+		idealAngle += Math.random() * 0.05 - 0.025;
 
 		setLaunchPower(power);
 		aimCannon(idealAngle, this::cannonComplete);
@@ -110,7 +110,7 @@ public class AITank extends Tank {
 				}
 			}
 
-			idealAngle += Math.random() * 0.1 - 0.5;
+			idealAngle += Math.random() * 0.05 - 0.025;
 
 			setLaunchPower(power);
 			aimCannon(idealAngle, this::cannonComplete);
