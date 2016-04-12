@@ -320,7 +320,7 @@ public abstract class Terrain extends JPanel implements KeyListener{
 			Tank t = new AITank(this, players);
 			if (aiNames.size() > 0) t.setName(aiNames.get(r.nextInt(aiNames.size())));
 			else t.setName("AI " + (i + 1));
-			t.setLocation(new Point((int) (Math.random() * (getXTerrain() - 100) + 50), 0));
+			t.setLocation(new Point((int) (Math.random() * (getXTerrain() - 200) + 100), 0));
 			drawable.add(t);
 			players.add(t);
 		}
