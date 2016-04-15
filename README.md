@@ -12,7 +12,7 @@ To build the game, clone the repository and run `ant` from the root of the proje
 
 ## Running
 
-To run the game from the root of the project, run the command `java -cp "out/production/Tanks;lib/*" Main.Main`
+To run the game from the root of the project, run the command `java -cp "out/production/Tanks:lib/*" Main.Main`
 
 ## Playing
 
